@@ -824,7 +824,7 @@ public class Common_Function {
 		String strDeviceIndex;
 		try {
 			if (ConfigFileReader.strEnv.contains("prod")) {
-				capebilityMap.put("appPackage", "com.studyiq.android.stag");
+				capebilityMap.put("appPackage", "com.studyiq.android");
 
 			} else {
 				capebilityMap.put("appPackage", "com.studyiq.android.stag");

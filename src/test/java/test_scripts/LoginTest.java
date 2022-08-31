@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import applicationUtil.LoginUtil;
+import util.ConfigFileReader;
 
 public class LoginTest extends BaseTest {
 
@@ -14,19 +15,18 @@ public class LoginTest extends BaseTest {
 
 		boolean result = true;
 		loginUtilObj = new LoginUtil(driver);
-		result = loginUtilObj.verifyLogin(driver, "9958544199");
-		Assert.assertEquals(result, true, "");
+		result = loginUtilObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
+		Assert.assertEquals(result, true, loginUtilObj.loginMsgList.toString());
 
 	}
-	
-	
+
 	@Test
 	public void verifyUserSignUp() {
 
 		boolean result = true;
 		loginUtilObj = new LoginUtil(driver);
 		result = loginUtilObj.verifySignUp(driver);
-		Assert.assertEquals(result, true, "");
+		Assert.assertEquals(result, true, loginUtilObj.loginMsgList.toString());
 
 	}
 

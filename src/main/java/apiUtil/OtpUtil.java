@@ -13,7 +13,7 @@ public class OtpUtil {
 	public ConfigFileReader cfReaderObject = new ConfigFileReader();
 	public APIUtils apiUtilsObj = new APIUtils();
 
-	public String getOtp(String strMobileNumber) {
+	public String getOtp(String strMobileNumber,boolean isNewUser) {
 		String strOtp = null;
 		APIResponse ap = null;
 		Map<String, String> formData;
@@ -21,7 +21,14 @@ public class OtpUtil {
 			formData = new HashMap<String, String>();
 			formData.put("mobile", strMobileNumber);
 			formData.put("otp_token", cfReaderObject.getOtpToken());
-			ap = apiUtilsObj.postCall(cfReaderObject.getBaseUrl(), Constant.USER_OTP, formData, Constant.CONTENT_TYPE);
+			if(isNewUser)
+			{
+				formData.put("action", "1");
+			}else
+			{
+				formData.put("action", "0");
+			}
+			ap = apiUtilsObj.postCall(cfReaderObject.getBaseUrl(), Constant.USER_OTP, formData, null);
 			System.out.println(ap.getmessageCode());
 
 			strOtp = ap.getJsonKeyValue("otp");
@@ -29,7 +36,6 @@ public class OtpUtil {
 		} catch (Exception e) {
 		}
 		return strOtp;
-
 	}
 
 }

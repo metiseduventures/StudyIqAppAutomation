@@ -10,6 +10,7 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.PaymentPage_OR;
 import util.Common_Function;
+import util.ConfigFileReader;
 
 public class PaymentPageUtil {
 
@@ -36,12 +37,15 @@ public class PaymentPageUtil {
 				}
 
 			}
-			// if address is not fill enter the address
 
-			if (cfObj.commonGetElements(driver, "//android.widget.CheckedTextView[@text = 'Bihar']", "xpath")
-					.size() > 0) {
-				cfObj.commonClick(
-						cfObj.commonGetElement(driver, "//android.widget.CheckedTextView[@text = 'Bihar']", "xpath"));
+			if (!ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
+				// if address is not fill enter the address
+
+				if (cfObj.commonGetElements(driver, "//android.widget.CheckedTextView[@text = 'Bihar']", "xpath")
+						.size() > 0) {
+					cfObj.commonClick(cfObj.commonGetElement(driver,
+							"//android.widget.CheckedTextView[@text = 'Bihar']", "xpath"));
+				}
 			}
 
 		} catch (Exception e) {

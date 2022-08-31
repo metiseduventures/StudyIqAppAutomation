@@ -15,7 +15,7 @@ import util.Common_Function;
 public class LoginUtil {
 
 	Login_OR loginPageObj;
-	List<String> loginMsgList = new ArrayList<String>();
+	public List<String> loginMsgList = new ArrayList<String>();
 	public Common_Function cfObj = new Common_Function();
 	HomePageUtil homePageUtilObj;
 
@@ -42,7 +42,11 @@ public class LoginUtil {
 			}
 			otpUtilObj = new OtpUtil();
 
-			strOtp = otpUtilObj.getOtp(strMobileNo);
+			strOtp = otpUtilObj.getOtp(strMobileNo, false);
+			if (strOtp == null) {
+				loginMsgList.add("Error in getting otp");
+				return false;
+			}
 
 			result = enterOtp(driver, strOtp);
 			if (!result) {
@@ -144,38 +148,8 @@ public class LoginUtil {
 
 	public boolean verifySignUp(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
-		String strOtp = null;
-		OtpUtil otpUtilObj;
-		String strMobileNo = null;
 		try {
-			strMobileNo = Common_Function.randomPhoneNumber(10, "3");
-			System.out.println("strMobileNo: " + strMobileNo);
-			result = enterMobileNumber(strMobileNo);
-			if (!result) {
-				return result;
-			}
-			result = clickOnGetOtp();
-			if (!result) {
-				return result;
-			}
-			otpUtilObj = new OtpUtil();
-
-			strOtp = otpUtilObj.getOtp(strMobileNo);
-
-			result = enterOtp(driver, strOtp);
-			if (!result) {
-				return result;
-			}
-			result = enterUserName(driver, "TestUser" + strMobileNo);
-			if (!result) {
-				return result;
-			}
-			result = enterUerEmail(driver, "TestUser" + strMobileNo + "@gmail.com");
-			if (!result) {
-				return result;
-			}
-
-			result = clickOnLoginButton(driver);
+			result = doSignUp(driver);
 			if (!result) {
 				return result;
 			}
@@ -256,6 +230,55 @@ public class LoginUtil {
 		} catch (Exception e) {
 			result = false;
 			loginMsgList.add("clickOnSkipLogin_Exception: " + e.getMessage());
+		}
+		return result;
+	}
+
+	public boolean doSignUp(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		String strOtp = null;
+		OtpUtil otpUtilObj;
+		String strMobileNo = null;
+		try {
+			strMobileNo = Common_Function.randomPhoneNumber(10, "3");
+			System.out.println("strMobileNo: " + strMobileNo);
+			result = enterMobileNumber(strMobileNo);
+			if (!result) {
+				return result;
+			}
+			result = clickOnGetOtp();
+			if (!result) {
+				return result;
+			}
+			otpUtilObj = new OtpUtil();
+
+			strOtp = otpUtilObj.getOtp(strMobileNo, true);
+			if (strOtp == null) {
+				loginMsgList.add("Error in getting otp");
+				return false;
+			}
+
+			result = enterOtp(driver, strOtp);
+			if (!result) {
+				return result;
+			}
+			result = enterUserName(driver, "TestUser" + strMobileNo);
+			if (!result) {
+				return result;
+			}
+			result = enterUerEmail(driver, "TestUser" + strMobileNo + "@gmail.com");
+			if (!result) {
+				return result;
+			}
+
+			result = clickOnLoginButton(driver);
+			if (!result) {
+				return result;
+			}
+
+		} catch (Exception e) {
+			result = false;
+			loginMsgList.add("doSignUp_Exception: " + e.getMessage());
 		}
 		return result;
 	}

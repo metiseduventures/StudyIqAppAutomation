@@ -32,11 +32,10 @@ public class CourseDetailPage {
 	public boolean verifyPurchaseCourse(AppiumDriver<MobileElement> driver, TestData testData) {
 		boolean result = true;
 		try {
-			
-
+			// login to application
 			loginutillObj = new LoginUtil(driver);
 
-			result = loginutillObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
+			result = loginutillObj.doSignUp(driver);
 			if (!result) {
 				return result;
 			}
@@ -47,7 +46,7 @@ public class CourseDetailPage {
 			if (!result) {
 				return result;
 			}
-
+			// click on buy now
 			result = clickOnBuyNow(driver);
 
 			if (!result) {
