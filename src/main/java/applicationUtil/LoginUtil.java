@@ -52,6 +52,7 @@ public class LoginUtil {
 			if (!result) {
 				return result;
 			}
+
 			result = clickOnLoginButton(driver);
 
 		} catch (Exception e) {
@@ -114,8 +115,8 @@ public class LoginUtil {
 		try {
 
 			cfObj.commonClick(loginPageObj.getBtnLogin());
-			// check if permission is display then allow permission
 
+			// check if permission is display then allow permission
 			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.PERMISSION_ALLOW, "id", 30);
 			if (result) {
 				cfObj.commonClick(loginPageObj.getBtnPermissionAllowed());
@@ -240,7 +241,7 @@ public class LoginUtil {
 		OtpUtil otpUtilObj;
 		String strMobileNo = null;
 		try {
-			strMobileNo = Common_Function.randomPhoneNumber(10, "3");
+			strMobileNo = Common_Function.randomPhoneNumber(10, "9");
 			System.out.println("strMobileNo: " + strMobileNo);
 			result = enterMobileNumber(strMobileNo);
 			if (!result) {
@@ -279,6 +280,17 @@ public class LoginUtil {
 		} catch (Exception e) {
 			result = false;
 			loginMsgList.add("doSignUp_Exception: " + e.getMessage());
+		}
+		return result;
+	}
+
+	public boolean checkSignUpLoginPage(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		try {
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.getBtnGetOtp(), 10);
+
+		} catch (Exception e) {
+			System.out.println("checkSignUpLoginPageException " + e.getMessage());
 		}
 		return result;
 	}

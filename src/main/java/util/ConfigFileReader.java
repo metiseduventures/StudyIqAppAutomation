@@ -41,7 +41,7 @@ public class ConfigFileReader {
 		BufferedReader reader;
 		String strPropertyPath = null;
 		try {
-			if (strEnv.equalsIgnoreCase("staging")) {
+			if (strEnv.equalsIgnoreCase("stag")) {
 				strPropertyPath = "src/main/resources/config/staging.properties";
 
 			} else if (strEnv.equalsIgnoreCase("dev")) {

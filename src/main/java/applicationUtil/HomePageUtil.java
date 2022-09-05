@@ -226,4 +226,33 @@ public class HomePageUtil {
 		return result;
 	}
 
+	public void openNaviagationMenu() {
+		try {
+			cfObj.commonClick(homePageORObj.openNavigationMenu());
+
+		} catch (Exception e) {
+			System.out.println("error " + e.getMessage());
+		}
+	}
+
+	public boolean openMyProfilePage() {
+		boolean result = true;
+		try {
+			List<MobileElement> navigationMenuElements = homePageORObj.getListNavigationMenuElements();
+
+			for (int i = 0; i < navigationMenuElements.size(); i++) {
+				String navigationMenuText = navigationMenuElements.get(i).getText();
+				if (navigationMenuText.equalsIgnoreCase("My Profile")) {
+					cfObj.commonClick(navigationMenuElements.get(i));
+					return true;
+				}
+			}
+			result = false;
+			homePageMsglist.add("The navigation menu buttons not working");
+
+		} catch (Exception e) {
+			System.out.println("error " + e.getMessage());
+		}
+		return result;
+	}
 }

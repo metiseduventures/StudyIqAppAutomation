@@ -67,4 +67,18 @@ public class HomePage_OR {
 		return listBtnLoginClose;
 	}
 
+	@AndroidFindBy(xpath = "//android.view.ViewGroup/android.widget.ImageButton")
+	private MobileElement navigationScreen;
+
+	public MobileElement openNavigationMenu() {
+		return navigationScreen;
+	}
+
+	@AndroidFindBy(xpath = "//androidx.appcompat.widget.LinearLayoutCompat/android.widget.CheckedTextView")
+	private List<MobileElement> listNavigationMenuElements;
+
+	public List<MobileElement> getListNavigationMenuElements() {
+		return listNavigationMenuElements;
+	}
+
 }

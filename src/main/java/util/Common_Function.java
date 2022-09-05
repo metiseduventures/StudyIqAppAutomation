@@ -826,9 +826,12 @@ public class Common_Function {
 			if (ConfigFileReader.strEnv.contains("prod")) {
 				capebilityMap.put("appPackage", "com.studyiq.android");
 
-			} else {
+			} else if (ConfigFileReader.strEnv.contains("stag")) {
 				capebilityMap.put("appPackage", "com.studyiq.android.stag");
+			} else {
+				capebilityMap.put("appPackage", "com.studyiq.android.dev");
 			}
+
 			if (ConfigFileReader.strRunMode.equalsIgnoreCase("local")) {
 
 				capebilityMap.put("deviceName", ConfigFileReader.strDeviceName);
@@ -934,6 +937,12 @@ public class Common_Function {
 			result = false;
 		}
 		return isFound;
+	}
+
+	public MobileElement scrollIntoText(AppiumDriver<MobileElement> driver, String visibleText) {
+		return driver.findElement(MobileBy.AndroidUIAutomator(
+				"new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\""
+						+ visibleText + "\").instance(0))"));
 	}
 
 }
