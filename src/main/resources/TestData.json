@@ -4,6 +4,11 @@
     "courseId" : "",
     "paymentMethod" : "Paytm",
     "couponCode" : "",
-    "isGuestUser" : false
+    "isGuestUser" : false,
+    "name": "bansal",
+    "address": "mohan nagar",
+    "pincode": "178121",
+    "city": "alwar",
+    "state": "punjab"		
   } ]
 }

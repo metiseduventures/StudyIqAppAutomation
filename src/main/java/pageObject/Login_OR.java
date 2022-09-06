@@ -65,5 +65,11 @@ public class Login_OR {
 		return btnSkipLogin;
 	}
 	
+	@AndroidFindBy(id = "com.android.permissioncontroller:id/permission_allow_button")
+	private List<MobileElement> permissionBtnElement;
+	
+	public List<MobileElement> permissionBtnAppear(){
+		return permissionBtnElement;
+	}
 	
 }
