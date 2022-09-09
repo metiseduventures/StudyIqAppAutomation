@@ -90,13 +90,13 @@ public class Common_Function {
 				capability.setCapability("automationName", getCapebility().get("automationName"));
 			}
 			capability.setCapability("deviceName", getCapebility().get("deviceName"));
-//			capability.setCapability(CapabilityType.VERSION, getCapebility().get("deviceVersion"));
-//			capability.setCapability("platformName", "Android");
+			capability.setCapability(CapabilityType.VERSION, getCapebility().get("deviceVersion"));
+			capability.setCapability("platformName", "Android");
 			// capability.setCapability("clearDeviceLogsOnStart",true);
 			capability.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, 30000);
 			capability.setCapability("appPackage", getCapebility().get("appPackage"));
 			capability.setCapability("appActivity", "com.studyiq.android.activities.SplashActivity");
-//			capability.setCapability("clearDeviceLogsOnStart", true);
+			capability.setCapability("clearDeviceLogsOnStart", true);
 			capability.setCapability("noReset", true);
 			capability.setCapability("unicodeKeyboard", false);
 			capability.setCapability("resetKeyboard", false);

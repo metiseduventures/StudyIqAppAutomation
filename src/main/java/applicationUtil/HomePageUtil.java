@@ -39,7 +39,7 @@ public class HomePageUtil {
 					"Course Attribute: " + homePageORObj.getListCoursesTitle().get(0).getAttribute("text").toString());
 
 			// Click on course on home page
-			cfObj.commonClick(homePageORObj.getListCourses().get(1));
+			cfObj.commonClick(homePageORObj.getListCourses().get(0));
 
 			// wait for course detail page to be opened
 
