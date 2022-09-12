@@ -64,50 +64,50 @@ public class CoursePageDetailsVerifyUtil {
 				return result;
 			}
 
-//			result = courseInfo(driver);
-//			if (!result) {
-//				return result;
-//			}
-//
-//			result = verifyBuyBtnAbove(driver);
-//			if (!result) {
-//				return result;
-//			}
-//
-//			result = verifyCourseContent(driver);
-//			if (!result) {
-//				return result;
-//			}
-//
-//			result = verifyCoursePrice(driver);
-//			if (!result) {
-//				return result;
-//			}
-//
-//			result = verifyExamsCovered(driver);
-//			if (!result) {
-//				return result;
-//			}
-//
-//			result = verifyAboutAuthor(driver);
-//			if (!result) {
-//				return result;
-//			}
-//
-//			result = verifyDemoVideos(driver);
-//			if (!result) {
-//				return result;
-//			}
-//
-//			result = verifyFreeCourses(driver);
-//			if (!result) {
-//				return result;
-//			}
-//
-//			result = verifyTestimonials(driver);
-//			if (!result) {
-//				return result;
-//			}
+			result = courseInfo(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyBuyBtnAbove(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyCourseContent(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyCoursePrice(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyExamsCovered(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyAboutAuthor(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyDemoVideos(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyFreeCourses(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyTestimonials(driver);
+			if (!result) {
+				return result;
+			}
 
 			result = verifyBuyBtnBelow(driver);
 			if (!result) {
