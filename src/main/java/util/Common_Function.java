@@ -962,5 +962,22 @@ public class Common_Function {
 				.waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
 				.moveTo(PointOption.point(moveToX, moveToY)).release().perform();
 	}
+	
+	public void swipeRightOnElement(WebElement element, AppiumDriver<MobileElement> driver) {
+
+		Point point = element.getLocation();
+		Dimension eleSize = element.getSize();
+		int centerX = point.getX() + (eleSize.getWidth() / 2);
+		int centerY = point.getY() + (eleSize.getHeight() / 2);
+		int moveToX = point.getX() + (eleSize.getWidth())+190;
+		int moveToY = point.getY() + (eleSize.getHeight() / 2);
+
+
+		new TouchAction(driver)
+		.press(PointOption.point(centerX,centerY))
+		.waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
+		.moveTo(PointOption.point(moveToX, moveToY))
+		.release().perform();
+		}
 
 }

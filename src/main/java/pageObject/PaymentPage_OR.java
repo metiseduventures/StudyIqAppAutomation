@@ -14,5 +14,27 @@ public class PaymentPage_OR {
 	public List<MobileElement> getListPaymentOption() {
 		return listPaymentOption;
 	}
+	
+	@AndroidFindBy(xpath = "//android.view.View[@resource-id='ptm-nb']/android.view.View/android.view.View/android.widget.TextView")
+	private MobileElement netBankPaymentOptionElement;
+	
+	public MobileElement netBankPaymentOption(){
+		return netBankPaymentOptionElement;
+	}
+	
+	@AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'PAY')]")
+	private MobileElement payBtnElement;
+	
+	public MobileElement payBtn() {
+		return payBtnElement;
+	}
+	
+	@AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'Successful')]")
+	private MobileElement successfulPayBtnElement;
+	
+	public MobileElement successfulPayBtn() {
+		return successfulPayBtnElement;
+	}
+	
 
 }

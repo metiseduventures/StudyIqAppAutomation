@@ -10,7 +10,6 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.PaymentPage_OR;
 import util.Common_Function;
-import util.ConfigFileReader;
 
 public class PaymentPageUtil {
 
@@ -29,25 +28,29 @@ public class PaymentPageUtil {
 
 		try {
 
-			for (MobileElement paymentOptionElement : paymentPageObj.getListPaymentOption()) {
+			List<MobileElement> paymentOptions = paymentPageObj.getListPaymentOption();
 
-				if (paymentOptionElement.getText().toString().equalsIgnoreCase(strPaymentOption)) {
-					cfObj.commonClick(paymentOptionElement);
-					break;
+			for (int i = 0; i < paymentOptions.size(); i++) {
+				if (paymentOptions.get(i).getText().equalsIgnoreCase(strPaymentOption)) {
+					cfObj.commonClick(paymentOptions.get(i));
+
+					Thread.sleep(4000);
+
+					driver.hideKeyboard();
+
+					cfObj.scrollIntoText(driver, "Net Banking");
+
+					cfObj.commonClick(paymentPageObj.netBankPaymentOption());
+
+					cfObj.commonClick(paymentPageObj.payBtn());
+
+					
+					cfObj.commonClick(paymentPageObj.successfulPayBtn());
+					return true;
 				}
-
 			}
-
-			if (!ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
-				// if address is not fill enter the address
-
-				if (cfObj.commonGetElements(driver, "//android.widget.CheckedTextView[@text = 'Bihar']", "xpath")
-						.size() > 0) {
-					cfObj.commonClick(cfObj.commonGetElement(driver,
-							"//android.widget.CheckedTextView[@text = 'Bihar']", "xpath"));
-				}
-			}
-
+			paymentPageMsgList.add("The payment is not available");
+			result = false;
 		} catch (Exception e) {
 			result = false;
 			paymentPageMsgList.add("selectPaymentOption_Exception: " + e.getMessage());
