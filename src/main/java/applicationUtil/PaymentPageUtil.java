@@ -28,29 +28,54 @@ public class PaymentPageUtil {
 
 		try {
 
-			List<MobileElement> paymentOptions = paymentPageObj.getListPaymentOption();
+		List<MobileElement> paymentOptions = paymentPageObj.getListPaymentOption();
 
 			for (int i = 0; i < paymentOptions.size(); i++) {
-				if (paymentOptions.get(i).getText().equalsIgnoreCase(strPaymentOption)) {
+				result = cfObj.commonWaitForElementToBeVisible(driver, paymentOptions.get(i), 5);
+				if (!result) {
+					paymentPageMsgList.add("The paymentOption name is not visible");
+				}
+			}
+
+			for (int i = 0; i < paymentOptions.size(); i++) {
+
+				String methodString = paymentOptions.get(i).getText();
+
+				if (methodString.equalsIgnoreCase(strPaymentOption) && strPaymentOption.equalsIgnoreCase("Paytm")) {
+
 					cfObj.commonClick(paymentOptions.get(i));
 
-					Thread.sleep(4000);
+					Thread.sleep(3000);
 
 					driver.hideKeyboard();
 
 					cfObj.scrollIntoText(driver, "Net Banking");
 
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.netBankPaymentOption(), 5);
+					if (!result) {
+						paymentPageMsgList.add("The netbank option in paytm is not visible");
+					}
 					cfObj.commonClick(paymentPageObj.netBankPaymentOption());
-
+					
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 5);
+					if (!result) {
+						paymentPageMsgList.add("The payBtn is not visible");
+					}
 					cfObj.commonClick(paymentPageObj.payBtn());
 
-					
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.successfulPayBtn(), 5);
+					if (!result) {
+						paymentPageMsgList.add("The successful Paytm payment btn is not visible");
+					}
 					cfObj.commonClick(paymentPageObj.successfulPayBtn());
-					return true;
+				} else {
+					cfObj.commonClick(paymentOptions.get(i));
+
+					paymentPageMsgList.add("The payment method is not working");
+					return false;
 				}
 			}
-			paymentPageMsgList.add("The payment is not available");
-			result = false;
+
 		} catch (Exception e) {
 			result = false;
 			paymentPageMsgList.add("selectPaymentOption_Exception: " + e.getMessage());

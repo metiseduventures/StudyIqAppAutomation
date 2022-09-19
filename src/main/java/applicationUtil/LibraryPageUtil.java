@@ -99,7 +99,14 @@ public class LibraryPageUtil {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
-			result = courseDetailPageUtil.selectCoupon(driver);
+			
+			result = courseDetailPageUtil.verifyPacks(driver);
+			if (!result) {
+				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+				return result;
+			}
+			
+			result = courseDetailPageUtil.selectCoupon_verifyAmount(driver);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
@@ -116,6 +123,18 @@ public class LibraryPageUtil {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
+			
+			result = courseDetailPageUtil.chooseYourPack(driver, testData.getChoosePack());
+			if (!result) {
+				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+				return result;
+			}
+			
+			result = courseDetailPageUtil.verifyEMIoption(driver);
+			if (!result) {
+				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+				return result;
+			}
 
 			result = courseDetailPageUtil.buyNowPack(driver);
 			if (!result) {
@@ -123,6 +142,12 @@ public class LibraryPageUtil {
 				return result;
 			}
 
+			result = courseDetailPageUtil.verifyViewDetails(driver);
+			if (!result) {
+				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+				return result;
+			}
+			
 			paymentPageUtilObj = new PaymentPageUtil(driver);
 
 			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod());
