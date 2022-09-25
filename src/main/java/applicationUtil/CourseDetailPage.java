@@ -27,7 +27,6 @@ public class CourseDetailPage {
 
 		courseDetailPageObj = new CourseDetailPage_OR();
 		PageFactory.initElements(new AppiumFieldDecorator(driver), courseDetailPageObj);
-
 	}
 
 	public boolean verifyPurchaseCourse(AppiumDriver<MobileElement> driver, TestData testData) {
@@ -50,6 +49,11 @@ public class CourseDetailPage {
 			// click on buy now
 			result = clickOnBuyNow(driver);
 
+			if (!result) {
+				return result;
+			}
+			
+			result = verifyEMIoption(driver);
 			if (!result) {
 				return result;
 			}
@@ -78,11 +82,6 @@ public class CourseDetailPage {
 			}
 
 			result = chooseYourPack(driver, testData.getChoosePack());
-			if (!result) {
-				return result;
-			}
-
-			result = verifyEMIoption(driver);
 			if (!result) {
 				return result;
 			}
@@ -203,9 +202,9 @@ public class CourseDetailPage {
 
 			// Click on change offer
 			cfObj.commonClick(courseDetailPageObj.getListLableChangePack().get(0));
+			
 			// wait for available offer page to be opened
-
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.APPLY_OFFER, "id", 30);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.availOfferLabelBox(), 30);
 
 			if (!result) {
 				System.out.println("Offer list pop up is not opened");
@@ -406,7 +405,7 @@ public class CourseDetailPage {
 		boolean result = true;
 		try {
 			cfObj.scrollUtill(driver, 1);
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiOptionTitle(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiOptionTitle(), 5);
 			if (result) {
 				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDesc(), 10);
 				if (!result) {

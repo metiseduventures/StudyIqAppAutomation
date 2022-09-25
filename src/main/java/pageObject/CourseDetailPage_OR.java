@@ -61,134 +61,138 @@ public class CourseDetailPage_OR {
 	public void setListBtnBuyApplyOffer(List<MobileElement> listBtnBuyApplyOffer) {
 		this.listBtnBuyApplyOffer = listBtnBuyApplyOffer;
 	}
-	
-	
+
 	@AndroidFindBy(id = "tv_offer_change_pack")
 	private List<MobileElement> listLableChangePack;
 
 	public List<MobileElement> getListLableChangePack() {
 		return listLableChangePack;
 	}
-	
-	
+
+	@AndroidFindBy(id = "tv_available_offer_label")
+	private MobileElement availableOfferLabelBox;
+
+	public MobileElement availOfferLabelBox() {
+		return availableOfferLabelBox;
+	}
+
 	@AndroidFindBy(id = "et_coupon_code")
 	private List<MobileElement> listTextCouponCode;
 
 	public List<MobileElement> getListTextCouponCode() {
 		return listTextCouponCode;
 	}
-	
+
 	@AndroidFindBy(id = "tv_apply_input_offer")
 	private List<MobileElement> listBtnApplyInputOffer;
 
 	public List<MobileElement> getListBtnApplyInputOffer() {
 		return listBtnApplyInputOffer;
 	}
-	
+
 	@AndroidFindBy(id = "tv_pack_title")
 	private MobileElement packTitleElement;
-	
+
 	public MobileElement packTitle() {
 		return packTitleElement;
 	}
-	
+
 	@AndroidFindBy(id = "tv_selling_price_pack")
 	private MobileElement packSellingPriceElement;
-	
+
 	public MobileElement packSellingPrice() {
 		return packSellingPriceElement;
 	}
-	
+
 	@AndroidFindBy(id = "tv_offer_discount_pack")
 	private MobileElement packDiscountPriceElement;
-	
+
 	public MobileElement packDiscountPrice() {
 		return packDiscountPriceElement;
 	}
-	
+
 	@AndroidFindBy(id = "view_details_ps")
 	private MobileElement viewDetailsBtnElement;
-	
+
 	public MobileElement viewDetailsBtn() {
 		return viewDetailsBtnElement;
 	}
-	
+
 	@AndroidFindBy(id = "tv_base_price_psd")
 	private MobileElement viewDetailsCoursePriceElement;
-	
+
 	public MobileElement viewDetailsCoursePrice() {
 		return viewDetailsCoursePriceElement;
 	}
-	
+
 	@AndroidFindBy(id = "tv_discount_psd")
 	private MobileElement viewDetailsDiscountPriceElement;
-	
+
 	public MobileElement viewDetailsDiscountPrice() {
 		return viewDetailsDiscountPriceElement;
 	}
-	
+
 	@AndroidFindBy(id = "tv_selling_price_psd")
 	private MobileElement viewDetailsTotalPriceElement;
-	
+
 	public MobileElement viewDetailsTotalPrice() {
 		return viewDetailsTotalPriceElement;
 	}
-	
-	
+
 	@AndroidFindBy(id = "ivClose")
 	private MobileElement viewDetailsCloseBtnElement;
-	
+
 	public MobileElement viewDetailsCloseBtn() {
 		return viewDetailsCloseBtnElement;
 	}
-	
-	@AndroidFindBy(id="tv_emi_title_pack")
+
+	@AndroidFindBy(id = "tv_emi_title_pack")
 	private MobileElement emiOptionTitleElement;
-	
+
 	public MobileElement emiOptionTitle() {
 		return emiOptionTitleElement;
 	}
-	
-	@AndroidFindBy(id="tv_emi_desc_pack")
+
+	@AndroidFindBy(id = "tv_emi_desc_pack")
 	private MobileElement emiDescElement;
-	
+
 	public MobileElement emiDesc() {
 		return emiDescElement;
 	}
-	
-	@AndroidFindBy(id="iv_emi_dialog")
+
+	@AndroidFindBy(id = "iv_emi_dialog")
 	private MobileElement emiDialogBtnElement;
-	
+
 	public MobileElement emiDialogBtn() {
 		return emiDialogBtnElement;
 	}
-	
-	@AndroidFindBy(id="iv_check_blank_pack")
+
+	@AndroidFindBy(id = "iv_check_blank_pack")
 	private MobileElement emiCheckBtnElement;
-	
+
 	public MobileElement emiCheckedBtn() {
 		return emiCheckBtnElement;
 	}
-	
-	@AndroidFindBy(id="tv_emi_title")
+
+	@AndroidFindBy(id = "tv_emi_title")
 	private List<MobileElement> emiTitlesOfInstallment;
-	
-	public List<MobileElement> getListEmiTitlesOfInstallment(){
+
+	public List<MobileElement> getListEmiTitlesOfInstallment() {
 		return emiTitlesOfInstallment;
 	}
-	
-	@AndroidFindBy(id="tv_emi_validity")
+
+	@AndroidFindBy(id = "tv_emi_validity")
 	private List<MobileElement> emiValidityOfInstallments;
-	
-	public List<MobileElement> getListEmiValidityOfInstallments(){
+
+	public List<MobileElement> getListEmiValidityOfInstallments() {
 		return emiValidityOfInstallments;
 	}
-	
-	@AndroidFindBy(id="tv_emi_amount")
+
+	@AndroidFindBy(id = "tv_emi_amount")
 	private List<MobileElement> emiAmountOfInstallments;
-	
-	public List<MobileElement> getListEmiAmountOfInstallments(){
+
+	public List<MobileElement> getListEmiAmountOfInstallments() {
 		return emiAmountOfInstallments;
 	}
-	
+
 }

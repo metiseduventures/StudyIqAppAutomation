@@ -50,6 +50,16 @@ public class HomePageTest extends BaseTest {
 
 	}
 
+	@Test(dataProvider = "getData", enabled = true)
+	public void verifyMyHomePage(TestData testData) {
+
+		boolean result = true;
+		homePageUtilObj = new HomePageUtil(driver);
+		result = homePageUtilObj.verifyHomePage(driver, testData);
+		Assert.assertEquals(result, true, homePageUtilObj.homePageMsglist.toString());
+		
+	}
+
 	@DataProvider
 	public Object[][] getData() throws FileNotFoundException {
 		JsonElement jsonData = new JsonParser().parse(new FileReader("src/main/resources/TestData.json"));

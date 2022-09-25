@@ -100,6 +100,12 @@ public class LibraryPageUtil {
 				return result;
 			}
 			
+			result = courseDetailPageUtil.verifyEMIoption(driver);
+			if (!result) {
+				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+				return result;
+			}
+			
 			result = courseDetailPageUtil.verifyPacks(driver);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
@@ -125,12 +131,6 @@ public class LibraryPageUtil {
 			}
 			
 			result = courseDetailPageUtil.chooseYourPack(driver, testData.getChoosePack());
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-			
-			result = courseDetailPageUtil.verifyEMIoption(driver);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
