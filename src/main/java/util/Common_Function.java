@@ -35,6 +35,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -69,6 +70,8 @@ import io.appium.java_client.touch.LongPressOptions;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import pojo.device.Environment;
+
+import org.openqa.selenium.*;
 
 @SuppressWarnings("unused")
 public class Common_Function {
@@ -798,11 +801,11 @@ public class Common_Function {
 			int height = size.height;
 			int middleOfX = width / 2;
 			int startYCoordinate = (int) (height * .7);
-			int endYCoordinate = (int) (height * .2);
+			int endYCoordinate = (int) (height * .6);
 			while (count < noOfTime) {
 				count = count + 1;
 				action.press(PointOption.point(middleOfX, startYCoordinate))
-						.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(2)))
+						.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1)))
 						.moveTo(PointOption.point(middleOfX, endYCoordinate)).release().perform();
 			}
 
@@ -906,14 +909,13 @@ public class Common_Function {
 		}
 	}
 
-	public boolean scrollUtillTheElementFound(AppiumDriver<MobileElement> driver, MobileElement element,
-			String elementToFind) {
+	public boolean scrollUtillTheElementFound(AppiumDriver<MobileElement> driver, String elementToFind) {
 		boolean result = true, isFound = false;
 		int count = 0;
 		try {
 
 			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-			List<MobileElement> elements = element.findElements(By.xpath(elementToFind));
+			List<MobileElement> elements = (List<MobileElement>) driver.findElements(By.xpath(elementToFind));
 			isFound = elements.size() > 0;
 			TouchAction action = new TouchAction(driver);
 			Dimension size = driver.manage().window().getSize();
@@ -927,7 +929,7 @@ public class Common_Function {
 				action.press(PointOption.point(middleOfX, startYCoordinate))
 						.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(2)))
 						.moveTo(PointOption.point(middleOfX, endYCoordinate)).release().perform();
-				isFound = element.findElements(By.xpath(elementToFind)).size() > 0;
+				isFound = driver.findElements(By.xpath(elementToFind)).size() > 0;
 			}
 
 			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -944,5 +946,38 @@ public class Common_Function {
 				"new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\""
 						+ visibleText + "\").instance(0))"));
 	}
+
+	public void swipeLeftOnElement(WebElement element, AppiumDriver<MobileElement> driver) {
+		Point point = element.getLocation();
+		Dimension eleSize = element.getSize();
+		int centerX = point.getX() + (eleSize.getWidth() / 2);
+		int centerY = point.getY() + (eleSize.getHeight() / 2);
+		int moveToX = point.getX()-190;
+		int moveToY = point.getY() + (eleSize.getHeight() / 2);
+
+		System.out.println(centerX +" and "+centerY);
+		System.out.println(moveToX +" and "+moveToY);
+		
+		new TouchAction(driver).press(PointOption.point(centerX, centerY))
+				.waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
+				.moveTo(PointOption.point(moveToX, moveToY)).release().perform();
+	}
+	
+	public void swipeRightOnElement(WebElement element, AppiumDriver<MobileElement> driver) {
+
+		Point point = element.getLocation();
+		Dimension eleSize = element.getSize();
+		int centerX = point.getX() + (eleSize.getWidth() / 2);
+		int centerY = point.getY() + (eleSize.getHeight() / 2);
+		int moveToX = point.getX() + (eleSize.getWidth())+190;
+		int moveToY = point.getY() + (eleSize.getHeight() / 2);
+
+
+		new TouchAction(driver)
+		.press(PointOption.point(centerX,centerY))
+		.waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
+		.moveTo(PointOption.point(moveToX, moveToY))
+		.release().perform();
+		}
 
 }

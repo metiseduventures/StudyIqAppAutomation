@@ -1,6 +1,7 @@
 package applicationUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.openqa.selenium.support.PageFactory;
 
@@ -53,7 +54,12 @@ public class CourseDetailPage {
 				return result;
 			}
 
-			result = selectCoupon(driver);
+			result = verifyPacks(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = selectCoupon_verifyAmount(driver);
 
 			if (!result) {
 				return result;
@@ -71,8 +77,23 @@ public class CourseDetailPage {
 				return result;
 			}
 
+			result = chooseYourPack(driver, testData.getChoosePack());
+			if (!result) {
+				return result;
+			}
+
+			result = verifyEMIoption(driver);
+			if (!result) {
+				return result;
+			}
+
 			result = buyNowPack(driver);
 
+			if (!result) {
+				return result;
+			}
+
+			result = verifyViewDetails(driver);
 			if (!result) {
 				return result;
 			}
@@ -92,9 +113,12 @@ public class CourseDetailPage {
 		return result;
 	}
 
-	public boolean selectCoupon(AppiumDriver<MobileElement> driver) {
+	public boolean selectCoupon_verifyAmount(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
+
+			String packageAmountString = courseDetailPageObj.packSellingPrice().getText();
+			Double packageAmount = amountCorrectFormat(packageAmountString);
 
 			result = clickOnAvailableOffer(driver);
 			if (!result) {
@@ -105,9 +129,21 @@ public class CourseDetailPage {
 			// wait for coupon to be applied
 
 			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.OFFER_CHANGE_PACK, "id", 30);
-
 			if (!result) {
 				System.out.println("Coupon is not applied");
+			}
+
+			String discountAmountString = courseDetailPageObj.packDiscountPrice().getText();
+			Double discountAmount = amountCorrectFormat(discountAmountString);
+
+			String afterCouponPackageAmountString = courseDetailPageObj.packSellingPrice().getText();
+			Double afterCouponPackageAmount = amountCorrectFormat(afterCouponPackageAmountString);
+
+			if (packageAmount == afterCouponPackageAmount + discountAmount) {
+				return true;
+			} else {
+				coursePageMsgList.add("The amount is not same of packages before and after");
+				return false;
 			}
 
 		} catch (Exception e) {
@@ -247,4 +283,205 @@ public class CourseDetailPage {
 
 	}
 
+	public boolean verifyPacks(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		boolean bool = true;
+		try {
+
+			while (bool) {
+				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
+				if (!result) {
+					coursePageMsgList.add("The pack title is not visible");
+					return result;
+				}
+				String titleOfPack = courseDetailPageObj.packTitle().getText();
+
+				cfObj.swipeLeftOnElement(courseDetailPageObj.packTitle(), driver);
+
+				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
+				if (!result) {
+					coursePageMsgList.add("The next pack title is not visible");
+					return result;
+				}
+
+				String nextTitleOfPack = courseDetailPageObj.packTitle().getText();
+
+				if (titleOfPack.equalsIgnoreCase(nextTitleOfPack)) {
+					bool = false;
+				}
+
+			}
+
+		} catch (Exception e) {
+			result = false;
+			coursePageMsgList.add("verifyPacks_Exception: " + e.getMessage());
+		}
+		return result;
+
+	}
+
+	public boolean chooseYourPack(AppiumDriver<MobileElement> driver, String choosenPack) {
+		boolean result = true;
+		boolean bool = true;
+		try {
+
+			while (bool) {
+				String titleOfPack = courseDetailPageObj.packTitle().getText();
+				if (titleOfPack.equalsIgnoreCase(choosenPack)) {
+
+					bool = false;
+					result = true;
+
+				} else {
+
+					cfObj.swipeLeftOnElement(courseDetailPageObj.packTitle(), driver);
+
+					String nextTitleOfPack = courseDetailPageObj.packTitle().getText();
+
+					if (titleOfPack.equalsIgnoreCase(nextTitleOfPack)) {
+						System.out.println("No more packs available to swipe");
+						coursePageMsgList.add("The pack is not available for this course");
+						return true;
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			result = false;
+			coursePageMsgList.add("chooseYourPack_Exception: " + e.getMessage());
+		}
+		return result;
+
+	}
+
+	public boolean verifyViewDetails(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		try {
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.viewDetailsBtn(), 10);
+			if (!result) {
+				coursePageMsgList.add("The view details btn not visible");
+				return false;
+			}
+
+			cfObj.commonClick(courseDetailPageObj.viewDetailsBtn());
+
+			String courseAmountString = courseDetailPageObj.viewDetailsCoursePrice().getText();
+			Double courseAmount = amountCorrectFormat(courseAmountString);
+
+			String courseTotalAmountString = courseDetailPageObj.viewDetailsTotalPrice().getText();
+			Double courseTotalAmount = amountCorrectFormat(courseTotalAmountString);
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.viewDetailsDiscountPrice(), 5);
+			if (result) {
+				String courseDiscountAmountString = courseDetailPageObj.viewDetailsDiscountPrice().getText();
+				Double courseDiscountAmount = amountCorrectFormat(courseDiscountAmountString);
+
+				if (courseTotalAmount == courseAmount - courseDiscountAmount) {
+					cfObj.commonClick(courseDetailPageObj.viewDetailsCloseBtn());
+					return true;
+				} else {
+
+					coursePageMsgList.add("The amount in view details is not same");
+					return false;
+				}
+			} else {
+				if (courseAmount == courseTotalAmount) {
+					cfObj.commonClick(courseDetailPageObj.viewDetailsCloseBtn());
+					return true;
+				} else {
+					coursePageMsgList.add("The amount in view details is not same");
+					return false;
+				}
+			}
+
+		} catch (Exception e) {
+			result = false;
+			coursePageMsgList.add("verifyViewDetails_Exception: " + e.getMessage());
+		}
+		return result;
+
+	}
+
+	public boolean verifyEMIoption(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		try {
+			cfObj.scrollUtill(driver, 1);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiOptionTitle(), 10);
+			if (result) {
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDesc(), 10);
+				if (!result) {
+					coursePageMsgList.add("The show details of emi desc not visible");
+				}
+
+				cfObj.commonClick(courseDetailPageObj.emiDesc());
+
+				List<MobileElement> noOfInstallments = courseDetailPageObj.getListEmiTitlesOfInstallment();
+				List<MobileElement> emiValidities = courseDetailPageObj.getListEmiValidityOfInstallments();
+				List<MobileElement> emiAmounts = courseDetailPageObj.getListEmiAmountOfInstallments();
+
+				for (int i = 0; i < noOfInstallments.size(); i++) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, noOfInstallments.get(i), 10);
+					if (!result) {
+						coursePageMsgList.add("The emi installment title is not visible");
+					}
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, emiValidities.get(i), 10);
+					if (!result) {
+						coursePageMsgList.add("The emi validity is not visible");
+					}
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, emiAmounts.get(i), 10);
+					if (!result) {
+						coursePageMsgList.add("The emi amount is not visible");
+					}
+
+				}
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDialogBtn(), 10);
+				if (!result) {
+					coursePageMsgList.add("The avail btn is not visible");
+				}
+
+				cfObj.commonClick(courseDetailPageObj.emiDialogBtn());
+
+				String checkEMIstatus = courseDetailPageObj.emiOptionTitle().getText();
+				
+				if (checkEMIstatus.contains("Applied")) {
+					cfObj.commonClick(courseDetailPageObj.emiCheckedBtn());
+				}
+				else {
+					coursePageMsgList.add("The emi is applied but title not changed with applied");
+					return false;
+				}
+
+			} else {
+				return true;
+			}
+
+		} catch (Exception e) {
+			result = false;
+			coursePageMsgList.add("verifyEMIoption_Exception: " + e.getMessage());
+		}
+		return result;
+	}
+
+	public Double amountCorrectFormat(String str) {
+		int index = 0;
+		for (int k = 0; k < str.length(); k++) {
+			if (str.charAt(k) >= 48 && str.charAt(k) <= 57) {
+				index = k;
+				break;
+			}
+		}
+
+		String[] arr = str.substring(index).split(",");
+		String amnt = "";
+
+		for (int m = 0; m < arr.length; m++) {
+			amnt = amnt + arr[m];
+		}
+		Double amountMain = Double.parseDouble(amnt);
+		return amountMain;
+	}
 }

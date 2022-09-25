@@ -10,7 +10,6 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.PaymentPage_OR;
 import util.Common_Function;
-import util.ConfigFileReader;
 
 public class PaymentPageUtil {
 
@@ -29,22 +28,51 @@ public class PaymentPageUtil {
 
 		try {
 
-			for (MobileElement paymentOptionElement : paymentPageObj.getListPaymentOption()) {
+		List<MobileElement> paymentOptions = paymentPageObj.getListPaymentOption();
 
-				if (paymentOptionElement.getText().toString().equalsIgnoreCase(strPaymentOption)) {
-					cfObj.commonClick(paymentOptionElement);
-					break;
+			for (int i = 0; i < paymentOptions.size(); i++) {
+				result = cfObj.commonWaitForElementToBeVisible(driver, paymentOptions.get(i), 5);
+				if (!result) {
+					paymentPageMsgList.add("The paymentOption name is not visible");
 				}
-
 			}
 
-			if (!ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
-				// if address is not fill enter the address
+			for (int i = 0; i < paymentOptions.size(); i++) {
 
-				if (cfObj.commonGetElements(driver, "//android.widget.CheckedTextView[@text = 'Bihar']", "xpath")
-						.size() > 0) {
-					cfObj.commonClick(cfObj.commonGetElement(driver,
-							"//android.widget.CheckedTextView[@text = 'Bihar']", "xpath"));
+				String methodString = paymentOptions.get(i).getText();
+
+				if (methodString.equalsIgnoreCase(strPaymentOption) && strPaymentOption.equalsIgnoreCase("Paytm")) {
+
+					cfObj.commonClick(paymentOptions.get(i));
+
+					Thread.sleep(3000);
+
+					driver.hideKeyboard();
+
+					cfObj.scrollIntoText(driver, "Net Banking");
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.netBankPaymentOption(), 5);
+					if (!result) {
+						paymentPageMsgList.add("The netbank option in paytm is not visible");
+					}
+					cfObj.commonClick(paymentPageObj.netBankPaymentOption());
+					
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 5);
+					if (!result) {
+						paymentPageMsgList.add("The payBtn is not visible");
+					}
+					cfObj.commonClick(paymentPageObj.payBtn());
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.successfulPayBtn(), 5);
+					if (!result) {
+						paymentPageMsgList.add("The successful Paytm payment btn is not visible");
+					}
+					cfObj.commonClick(paymentPageObj.successfulPayBtn());
+				} else {
+					cfObj.commonClick(paymentOptions.get(i));
+
+					paymentPageMsgList.add("The payment method is not working");
+					return false;
 				}
 			}
 
