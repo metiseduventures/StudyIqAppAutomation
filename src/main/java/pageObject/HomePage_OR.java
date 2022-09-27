@@ -95,6 +95,13 @@ public class HomePage_OR {
 	public List<MobileElement> getListBottomMenuMyHome() {
 		return listBottomMenuMyHome;
 	}
+	
+	@AndroidFindBy(id = "tv_nav_feed")
+	private List<MobileElement> listBottomMenuMyFeed;
+
+	public List<MobileElement> getListBottomMenuMyFeed() {
+		return listBottomMenuMyFeed;
+	}
 
 	@AndroidFindBy(id = "tv_nav_library")
 	private List<MobileElement> listBottomMenuMyLibrary;

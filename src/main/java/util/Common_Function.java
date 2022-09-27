@@ -432,7 +432,7 @@ public class Common_Function {
 			int width = size.width;
 			int height = size.height;
 			int middleOfX = width / 2;
-			int startYCoordinate = (int) (height * .7);
+			int startYCoordinate = (int) (height * .5);
 			int endYCoordinate = (int) (height * .2);
 			while (!isFound && count < 5) {
 				count = count + 1;
