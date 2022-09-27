@@ -91,6 +91,15 @@ public class HomePageUtil {
 		boolean result = true;
 		boolean bool = true;
 		try {
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.getListBottomMenuMyHome().get(0), 10);
+			if (!result) {
+				homePageMsglist.add("The text of my home on bottom is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(homePageORObj.getListBottomMenuMyHome().get(0));
+
 			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.listOfTextView().get(0), 10);
 			if (!result) {
 				homePageMsglist.add("The home page title is not visible at top");
@@ -480,52 +489,28 @@ public class HomePageUtil {
 				return false;
 			}
 
-			// explore
-			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.getListBottomMenuMyExplore().get(0),
-					10);
+			//my feed
+			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.getListBottomMenuMyFeed().get(0), 10);
 			if (!result) {
-				homePageMsglist.add("The text of my home on bottom is not visible");
+				homePageMsglist.add("The text of my feed on bottom is not visible");
 				return result;
 			}
+			String feedBottomText = homePageORObj.getListBottomMenuMyFeed().get(0).getText();
 
-			cfObj.commonClick(homePageORObj.getListBottomMenuMyExplore().get(0));
+			cfObj.commonClick(homePageORObj.getListBottomMenuMyFeed().get(0));
 
-			List<MobileElement> exploreSubjectTitles = homePageORObj.getListOfSubjectTitle();
-			List<MobileElement> exploreSubjectImgs = homePageORObj.getListOfSubjectImgs();
-
-			for (int i = 0; i < exploreSubjectTitles.size(); i++) {
-
-				result = cfObj.commonWaitForElementToBeVisible(driver, exploreSubjectTitles.get(i), 10);
-				if (!result) {
-					homePageMsglist.add("The title is not visible");
-					return result;
-				}
-
-				result = cfObj.commonWaitForElementToBeVisible(driver, exploreSubjectImgs.get(i), 10);
-				if (!result) {
-					homePageMsglist.add("The img is not visible");
-					return result;
-				}
+			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.listOfTextView().get(0), 10);
+			if (!result) {
+				homePageMsglist.add("My feed title is not visible at top");
+				return result;
 			}
-
-			cfObj.commonClick(exploreSubjectTitles.get(0));
-
-			List<MobileElement> exploreCourses = homePageORObj.exploreActionbarElements();
-
-			for (int i = 0; i < exploreCourses.size(); i++) {
-
-				result = cfObj.commonWaitForElementToBeVisible(driver, exploreCourses.get(i), 10);
-				if (!result) {
-					homePageMsglist.add("The courses on action bar is not visible");
-					return result;
-				}
-
-				cfObj.swipeLeftOnElement(exploreCourses.get(i), driver);
-
-				cfObj.commonClick(exploreCourses.get(i));
+			String feedPageText = homePageORObj.listOfTextView().get(0).getText();
+			if (feedBottomText.equalsIgnoreCase(feedPageText)) {
+				result = true;
+			} else {
+				homePageMsglist.add("The title and bottom text are not same");
+				return false;
 			}
-
-			cfObj.commonClick(homePageORObj.getListBottomMenuMyHome().get(0));
 
 		} catch (Exception e) {
 			result = false;
