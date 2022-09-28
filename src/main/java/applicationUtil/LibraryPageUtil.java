@@ -9,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import pageObject.CourseDetailPage_OR;
 import pageObject.LibraryPage_OR;
 import pojo.testdata.TestData;
 import util.Common_Function;
@@ -20,6 +21,7 @@ public class LibraryPageUtil {
 	LoginUtil loginUtillObj;
 	HomePageUtil homePageUtilObj;
 	PaymentPageUtil paymentPageUtilObj;
+	CourseDetailPage_OR courseDetailPageObj;
 
 	public ArrayList<String> libraryPageMsgList = new ArrayList<String>();
 
@@ -93,43 +95,62 @@ public class LibraryPageUtil {
 	public boolean buyProcess(AppiumDriver<MobileElement> driver, TestData testData) {
 		boolean result = true;
 		courseDetailPageUtil = new CourseDetailPage(driver);
+		courseDetailPageObj = new CourseDetailPage_OR();
 		try {
 			result = courseDetailPageUtil.clickOnBuyNow(driver);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
-			
+
 			result = courseDetailPageUtil.verifyEMIoption(driver);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
-			
+
 			result = courseDetailPageUtil.verifyPacks(driver);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
-			
-			result = courseDetailPageUtil.selectCoupon_verifyAmount(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.noOfOffersAvail(), 10);
+			if (result) {
+
+				String noOfOffersAvail = courseDetailPageObj.noOfOffersAvail().getText();
+				String[] arr = noOfOffersAvail.split(" ");
+				int countOfOffers = Integer.parseInt(arr[0]);
+
+				if (countOfOffers > 0) {
+
+					result = courseDetailPageUtil.verifyInvalidCoupon(driver);
+					if (!result) {
+						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+						return result;
+					}
+
+					result = courseDetailPageUtil.selectCoupon_verifyAmount(driver);
+					if (!result) {
+						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+						return result;
+					}
+
+					result = courseDetailPageUtil.changeCoupon(driver);
+					if (!result) {
+						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+						return result;
+					}
+
+					result = courseDetailPageUtil.applyManualCoupon(driver);
+					if (!result) {
+						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+						return result;
+					}
+
+				}
 			}
 
-			result = courseDetailPageUtil.changeCoupon(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.applyManualCoupon(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-			
 			result = courseDetailPageUtil.chooseYourPack(driver, testData.getChoosePack());
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
@@ -147,12 +168,18 @@ public class LibraryPageUtil {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
-			
+
 			paymentPageUtilObj = new PaymentPageUtil(driver);
 
 			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod());
 			if (!result) {
 				libraryPageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
+				return result;
+			}
+
+			result = courseDetailPageUtil.courseBuyStatus(driver);
+			if (!result) {
+				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
 
@@ -782,9 +809,10 @@ public class LibraryPageUtil {
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myDoubtsBtn(), 5);
 			if (!result) {
-				libraryPageMsgList.add("My doubts is not visible");
-				return result;
+				System.out.println("The doubt section/btn is not visible");
+				return true;
 			}
+			
 			cfObj.commonClick(libraryPage_OR.myDoubtsBtn());
 
 			String doubt = "I have a doubt";
