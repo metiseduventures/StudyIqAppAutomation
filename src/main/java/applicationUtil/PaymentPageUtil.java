@@ -28,7 +28,7 @@ public class PaymentPageUtil {
 
 		try {
 
-		List<MobileElement> paymentOptions = paymentPageObj.getListPaymentOption();
+			List<MobileElement> paymentOptions = paymentPageObj.getListPaymentOption();
 
 			for (int i = 0; i < paymentOptions.size(); i++) {
 				result = cfObj.commonWaitForElementToBeVisible(driver, paymentOptions.get(i), 5);
@@ -56,7 +56,7 @@ public class PaymentPageUtil {
 						paymentPageMsgList.add("The netbank option in paytm is not visible");
 					}
 					cfObj.commonClick(paymentPageObj.netBankPaymentOption());
-					
+
 					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 5);
 					if (!result) {
 						paymentPageMsgList.add("The payBtn is not visible");
@@ -68,12 +68,17 @@ public class PaymentPageUtil {
 						paymentPageMsgList.add("The successful Paytm payment btn is not visible");
 					}
 					cfObj.commonClick(paymentPageObj.successfulPayBtn());
-				} else {
-					cfObj.commonClick(paymentOptions.get(i));
 
-					paymentPageMsgList.add("The payment method is not working");
-					return false;
+					return true;
+
+				} else {
+					result = false;
 				}
+			}
+
+			if (!result) {
+
+				paymentPageMsgList.add("The payment method is not working");
 			}
 
 		} catch (Exception e) {

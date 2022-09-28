@@ -62,6 +62,20 @@ public class CourseDetailPage_OR {
 		this.listBtnBuyApplyOffer = listBtnBuyApplyOffer;
 	}
 
+	@AndroidFindBy(id = "coupon_code_added_done")
+	private MobileElement applyCodeAfterInputBtnElement;
+
+	public MobileElement applyCodeAfterInputBtn() {
+		return applyCodeAfterInputBtnElement;
+	}
+
+	@AndroidFindBy(id = "coupon_code_added_cancel")
+	private MobileElement cancelCodeAfterInputBtnElement;
+
+	public MobileElement cancelCodeAfterInputBtn() {
+		return cancelCodeAfterInputBtnElement;
+	}
+
 	@AndroidFindBy(id = "tv_offer_change_pack")
 	private List<MobileElement> listLableChangePack;
 
@@ -193,6 +207,41 @@ public class CourseDetailPage_OR {
 
 	public List<MobileElement> getListEmiAmountOfInstallments() {
 		return emiAmountOfInstallments;
+	}
+
+	@AndroidFindBy(xpath = "(//android.widget.Toast)[1]")
+	private MobileElement toastInvalidCouponElement;
+
+	public MobileElement toastInvalidCoupon() {
+		return toastInvalidCouponElement;
+	}
+
+	@AndroidFindBy(id = "tv_offer_title_pack")
+	private MobileElement noOfOffersAvailElement;
+
+	public MobileElement noOfOffersAvail() {
+		return noOfOffersAvailElement;
+	}
+	
+	@AndroidFindBy(id = "tv_payment_status_pc")
+	private MobileElement paymentStatusElement;
+	
+	public MobileElement paymentStatus() {
+		return paymentStatusElement;
+	}
+	
+	@AndroidFindBy(id = "tv_payment_desc_pc")
+	private MobileElement paymentStatusDescElement;
+	
+	public MobileElement paymentStatusDesc() {
+		return paymentStatusDescElement;
+	}
+	
+	@AndroidFindBy(id = "bt_action_pc")
+	private MobileElement goToLibraryBtnElement;
+	
+	public MobileElement goToLibraryBtn() {
+		return goToLibraryBtnElement;
 	}
 
 }
