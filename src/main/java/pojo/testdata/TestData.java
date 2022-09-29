@@ -14,6 +14,15 @@ public class TestData {
 	private String city;
 	private String state;
 	private String choosePack;
+	private String isKey;
+
+	public String getIsKey() {
+		return isKey;
+	}
+
+	public void setIsKey(String isKey) {
+		this.isKey = isKey;
+	}
 
 	public boolean isGuestUser() {
 		return isGuestUser;

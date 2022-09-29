@@ -126,14 +126,22 @@ public class CourseDetailPage {
 
 			paymentPageUtilObj = new PaymentPageUtil(driver);
 
-			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod());
+			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
 			if (!result) {
 				return result;
 			}
 
-			result = courseBuyStatus(driver);
-			if (!result) {
-				return result;
+			if (testData.getIsKey().equalsIgnoreCase("pass")) {
+				
+				result = courseBuyStatus(driver);
+				if (!result) {
+					return result;
+				}
+				
+			}else {
+				
+				System.out.println("User on course page - the payment is failed");
+				
 			}
 
 		} catch (Exception e) {
@@ -438,7 +446,6 @@ public class CourseDetailPage {
 
 					if (titleOfPack.equalsIgnoreCase(nextTitleOfPack)) {
 						System.out.println("No more packs available to swipe");
-						coursePageMsgList.add("The pack is not available for this course");
 						return true;
 					}
 				}
@@ -484,10 +491,10 @@ public class CourseDetailPage {
 				}
 			} else {
 				if (courseAmount.equals(courseTotalAmount)) {
-					
+
 					cfObj.commonClick(courseDetailPageObj.viewDetailsCloseBtn());
 					return true;
-					
+
 				} else {
 					coursePageMsgList.add("The amount in view details is not same");
 					return false;

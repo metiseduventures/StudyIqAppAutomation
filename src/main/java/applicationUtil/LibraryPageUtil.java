@@ -9,7 +9,6 @@ import org.openqa.selenium.support.PageFactory;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
-import pageObject.CourseDetailPage_OR;
 import pageObject.LibraryPage_OR;
 import pojo.testdata.TestData;
 import util.Common_Function;
@@ -21,7 +20,6 @@ public class LibraryPageUtil {
 	LoginUtil loginUtillObj;
 	HomePageUtil homePageUtilObj;
 	PaymentPageUtil paymentPageUtilObj;
-	CourseDetailPage_OR courseDetailPageObj;
 
 	public ArrayList<String> libraryPageMsgList = new ArrayList<String>();
 
@@ -69,19 +67,24 @@ public class LibraryPageUtil {
 				return result;
 			}
 
-			result = orderPlacedOrNot(driver);
-			if (!result) {
-				return result;
-			}
+			if (testData.getIsKey().equalsIgnoreCase("pass")) {
 
-			result = verifyMyLibraryTitle(driver);
-			if (!result) {
-				return result;
-			}
+				result = orderPlacedOrNot(driver);
+				if (!result) {
+					return result;
+				}
 
-			result = openCoursesInLibrary(driver);
-			if (!result) {
-				return result;
+				result = verifyMyLibraryTitle(driver);
+				if (!result) {
+					return result;
+				}
+
+				result = openCoursesInLibrary(driver);
+				if (!result) {
+					return result;
+				}
+			} else {
+				System.out.println("Failed the payment");
 			}
 
 		} catch (Exception e) {
@@ -95,7 +98,6 @@ public class LibraryPageUtil {
 	public boolean buyProcess(AppiumDriver<MobileElement> driver, TestData testData) {
 		boolean result = true;
 		courseDetailPageUtil = new CourseDetailPage(driver);
-		courseDetailPageObj = new CourseDetailPage_OR();
 		try {
 			result = courseDetailPageUtil.clickOnBuyNow(driver);
 			if (!result) {
@@ -115,10 +117,10 @@ public class LibraryPageUtil {
 				return result;
 			}
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.noOfOffersAvail(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.noOfOffersAvail(), 10);
 			if (result) {
 
-				String noOfOffersAvail = courseDetailPageObj.noOfOffersAvail().getText();
+				String noOfOffersAvail = libraryPage_OR.noOfOffersAvail().getText();
 				String[] arr = noOfOffersAvail.split(" ");
 				int countOfOffers = Integer.parseInt(arr[0]);
 
@@ -171,16 +173,23 @@ public class LibraryPageUtil {
 
 			paymentPageUtilObj = new PaymentPageUtil(driver);
 
-			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod());
+			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
 			if (!result) {
 				libraryPageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
 				return result;
 			}
 
-			result = courseDetailPageUtil.courseBuyStatus(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
+			if (testData.getIsKey().equalsIgnoreCase("pass")) {
+
+				result = courseDetailPageUtil.courseBuyStatus(driver);
+				if (!result) {
+					libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+					return result;
+				}
+
+			} else {
+				libraryPageMsgList.add("There is failure in course purchase");
+				return true;
 			}
 
 		} catch (Exception e) {
@@ -812,7 +821,7 @@ public class LibraryPageUtil {
 				System.out.println("The doubt section/btn is not visible");
 				return true;
 			}
-			
+
 			cfObj.commonClick(libraryPage_OR.myDoubtsBtn());
 
 			String doubt = "I have a doubt";
