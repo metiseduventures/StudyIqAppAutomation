@@ -34,25 +34,39 @@ public class CourseDetailPage {
 		try {
 			// login to application
 			loginutillObj = new LoginUtil(driver);
+			boolean checkLoginPageOrNot = loginutillObj.checkSignUpLoginPage(driver);
+			if (checkLoginPageOrNot == true) {
 
-			result = loginutillObj.doSignUp(driver);
-			if (!result) {
-				return result;
+				result = loginutillObj.doSignUp(driver);
+				if (!result) {
+					coursePageMsgList.addAll(loginutillObj.loginMsgList);
+					return result;
+				}
+			} else {
+
+				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 30);
+				if (result) {
+					cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
+				}
+
+				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
+				if (!result) {
+					coursePageMsgList.add("Home page not opened after login");
+					return result;
+				}
 			}
 
 			homePageUtilObj = new HomePageUtil(driver);
 			result = homePageUtilObj.clickOnCourseOnHomePage(driver);
-
 			if (!result) {
 				return result;
 			}
-			// click on buy now
+
 			result = clickOnBuyNow(driver);
-
 			if (!result) {
 				return result;
 			}
-			
+
 			result = verifyEMIoption(driver);
 			if (!result) {
 				return result;
@@ -63,22 +77,36 @@ public class CourseDetailPage {
 				return result;
 			}
 
-			result = selectCoupon_verifyAmount(driver);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.noOfOffersAvail(), 10);
+			if (result) {
 
-			if (!result) {
-				return result;
-			}
+				String noOfOffersAvail = courseDetailPageObj.noOfOffersAvail().getText();
+				String[] arr = noOfOffersAvail.split(" ");
+				int countOfOffers = Integer.parseInt(arr[0]);
 
-			result = changeCoupon(driver);
+				if (countOfOffers > 0) {
 
-			if (!result) {
-				return result;
-			}
+					result = verifyInvalidCoupon(driver);
+					if (!result) {
+						return result;
+					}
 
-			result = applyManualCoupon(driver);
+					result = selectCoupon_verifyAmount(driver);
+					if (!result) {
+						return result;
+					}
 
-			if (!result) {
-				return result;
+					result = changeCoupon(driver);
+					if (!result) {
+						return result;
+					}
+
+					result = applyManualCoupon(driver);
+					if (!result) {
+						return result;
+					}
+
+				}
 			}
 
 			result = chooseYourPack(driver, testData.getChoosePack());
@@ -87,7 +115,6 @@ public class CourseDetailPage {
 			}
 
 			result = buyNowPack(driver);
-
 			if (!result) {
 				return result;
 			}
@@ -99,16 +126,91 @@ public class CourseDetailPage {
 
 			paymentPageUtilObj = new PaymentPageUtil(driver);
 
-			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod());
-
+			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
 			if (!result) {
 				return result;
+			}
+
+			if (testData.getIsKey().equalsIgnoreCase("pass")) {
+				
+				result = courseBuyStatus(driver);
+				if (!result) {
+					return result;
+				}
+				
+			}else {
+				
+				System.out.println("User on course page - the payment is failed");
+				
 			}
 
 		} catch (Exception e) {
 			result = false;
 		}
 
+		return result;
+	}
+
+	public boolean verifyInvalidCoupon(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		try {
+
+			result = clickOnAvailableOffer(driver);
+			if (!result) {
+				return result;
+			}
+
+			// wait for available offer page to be opened
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.availOfferLabelBox(), 30);
+			if (!result) {
+				System.out.println("Offer list pop up is not opened");
+			}
+
+			String invalidCode = "INVALID123";
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.getListTextCouponCode().get(0),
+					10);
+			if (!result) {
+				coursePageMsgList.add("The input of enter code is not visible");
+				return result;
+			}
+
+			// click on coupon text
+			cfObj.commonClick(courseDetailPageObj.getListTextCouponCode().get(0));
+
+			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListTextCouponCode().get(0), invalidCode);
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.applyCodeAfterInputBtn(), 10);
+			if (!result) {
+				coursePageMsgList.add("The Apply btn is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.cancelCodeAfterInputBtn(), 10);
+			if (!result) {
+				coursePageMsgList.add("The cancel btn is not visible");
+				return result;
+			}
+
+			// click on apply button
+			cfObj.commonClick(courseDetailPageObj.applyCodeAfterInputBtn());
+
+			String toastMsgLangChange = courseDetailPageObj.toastInvalidCoupon().getAttribute("name");
+
+			if (toastMsgLangChange.equalsIgnoreCase("Invalid Coupon Code")) {
+				return true;
+
+			} else {
+
+				coursePageMsgList.add("The coupon is invalid but the toast is not visible");
+				return false;
+			}
+
+		} catch (Exception e) {
+			result = false;
+			coursePageMsgList.add("verifyInvalidCoupon_Exception: " + e.getMessage());
+
+		}
 		return result;
 	}
 
@@ -147,6 +249,7 @@ public class CourseDetailPage {
 
 		} catch (Exception e) {
 			result = false;
+			coursePageMsgList.add("selectCoupon_verifyAmount_Exception: " + e.getMessage());
 		}
 
 		return result;
@@ -168,6 +271,7 @@ public class CourseDetailPage {
 
 		} catch (Exception e) {
 			result = false;
+			coursePageMsgList.add("clickOnBuyNow_Exception: " + e.getMessage());
 		}
 		return result;
 	}
@@ -192,6 +296,7 @@ public class CourseDetailPage {
 
 		} catch (Exception e) {
 			result = false;
+			coursePageMsgList.add("clickOnAvailableOffer_Exception: " + e.getMessage());
 		}
 		return result;
 	}
@@ -202,7 +307,7 @@ public class CourseDetailPage {
 
 			// Click on change offer
 			cfObj.commonClick(courseDetailPageObj.getListLableChangePack().get(0));
-			
+
 			// wait for available offer page to be opened
 			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.availOfferLabelBox(), 30);
 
@@ -212,6 +317,7 @@ public class CourseDetailPage {
 
 		} catch (Exception e) {
 			result = false;
+			coursePageMsgList.add("changeCoupon_Exception: " + e.getMessage());
 		}
 		return result;
 	}
@@ -229,7 +335,7 @@ public class CourseDetailPage {
 
 			// click on apply button
 
-			cfObj.commonClick(courseDetailPageObj.getListBtnApplyInputOffer().get(0));
+			cfObj.commonClick(courseDetailPageObj.applyCodeAfterInputBtn());
 			// wait for coupon to be applied
 
 			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.OFFER_CHANGE_PACK, "id", 30);
@@ -240,6 +346,7 @@ public class CourseDetailPage {
 
 		} catch (Exception e) {
 			result = false;
+			coursePageMsgList.add("applyManualCoupon_Exception: " + e.getMessage());
 		}
 		return result;
 	}
@@ -261,6 +368,7 @@ public class CourseDetailPage {
 
 		} catch (Exception e) {
 			result = false;
+			coursePageMsgList.add("buyNowPack_Exception: " + e.getMessage());
 		}
 		return result;
 	}
@@ -279,7 +387,6 @@ public class CourseDetailPage {
 			coursePageMsgList.add("verifyCourseDetailPageViaDeepLink_Exception: " + e.getMessage());
 		}
 		return result;
-
 	}
 
 	public boolean verifyPacks(AppiumDriver<MobileElement> driver) {
@@ -339,7 +446,6 @@ public class CourseDetailPage {
 
 					if (titleOfPack.equalsIgnoreCase(nextTitleOfPack)) {
 						System.out.println("No more packs available to swipe");
-						coursePageMsgList.add("The pack is not available for this course");
 						return true;
 					}
 				}
@@ -384,9 +490,11 @@ public class CourseDetailPage {
 					return false;
 				}
 			} else {
-				if (courseAmount == courseTotalAmount) {
+				if (courseAmount.equals(courseTotalAmount)) {
+
 					cfObj.commonClick(courseDetailPageObj.viewDetailsCloseBtn());
 					return true;
+
 				} else {
 					coursePageMsgList.add("The amount in view details is not same");
 					return false;
@@ -445,11 +553,10 @@ public class CourseDetailPage {
 				cfObj.commonClick(courseDetailPageObj.emiDialogBtn());
 
 				String checkEMIstatus = courseDetailPageObj.emiOptionTitle().getText();
-				
+
 				if (checkEMIstatus.contains("Applied")) {
 					cfObj.commonClick(courseDetailPageObj.emiCheckedBtn());
-				}
-				else {
+				} else {
 					coursePageMsgList.add("The emi is applied but title not changed with applied");
 					return false;
 				}
@@ -461,6 +568,47 @@ public class CourseDetailPage {
 		} catch (Exception e) {
 			result = false;
 			coursePageMsgList.add("verifyEMIoption_Exception: " + e.getMessage());
+		}
+		return result;
+	}
+
+	public boolean courseBuyStatus(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		try {
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatus(), 10);
+			if (!result) {
+				coursePageMsgList.add("The status of course purchase is not visible or wrong page");
+				return result;
+			}
+
+			String expectedPayStatus = "Your Order has been placed";
+			String actualPayStatus = courseDetailPageObj.paymentStatus().getText();
+
+			if (expectedPayStatus.equalsIgnoreCase(actualPayStatus)) {
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatusDesc(), 10);
+				if (!result) {
+					coursePageMsgList.add("The description of course purchase is not visible");
+					return result;
+				}
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.goToLibraryBtn(), 10);
+				if (!result) {
+					coursePageMsgList.add("The go to library btn is not visible");
+					return result;
+				}
+
+				return true;
+
+			} else {
+				coursePageMsgList.add("Payment Unsuccessful and Order not placed");
+				return false;
+			}
+
+		} catch (Exception e) {
+			result = false;
+			coursePageMsgList.add("courseBuyStatus_Exception: " + e.getMessage());
 		}
 		return result;
 	}

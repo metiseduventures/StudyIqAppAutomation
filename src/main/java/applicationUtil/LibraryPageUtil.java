@@ -67,19 +67,24 @@ public class LibraryPageUtil {
 				return result;
 			}
 
-			result = orderPlacedOrNot(driver);
-			if (!result) {
-				return result;
-			}
+			if (testData.getIsKey().equalsIgnoreCase("pass")) {
 
-			result = verifyMyLibraryTitle(driver);
-			if (!result) {
-				return result;
-			}
+				result = orderPlacedOrNot(driver);
+				if (!result) {
+					return result;
+				}
 
-			result = openCoursesInLibrary(driver);
-			if (!result) {
-				return result;
+				result = verifyMyLibraryTitle(driver);
+				if (!result) {
+					return result;
+				}
+
+				result = openCoursesInLibrary(driver);
+				if (!result) {
+					return result;
+				}
+			} else {
+				System.out.println("Failed the payment");
 			}
 
 		} catch (Exception e) {
@@ -99,37 +104,55 @@ public class LibraryPageUtil {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
-			
+
 			result = courseDetailPageUtil.verifyEMIoption(driver);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
-			
+
 			result = courseDetailPageUtil.verifyPacks(driver);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
-			
-			result = courseDetailPageUtil.selectCoupon_verifyAmount(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.noOfOffersAvail(), 10);
+			if (result) {
+
+				String noOfOffersAvail = libraryPage_OR.noOfOffersAvail().getText();
+				String[] arr = noOfOffersAvail.split(" ");
+				int countOfOffers = Integer.parseInt(arr[0]);
+
+				if (countOfOffers > 0) {
+
+					result = courseDetailPageUtil.verifyInvalidCoupon(driver);
+					if (!result) {
+						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+						return result;
+					}
+
+					result = courseDetailPageUtil.selectCoupon_verifyAmount(driver);
+					if (!result) {
+						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+						return result;
+					}
+
+					result = courseDetailPageUtil.changeCoupon(driver);
+					if (!result) {
+						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+						return result;
+					}
+
+					result = courseDetailPageUtil.applyManualCoupon(driver);
+					if (!result) {
+						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+						return result;
+					}
+
+				}
 			}
 
-			result = courseDetailPageUtil.changeCoupon(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.applyManualCoupon(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-			
 			result = courseDetailPageUtil.chooseYourPack(driver, testData.getChoosePack());
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
@@ -147,13 +170,26 @@ public class LibraryPageUtil {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
-			
+
 			paymentPageUtilObj = new PaymentPageUtil(driver);
 
-			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod());
+			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
 			if (!result) {
 				libraryPageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
 				return result;
+			}
+
+			if (testData.getIsKey().equalsIgnoreCase("pass")) {
+
+				result = courseDetailPageUtil.courseBuyStatus(driver);
+				if (!result) {
+					libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
+					return result;
+				}
+
+			} else {
+				libraryPageMsgList.add("There is failure in course purchase");
+				return true;
 			}
 
 		} catch (Exception e) {
@@ -782,9 +818,10 @@ public class LibraryPageUtil {
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myDoubtsBtn(), 5);
 			if (!result) {
-				libraryPageMsgList.add("My doubts is not visible");
-				return result;
+				System.out.println("The doubt section/btn is not visible");
+				return true;
 			}
+
 			cfObj.commonClick(libraryPage_OR.myDoubtsBtn());
 
 			String doubt = "I have a doubt";
