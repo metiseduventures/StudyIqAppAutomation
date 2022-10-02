@@ -105,13 +105,13 @@ public class LibraryPageUtil {
 				return result;
 			}
 
-			result = courseDetailPageUtil.verifyEMIoption(driver);
+			result = courseDetailPageUtil.verifyEMIoption(driver,null);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
 
-			result = courseDetailPageUtil.verifyPacks(driver);
+			result = courseDetailPageUtil.verifyPacks(driver,null);
 			if (!result) {
 				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;

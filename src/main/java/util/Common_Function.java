@@ -97,7 +97,7 @@ public class Common_Function {
 			capability.setCapability("appPackage", getCapebility().get("appPackage"));
 			capability.setCapability("appActivity", "com.studyiq.android.activities.SplashActivity");
 			capability.setCapability("clearDeviceLogsOnStart", true);
-			capability.setCapability("noReset", true);
+			capability.setCapability("noReset", false);
 			capability.setCapability("unicodeKeyboard", false);
 			capability.setCapability("resetKeyboard", false);
 

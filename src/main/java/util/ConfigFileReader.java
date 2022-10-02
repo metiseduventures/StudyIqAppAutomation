@@ -14,7 +14,7 @@ public class ConfigFileReader {
 	public static String strApplicationType;
 	static {
 		strEnv = System.getProperty("env");
-		strEnv = "stag";
+		strEnv = "prod";
 		strDeviceName = System.getProperty("deviceId");
 		userName = System.getProperty("userName");
 		userName = "abhay.rai";
@@ -25,8 +25,8 @@ public class ConfigFileReader {
 		strDeviceVersion = System.getProperty("version");
 		strRunMode = System.getProperty("runMode");
 		strRunMode = "local";
-		strDeviceName = "e252241e";
-		strDeviceVersion = "11.0";
+		strDeviceName = "RZ8T11F8CYW";
+		strDeviceVersion = "12.0";
 		strDeviceIndex = System.getProperty("deviceIndex");
 		strDeviceIndex = "0";
 		strFilePath = System.getProperty("apkId");

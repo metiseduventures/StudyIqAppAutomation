@@ -763,13 +763,13 @@ public class HomePageUtil {
 				return result;
 			}
 
-			result = courseDetailPageUtil.verifyEMIoption(driver);
+			result = courseDetailPageUtil.verifyEMIoption(driver,null);
 			if (!result) {
 				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
 
-			result = courseDetailPageUtil.verifyPacks(driver);
+			result = courseDetailPageUtil.verifyPacks(driver,null);
 			if (!result) {
 				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;

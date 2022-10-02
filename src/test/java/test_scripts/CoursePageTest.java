@@ -29,17 +29,6 @@ public class CoursePageTest extends BaseTest {
 		Assert.assertEquals(result, true, coursePageUtilObj.coursePageMsgList.toString());
 
 	}
-	
-	
-	@Test(dataProvider = "getData", enabled = true)
-	public void verifyCourseDetailPageViaDeepLink(TestData testData) {
-
-		boolean result = true;
-		coursePageUtilObj = new CourseDetailPage(driver);
-		result = coursePageUtilObj.verifyCourseDetailPageViaDeepLink(driver, testData);
-		Assert.assertEquals(result, true, coursePageUtilObj.coursePageMsgList.toString());
-
-	}
 
 	@DataProvider
 	public Object[][] getData() throws FileNotFoundException {

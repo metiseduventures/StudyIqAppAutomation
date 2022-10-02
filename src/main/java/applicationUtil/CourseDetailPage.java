@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.openqa.selenium.support.PageFactory;
 
+import apiUtil.CourseApiUtil;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.CourseDetailPage_OR;
+import pojo.courseList.CourseList;
+import pojo.courseView.CourseView;
 import pojo.testdata.TestData;
 import util.Common_Function;
 import util.ConfigFileReader;
@@ -31,31 +34,26 @@ public class CourseDetailPage {
 
 	public boolean verifyPurchaseCourse(AppiumDriver<MobileElement> driver, TestData testData) {
 		boolean result = true;
+		CourseApiUtil courseApiUtilObj;
+		CourseView courseViewObj;
+		CourseList courseListObj;
 		try {
+			courseApiUtilObj = new CourseApiUtil();
+			courseListObj = courseApiUtilObj.getCourseList("bestselling-courses");
+			if (courseListObj == null) {
+				coursePageMsgList.add("Error in getting course list from api");
+				return false;
+			}
+			courseViewObj = courseApiUtilObj
+					.getCourseViewData(courseListObj.getData().getCourses().get(0).getCourseSlug());
+			System.out.println(courseViewObj.getData().getPriceInfo());
 			// login to application
 			loginutillObj = new LoginUtil(driver);
-			boolean checkLoginPageOrNot = loginutillObj.checkSignUpLoginPage(driver);
-			if (checkLoginPageOrNot == true) {
-
-				result = loginutillObj.doSignUp(driver);
-				if (!result) {
-					coursePageMsgList.addAll(loginutillObj.loginMsgList);
-					return result;
-				}
-			} else {
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 30);
-				if (result) {
-					cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
-				}
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
-				if (!result) {
-					coursePageMsgList.add("Home page not opened after login");
-					return result;
-				}
+			result = loginutillObj.doSignUp(driver);
+			if (!result) {
+				coursePageMsgList.addAll(loginutillObj.loginMsgList);
+				return result;
 			}
-
 			homePageUtilObj = new HomePageUtil(driver);
 			result = homePageUtilObj.clickOnCourseOnHomePage(driver);
 			if (!result) {
@@ -67,12 +65,12 @@ public class CourseDetailPage {
 				return result;
 			}
 
-			result = verifyEMIoption(driver);
+			result = verifyEMIoption(driver, courseViewObj);
 			if (!result) {
 				return result;
 			}
 
-			result = verifyPacks(driver);
+			result = verifyPacks(driver, courseViewObj);
 			if (!result) {
 				return result;
 			}
@@ -132,16 +130,16 @@ public class CourseDetailPage {
 			}
 
 			if (testData.getIsKey().equalsIgnoreCase("pass")) {
-				
+
 				result = courseBuyStatus(driver);
 				if (!result) {
 					return result;
 				}
-				
-			}else {
-				
+
+			} else {
+
 				System.out.println("User on course page - the payment is failed");
-				
+
 			}
 
 		} catch (Exception e) {
@@ -389,19 +387,16 @@ public class CourseDetailPage {
 		return result;
 	}
 
-	public boolean verifyPacks(AppiumDriver<MobileElement> driver) {
+	public boolean verifyPacks(AppiumDriver<MobileElement> driver, CourseView courseViewObj) {
 		boolean result = true;
-		boolean bool = true;
 		try {
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
+			if (!result) {
+				coursePageMsgList.add("The pack title is not visible");
+				return result;
+			}
 
-			while (bool) {
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
-				if (!result) {
-					coursePageMsgList.add("The pack title is not visible");
-					return result;
-				}
-				String titleOfPack = courseDetailPageObj.packTitle().getText();
-
+			for (int i = 1; i < courseViewObj.getData().getPackages().get(0).getPackages().size(); i++) {
 				cfObj.swipeLeftOnElement(courseDetailPageObj.packTitle(), driver);
 
 				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
@@ -409,13 +404,6 @@ public class CourseDetailPage {
 					coursePageMsgList.add("The next pack title is not visible");
 					return result;
 				}
-
-				String nextTitleOfPack = courseDetailPageObj.packTitle().getText();
-
-				if (titleOfPack.equalsIgnoreCase(nextTitleOfPack)) {
-					bool = false;
-				}
-
 			}
 
 		} catch (Exception e) {
@@ -509,12 +497,17 @@ public class CourseDetailPage {
 
 	}
 
-	public boolean verifyEMIoption(AppiumDriver<MobileElement> driver) {
+	public boolean verifyEMIoption(AppiumDriver<MobileElement> driver, CourseView courseViewObj) {
 		boolean result = true;
 		try {
 			cfObj.scrollUtill(driver, 1);
 			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiOptionTitle(), 5);
-			if (result) {
+			if (courseViewObj.getData().getCourseDetail().getIsEmiAvailable() != 0) {
+				if (!result) {
+					coursePageMsgList.add("Emi option is not availabe for emi course");
+					return result;
+
+				}
 				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDesc(), 10);
 				if (!result) {
 					coursePageMsgList.add("The show details of emi desc not visible");
@@ -560,9 +553,13 @@ public class CourseDetailPage {
 					coursePageMsgList.add("The emi is applied but title not changed with applied");
 					return false;
 				}
-
 			} else {
-				return true;
+				if (result) {
+					coursePageMsgList.add("Emi option is  availabe for non emi course");
+					return false;
+				} else {
+					return true;
+				}
 			}
 
 		} catch (Exception e) {
@@ -630,5 +627,16 @@ public class CourseDetailPage {
 		}
 		Double amountMain = Double.parseDouble(amnt);
 		return amountMain;
+	}
+
+	public boolean clickOnShareIconOnCourseDetailPage(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		try {
+
+		} catch (Exception e) {
+			coursePageMsgList.add("clickOnShareIconOnCourseDetailPage_Exception " + e.getMessage());
+			return result;
+		}
+		return result;
 	}
 }

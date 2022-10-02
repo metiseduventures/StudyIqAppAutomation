@@ -13,6 +13,7 @@ import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.CoursePageDetailsVerify_OR;
 import util.Common_Function;
+import util.ConfigFileReader;
 
 public class CoursePageDetailsVerifyUtil {
 	CoursePageDetailsVerify_OR cdpVerify_OR;
@@ -34,36 +35,19 @@ public class CoursePageDetailsVerifyUtil {
 		loginutillObj = new LoginUtil(driver);
 
 		try {
-			boolean checkLoginPageOrNot = loginutillObj.checkSignUpLoginPage(driver);
-			if (checkLoginPageOrNot == true) {
-
-				result = loginutillObj.doSignUp(driver);
-				if (!result) {
-					cdpVerifyMsgList.addAll(loginutillObj.loginMsgList);
-					return result;
-				}
-
-			} else {
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 30);
-				if (result) {
-					cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
-				}
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
-				if (!result) {
-					cdpVerifyMsgList.add("Home page not opened after login");
-					return result;
-				}
-			}
-
+			
+            result = loginutillObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
+            if(!result)
+            {
+            	cdpVerifyMsgList.addAll(loginutillObj.loginMsgList);
+            	return result;
+            }
 			homePageUtilObj = new HomePageUtil(driver);
 			result = homePageUtilObj.clickOnCourseOnHomePage(driver);
 			if (!result) {
 				cdpVerifyMsgList.addAll(homePageUtilObj.homePageMsglist);
 				return result;
 			}
-
 			result = courseInfo(driver);
 			if (!result) {
 				return result;
