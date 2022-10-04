@@ -44,6 +44,7 @@ public class CourseApiUtil {
 
 		} catch (Exception e) {
 			// TODO: handle exception
+			System.out.println(e.getMessage());
 		}
 
 		return courseListObj;

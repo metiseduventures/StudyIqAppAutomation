@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "course_slug",
     "course_content_type",
     "course_video",
-    "course_link",
     "s3_enabled",
     "s3_url"
 })
@@ -47,8 +46,6 @@ public class Course {
     private Integer courseContentType;
     @JsonProperty("course_video")
     private Object courseVideo;
-    @JsonProperty("course_link")
-    private Integer courseLink;
     @JsonProperty("s3_enabled")
     private Integer s3Enabled;
     @JsonProperty("s3_url")
@@ -144,16 +141,6 @@ public class Course {
     @JsonProperty("course_video")
     public void setCourseVideo(Object courseVideo) {
         this.courseVideo = courseVideo;
-    }
-
-    @JsonProperty("course_link")
-    public Integer getCourseLink() {
-        return courseLink;
-    }
-
-    @JsonProperty("course_link")
-    public void setCourseLink(Integer courseLink) {
-        this.courseLink = courseLink;
     }
 
     @JsonProperty("s3_enabled")

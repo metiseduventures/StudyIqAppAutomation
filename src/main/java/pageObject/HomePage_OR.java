@@ -9,47 +9,46 @@ public class HomePage_OR {
 
 	@AndroidFindBy(xpath = "//android.view.ViewGroup/android.widget.TextView")
 	private List<MobileElement> listOfTextViewElements;
-	
+
 	public List<MobileElement> listOfTextView() {
 		return listOfTextViewElements;
 	}
-	
+
 	@AndroidFindBy(id = "action_search")
 	private MobileElement searchCourseBtnElement;
-	
+
 	public MobileElement searchCourseBtn() {
 		return searchCourseBtnElement;
 	}
-	
+
 	@AndroidFindBy(id = "et_search")
 	private MobileElement inputSearchBoxElement;
-	
+
 	public MobileElement inputSearchBox() {
 		return inputSearchBoxElement;
 	}
-	
+
 	@AndroidFindBy(id = "item_search_title")
 	private List<MobileElement> listOfSearchItemTitleElements;
-	
-	public List<MobileElement> listOfSearchItemsTitle(){
+
+	public List<MobileElement> listOfSearchItemsTitle() {
 		return listOfSearchItemTitleElements;
 	}
-	
+
 	@AndroidFindBy(id = "item_search_img")
 	private List<MobileElement> listOfSearchItemImgElements;
-	
-	public List<MobileElement> listOfSearchItemsImg(){
+
+	public List<MobileElement> listOfSearchItemsImg() {
 		return listOfSearchItemImgElements;
 	}
-	
-	
+
 	@AndroidFindBy(id = "bt_clear")
 	private MobileElement clearInputSearchElement;
-	
+
 	public MobileElement clearInputSearch() {
 		return clearInputSearchElement;
 	}
-		
+
 	@AndroidFindBy(id = "iv_home_section_landscape")
 	private List<MobileElement> listCourses;
 
@@ -88,14 +87,14 @@ public class HomePage_OR {
 
 	@AndroidFindBy(id = "item_search_img")
 	private List<MobileElement> listSearchResult;
-	
+
 	@AndroidFindBy(id = "tv_nav_home")
 	private List<MobileElement> listBottomMenuMyHome;
 
 	public List<MobileElement> getListBottomMenuMyHome() {
 		return listBottomMenuMyHome;
 	}
-	
+
 	@AndroidFindBy(id = "tv_nav_feed")
 	private List<MobileElement> listBottomMenuMyFeed;
 
@@ -109,7 +108,7 @@ public class HomePage_OR {
 	public List<MobileElement> getListBottomMenuMyLibrary() {
 		return listBottomMenuMyLibrary;
 	}
-	
+
 	@AndroidFindBy(id = "tv_nav_explore")
 	private List<MobileElement> listBottomMenuMyExplore;
 
@@ -123,7 +122,7 @@ public class HomePage_OR {
 	public List<MobileElement> getListBottomMenuMyTestSeries() {
 		return listBottomMenuMyTestSeries;
 	}
-	
+
 	@AndroidFindBy(id = "tv_nav_book")
 	private List<MobileElement> listBottomMenuMyBook;
 
@@ -154,85 +153,99 @@ public class HomePage_OR {
 
 	@AndroidFindBy(id = "img_slider")
 	private MobileElement imgSliderElement;
-	
+
 	public MobileElement imgSlider() {
 		return imgSliderElement;
 	}
-	
+
 	@AndroidFindBy(id = "txt_section_title")
 	private List<MobileElement> sectionOfCoursesTitle;
-	
-	public List<MobileElement> sectionOfCoursesTitles(){
+
+	public List<MobileElement> sectionOfCoursesTitles() {
 		return sectionOfCoursesTitle;
 	}
-	
+
 	@AndroidFindBy(id = "tv_home_view_all")
 	private List<MobileElement> viewAllBtnElements;
-	
-	public List<MobileElement> viewAllBtnList(){
+
+	public List<MobileElement> viewAllBtnList() {
 		return viewAllBtnElements;
 	}
-	
+
 	@AndroidFindBy(id = "tv_home_tab")
 	private List<MobileElement> listOfHomeTabTexts;
-	
+
 	public List<MobileElement> listOfHomeTabText() {
 		return listOfHomeTabTexts;
 	}
-	
+
 	@AndroidFindBy(id = "iv_home_tab")
 	private List<MobileElement> listOfHomeTabImgs;
-	
+
 	public List<MobileElement> listOfHomeTabImgs() {
 		return listOfHomeTabImgs;
 	}
-	
+
 	@AndroidFindBy(id = "ss_txt_title")
 	private List<MobileElement> listOfSubjectTitle;
-	
+
 	public List<MobileElement> getListOfSubjectTitle() {
 		return listOfSubjectTitle;
 	}
-	
+
 	@AndroidFindBy(id = "ss_img")
 	private List<MobileElement> listOfSubjectImgs;
-	
+
 	public List<MobileElement> getListOfSubjectImgs() {
 		return listOfSubjectImgs;
 	}
-	
+
 	@AndroidFindBy(xpath = "//androidx.appcompat.app.ActionBar.b")
 	private List<MobileElement> exploreActionBarElements;
-	
-	public List<MobileElement> exploreActionbarElements(){
+
+	public List<MobileElement> exploreActionbarElements() {
 		return exploreActionBarElements;
 	}
-	
+
 	@AndroidFindBy(id = "//androidx.recyclerview.widget.RecyclerView")
 	private MobileElement viewOnExploreCourses;
-	
+
 	public MobileElement viewOnExploreCoursesPage() {
 		return viewOnExploreCourses;
 	}
-	
+
 	@AndroidFindBy(id = "android:id/button1")
 	private MobileElement logoutBtnElement;
-	
+
 	public MobileElement logoutBtn() {
 		return logoutBtnElement;
 	}
-	
+
 	@AndroidFindBy(id = "iv_view_all_thumb")
 	private List<MobileElement> imgOfCoursesInViewAll;
-	
-	public List<MobileElement> listOfImgOfCoursesInViewAll(){
+
+	public List<MobileElement> listOfImgOfCoursesInViewAll() {
 		return imgOfCoursesInViewAll;
 	}
-	
+
 	@AndroidFindBy(id = "tv_view_all_title")
 	private List<MobileElement> titleOfCoursesInViewAll;
-	
-	public List<MobileElement> listOftitleOfCoursesInViewAll(){
+
+	public List<MobileElement> listOftitleOfCoursesInViewAll() {
 		return titleOfCoursesInViewAll;
+	}
+
+	@AndroidFindBy(id = "tv_offer_title_pack")
+	private MobileElement noOfOffersAvailElement;
+
+	public MobileElement noOfOffersAvail() {
+		return noOfOffersAvailElement;
+	}
+
+	@AndroidFindBy(id = "btn_buy_one")
+	private List<MobileElement> listBtnBuyNow;
+
+	public List<MobileElement> getListBtnBuyNow() {
+		return listBtnBuyNow;
 	}
 }

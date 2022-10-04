@@ -60,7 +60,7 @@ public class PaymentPageUtil {
 					cfObj.commonClick(paymentPageObj.netBankPaymentOption());
 
 					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 10);
-					if (!result) {	
+					if (!result) {
 						paymentPageMsgList.add("The payBtn is not visible");
 						return result;
 					}
@@ -81,94 +81,36 @@ public class PaymentPageUtil {
 					if (testData.getIsKey().equalsIgnoreCase("pass")) {
 
 						cfObj.commonClick(paymentPageObj.successfulPayBtn());
-						result = true;
 						
+						return true;
+
 					} else if (testData.getIsKey().equalsIgnoreCase("fail")) {
 
-						boolean bool = true;
-						while (bool) {
+						cfObj.commonClick(paymentPageObj.failurePayBtn());
 
-							cfObj.commonClick(paymentPageObj.failurePayBtn());
-
-							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_payment_status_pc",
-									"id", 15);
-							if (result) {
-
-								result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_payment_desc_pc",
-										"id", 10);
-								if (!result) {
-									paymentPageMsgList.add("The payment status description is not visible");
-									return result;
-								}
-
-								result = cfObj.commonWaitForElementToBeVisible(driver,
-										paymentPageObj.retryPayAfterUnsuccessBtn(), 10);
-								if (!result) {
-									paymentPageMsgList.add("The payment status description is not visible");
-									return result;
-								}
-
-								cfObj.commonClick(paymentPageObj.retryPayAfterUnsuccessBtn());
-
-								result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "view_details_ps",
-										"id", 10);
-								if (!result) {
-									paymentPageMsgList.add("The payment choose method page is not visible");
-									return result;
-								}
-
-								driver.navigate().back();
-
-								driver.navigate().back();
-								
-								result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "txt_course_title", "id", 10);
-								if (!result) {
-									paymentPageMsgList.add("It is not on the cdp page");
-									return result;
-								}
-
-								return true;
-							}
-
-							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
-									"//android.widget.TextView[contains(@text,'Your transaction has failed.')]",
-									"xpath", 10);
-							if (!result) {
-								paymentPageMsgList.add("The transaction failed popup not visible");
-								return result;
-							}
-
-							result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.retryPaymentBtn(),
-									10);
-							if (!result) {
-								paymentPageMsgList.add("The retry btn is not visible");
-								return result;
-							}
-
-							cfObj.commonClick(paymentPageObj.retryPaymentBtn());
-
-							result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 10);
-							if (!result) {
-								paymentPageMsgList.add("The payBtn is not visible");
-								return result;
-							}
-
-							cfObj.commonClick(paymentPageObj.payBtn());
-
-							result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.successfulPayBtn(),
-									10);
-							if (!result) {
-								paymentPageMsgList.add("The successful Paytm payment btn is not visible");
-								return result;
-							}
-
-							result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.failurePayBtn(), 10);
-							if (!result) {
-								paymentPageMsgList.add("The successful Paytm payment btn is not visible");
-								return result;
-							}
-
+						result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+								"//android.widget.TextView[contains(@text,'Your transaction has failed.')]", "xpath",
+								10);
+						if (!result) {
+							paymentPageMsgList.add("The transaction failed popup not visible");
+							return result;
 						}
+
+						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.retryPaymentBtn(), 10);
+						if (!result) {
+							paymentPageMsgList.add("The retry btn is not visible");
+							return result;
+						}
+
+						cfObj.commonClick(paymentPageObj.retryPaymentBtn());
+
+						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 10);
+						if (!result) {
+							paymentPageMsgList.add("The payBtn is not visible");
+							return result;
+						}
+						
+						return true;
 
 					} else {
 						paymentPageMsgList.add("The isKey is not pass or fail, it is wrong");

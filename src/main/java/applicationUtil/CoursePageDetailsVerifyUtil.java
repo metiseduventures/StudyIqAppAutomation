@@ -3,7 +3,10 @@ package applicationUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.PageFactory;
+
+import com.google.common.collect.ImmutableMap;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
@@ -35,38 +38,34 @@ public class CoursePageDetailsVerifyUtil {
 		loginutillObj = new LoginUtil(driver);
 
 		try {
-			
-            result = loginutillObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
-            if(!result)
-            {
-            	cdpVerifyMsgList.addAll(loginutillObj.loginMsgList);
-            	return result;
-            }
+
+			result = loginutillObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
+			if (!result) {
+				cdpVerifyMsgList.addAll(loginutillObj.loginMsgList);
+				return result;
+			}
+
 			homePageUtilObj = new HomePageUtil(driver);
 			result = homePageUtilObj.clickOnCourseOnHomePage(driver);
 			if (!result) {
 				cdpVerifyMsgList.addAll(homePageUtilObj.homePageMsglist);
 				return result;
 			}
-			result = courseInfo(driver);
-			if (!result) {
-				return result;
-			}
 
-			result = verifyBuyBtnAbove(driver);
-			if (!result) {
-				return result;
-			}
+//			result = courseInfo(driver);
+//			if (!result) {
+//				return result;
+//			}
+//
+//			result = verifyBuyBtnAbove(driver);
+//			if (!result) {
+//				return result;
+//			}
 
-			result = verifyCourseContent(driver);
-			if (!result) {
-				return result;
-			}
-
-			result = verifyCoursePrice(driver);
-			if (!result) {
-				return result;
-			}
+//			result = verifyCoursePrice(driver);
+//			if (!result) {
+//				return result;
+//			}
 
 			result = verifyExamsCovered(driver);
 			if (!result) {
@@ -79,6 +78,11 @@ public class CoursePageDetailsVerifyUtil {
 			}
 
 			result = verifyDemoVideos(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyCourseContent(driver);
 			if (!result) {
 				return result;
 			}
@@ -99,6 +103,7 @@ public class CoursePageDetailsVerifyUtil {
 			}
 
 		} catch (Exception e) {
+			cdpVerifyMsgList.add("verifyCoursePage_Exception " + e.getMessage());
 			result = false;
 		}
 
@@ -126,8 +131,7 @@ public class CoursePageDetailsVerifyUtil {
 			// course description
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.courseDescription(), 5);
 			if (!result) {
-				cdpVerifyMsgList.add("The description of course is not visible");
-				return result;
+				System.out.println("The description of course is not visible");
 			}
 
 			// select language
@@ -151,17 +155,20 @@ public class CoursePageDetailsVerifyUtil {
 				return result;
 			}
 			cfObj.commonClick(cdpVerify_OR.shareCourse());
+
+			// add a wait to check if it is a share pop up
+
 			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 
 			// emi
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.emiText(), 5);
 			if (!result) {
-				cdpVerifyMsgList.add("EMI option is not available");
-				return result;
+				System.out.println("EMI option is not available");
+				result = true;
 			}
 
 		} catch (Exception e) {
-			cdpVerifyMsgList.add("courseInfoException");
+			cdpVerifyMsgList.add("courseInfoException " + e.getMessage());
 			result = false;
 		}
 		return result;
@@ -204,7 +211,12 @@ public class CoursePageDetailsVerifyUtil {
 
 			// view
 			cfObj.commonClick(cdpVerify_OR.viewCourseContent());
-			cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "txt_content", "id", 10);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "txt_content", "id", 10);
+			if (!result) {
+				cdpVerifyMsgList.add("The view course content text is not visible");
+				return result;
+			}
+
 			result = verifyViewCourseContent(driver);
 			if (!result) {
 				return result;
@@ -241,12 +253,28 @@ public class CoursePageDetailsVerifyUtil {
 
 	public boolean verifyCoursePrice(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
+		boolean bool = true;
 		try {
 
 			String coursePriceAbove = cdpVerify_OR.coursePriceAtAbove().getText();
-			cfObj.scrollUtillTheElementFound(driver, "btn_buy_two");
+			
+
+			
+				result = cfObj.scrollUtillTheElementFound(driver, "btn_buy_two");
+				if (result) {
+					bool = false;
+				}
+			
 			String coursePriceBelow = cdpVerify_OR.mainPriceAtBottom().getText();
-			cfObj.scrollUpUtillTheElementFound(driver, "btn_buy_one");
+			
+			cfObj.swipeUPOnElement(cdpVerify_OR.buyNowBtnBelow(), driver);
+			
+			
+				result = cfObj.scrollUtillTheElementFound(driver, "btn_buy_one");
+				if (result) {
+					bool = false;
+				}
+			
 
 			if (coursePriceAbove.equalsIgnoreCase(coursePriceBelow)) {
 				result = true;
@@ -267,7 +295,7 @@ public class CoursePageDetailsVerifyUtil {
 		boolean loop = true;
 		try {
 
-			String visibleText = "Author";
+			String visibleText = "Exams Covered";
 			cfObj.scrollIntoText(driver, visibleText);
 
 			while (loop) {
@@ -348,7 +376,7 @@ public class CoursePageDetailsVerifyUtil {
 		boolean result = true;
 		try {
 
-			String visibleText = "Get free with this course";
+			String visibleText = "Demo Videos";
 			cfObj.scrollIntoText(driver, visibleText);
 
 			// select language
@@ -380,7 +408,7 @@ public class CoursePageDetailsVerifyUtil {
 			cfObj.scrollIntoText(driver, visibleText);
 
 			List<MobileElement> freeCourses = cdpVerify_OR.freeCourses();
-			for (int i = 0; i < freeCourses.size();i++) {
+			for (int i = 0; i < freeCourses.size(); i++) {
 
 				result = cfObj.commonWaitForElementToBeVisible(driver, freeCourses.get(i), 5);
 				if (!result) {
@@ -466,14 +494,14 @@ public class CoursePageDetailsVerifyUtil {
 		boolean result = true;
 		try {
 
-			cfObj.scrollByID("//android.widget.Button[@resource-id='com.studyiq.android.stag:id/btn_buy_two']", driver);
+			cfObj.scrollByID("//android.widget.Button[contains(@resource-id,'btn_buy_two')]", driver);
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.buyNowBtnBelow(), 5);
 			if (!result) {
 				cdpVerifyMsgList.add("The buy now button above is not visible");
 				return result;
 			}
-			
+
 			cfObj.commonClick(cdpVerify_OR.buyNowBtnBelow());
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.buyNowAllTxt().get(0), 10);

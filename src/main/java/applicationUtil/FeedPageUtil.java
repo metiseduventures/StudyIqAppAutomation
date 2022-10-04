@@ -137,6 +137,37 @@ public class FeedPageUtil {
 			List<MobileElement> langs = feedPageORObj.listOfFeedLang();
 			List<MobileElement> langTitles = feedPageORObj.listOfFeedTitleLang();
 
+			// make for loop to check if english lang is selected
+			for (int i = 0; i < langTitles.size(); i++) {
+				result = cfObj.commonWaitForElementToBeVisible(driver, langTitles.get(i), 10);
+				if (!result) {
+					feedPageMsglist.add("The name of lang in feed is not visible");
+					return result;
+				}
+
+				String firstLangTitle = langTitles.get(i).getText();
+				if (firstLangTitle.equalsIgnoreCase("English")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, feedPageORObj.feedLangTickMark(), 10);
+					if (!result) {
+						feedPageMsglist.add("The selected lang is not english");
+						return result;
+					}
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, feedPageORObj.feedLangClose(), 10);
+					if (!result) {
+						feedPageMsglist.add("The close btn is not visible");
+						return result;
+					}
+
+					cfObj.commonClick(feedPageORObj.feedLangClose());
+					break;
+				}
+			}
+
+			cfObj.commonClick(feedPageORObj.langFeedBtn());
+
+			// in this loop, just click on every lang and check their toast
 			for (int i = 0; i < langTitles.size(); i++) {
 
 				result = cfObj.commonWaitForElementToBeVisible(driver, langTitles.get(i), 10);
@@ -161,12 +192,8 @@ public class FeedPageUtil {
 					}
 
 					cfObj.commonClick(feedPageORObj.feedLangClose());
-
 					cfObj.commonClick(feedPageORObj.langFeedBtn());
-
-					cfObj.commonClick(langs.get(i));
-
-					cfObj.commonClick(feedPageORObj.langFeedBtn());
+					
 
 				} else {
 					cfObj.commonClick(langs.get(i));
@@ -203,6 +230,12 @@ public class FeedPageUtil {
 		int count = 2;
 		try {
 
+			result = cfObj.commonWaitForElementToBeVisible(driver, feedPageORObj.titleThumbnailSlider(), 10);
+			if (!result) {
+				System.out.println("The trending section is not visible");
+				return true;
+			}
+
 			for (int i = 0; i < count; i++) {
 				result = feedPageORObj.videoThumbnailSlider().isDisplayed();
 				if (!result) {
@@ -228,7 +261,6 @@ public class FeedPageUtil {
 			cfObj.swipeRightOnElement(feedPageORObj.videoThumbnailSlider(), driver);
 
 			String trendingTitle = feedPageORObj.titleThumbnailSlider().getText();
-
 			String desc = feedPageORObj.descThumbnailSlider().getText();
 
 			cfObj.commonClick(feedPageORObj.videoThumbnailSlider());
@@ -266,125 +298,136 @@ public class FeedPageUtil {
 		boolean result = true;
 		try {
 
+			// click all feed types
 			List<MobileElement> typesOfFeed = feedPageORObj.listOfTypesOfFeed();
 
 			cfObj.scrollUtillTheElementFound(driver, "tv_feed_des", "id");
 
-			for (int i = 0; i < 3; i++) {
+			// api ke through mil jayega no. of feed types
+			// TOTAL NO.OF ELEMENTS/WINDOW SCREEN - 6/3
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, typesOfFeed.get(i), 10);
-				if (!result) {
-					feedPageMsglist.add("The element text is not visible");
-					return result;
-				}
+			for (int j = 0; j < 2; j++) {
 
-				cfObj.commonClick(typesOfFeed.get(i));
+				for (int i = j; i < j + 3; i++) {
 
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_title", "id", 10);
-				if (result) {
-
-					System.out.println("Their is no element in the feed type");
-
-				} else {
-
-					result = cfObj.commonWaitForElementToBeVisible(driver,
-							feedPageORObj.listOftitleOfFeedtypeElements().get(0), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, typesOfFeed.get(i), 10);
 					if (!result) {
-						feedPageMsglist.add("The title of feed element is not visible");
+						feedPageMsglist.add("The element text is not visible");
+						return result;
 					}
 
-					String titleOfFeedTypeElement = feedPageORObj.listOftitleOfFeedtypeElements().get(0).getText();
+					cfObj.commonClick(typesOfFeed.get(i));
 
-					if (titleOfFeedTypeElement.equalsIgnoreCase("all")) {
+					result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_title", "id", 5);
+					if (result) {
 
-					} else if (titleOfFeedTypeElement.equalsIgnoreCase("current affairs")) {
-
-						result = feedTypeBoxVerify(driver, titleOfFeedTypeElement);
-						if (!result) {
-							return result;
-						}
-
-					} else if (titleOfFeedTypeElement.equalsIgnoreCase("articles")) {
-
-						result = feedTypeBoxVerify(driver, titleOfFeedTypeElement);
-						if (!result) {
-							return result;
-						}
-
-					} else if (titleOfFeedTypeElement.equalsIgnoreCase("videos")) {
-
-						result = feedTypeBoxVerify(driver, titleOfFeedTypeElement);
-						if (!result) {
-							return result;
-						}
-
-					} else if (titleOfFeedTypeElement.equalsIgnoreCase("quizzes")) {
-
-						result = cfObj.commonWaitForElementToBeVisible(driver,
-								feedPageORObj.listOfDateOfFeedtypeElements().get(0), 10);
-						if (!result) {
-							feedPageMsglist.add("The date of the quiz is not visible");
-							return result;
-						}
-
-						result = feedPageORObj.listOficonOfFeedtypeElements().get(0).isDisplayed();
-						if (!result) {
-							feedPageMsglist.add("The icon of the quiz is not visible");
-							return result;
-						}
-
-						result = cfObj.commonWaitForElementToBeVisible(driver,
-								feedPageORObj.listOfquizNameInFeed().get(0), 10);
-						if (!result) {
-							feedPageMsglist.add("The name of the quiz is not visible");
-							return result;
-						}
-
-						result = cfObj.commonWaitForElementToBeVisible(driver,
-								feedPageORObj.listOfquizQuesCountInFeed().get(0), 10);
-						if (!result) {
-							feedPageMsglist.add("The count of ques in the quiz is not visible");
-							return result;
-						}
-
-						result = cfObj.commonWaitForElementToBeVisible(driver,
-								feedPageORObj.listOfquizDurationInFeed().get(0), 10);
-						if (!result) {
-							feedPageMsglist.add("The duration of the quiz is not visible");
-							return result;
-						}
-
-						result = cfObj.commonWaitForElementToBeVisible(driver,
-								feedPageORObj.listOfquizStartNowInFeed().get(0), 10);
-						if (!result) {
-							feedPageMsglist.add("The start now in the quiz is not visible");
-							return result;
-						}
-
-						cfObj.commonClick(feedPageORObj.listOfquizStartNowInFeed().get(0));
-						
-						result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "//*[contains(@text,'START TEST')]", "xpath", 10);
-						if (!result) {
-							feedPageMsglist.add("The test page has not opened");
-							return result;
-						}
-						
-						driver.navigate().back();
-
-					} else if (titleOfFeedTypeElement.equalsIgnoreCase("Job alerts")) {
-
-						result = feedTypeBoxVerify(driver, titleOfFeedTypeElement);
-						if (!result) {
-							return result;
-						}
+						System.out.println("Their is no element in the feed type");
 
 					} else {
 
-						feedPageMsglist.add("Extra type not explored");
-						return false;
+						result = cfObj.commonWaitForElementToBeVisible(driver,
+								feedPageORObj.listOftitleOfFeedtypeElements().get(0), 10);
+						if (!result) {
+							feedPageMsglist.add("The title of feed element is not visible");
+						}
+
+						String titleOfFeedTypeElement = feedPageORObj.listOftitleOfFeedtypeElements().get(0).getText();
+
+						if (titleOfFeedTypeElement.equalsIgnoreCase("all")) {
+
+						} else if (titleOfFeedTypeElement.equalsIgnoreCase("current affairs")) {
+
+							result = feedTypeBoxVerify(driver, titleOfFeedTypeElement);
+							if (!result) {
+								return result;
+							}
+
+						} else if (titleOfFeedTypeElement.equalsIgnoreCase("articles")) {
+
+							result = feedTypeBoxVerify(driver, titleOfFeedTypeElement);
+							if (!result) {
+								return result;
+							}
+
+						} else if (titleOfFeedTypeElement.equalsIgnoreCase("videos")) {
+
+							result = feedTypeBoxVerify(driver, titleOfFeedTypeElement);
+							if (!result) {
+								return result;
+							}
+
+						} else if (titleOfFeedTypeElement.equalsIgnoreCase("quizzes")) {
+
+							result = cfObj.commonWaitForElementToBeVisible(driver,
+									feedPageORObj.listOfDateOfFeedtypeElements().get(0), 10);
+							if (!result) {
+								feedPageMsglist.add("The date of the quiz is not visible");
+								return result;
+							}
+
+							result = feedPageORObj.listOficonOfFeedtypeElements().get(0).isDisplayed();
+							if (!result) {
+								feedPageMsglist.add("The icon of the quiz is not visible");
+								return result;
+							}
+
+							result = cfObj.commonWaitForElementToBeVisible(driver,
+									feedPageORObj.listOfquizNameInFeed().get(0), 10);
+							if (!result) {
+								feedPageMsglist.add("The name of the quiz is not visible");
+								return result;
+							}
+
+							result = cfObj.commonWaitForElementToBeVisible(driver,
+									feedPageORObj.listOfquizQuesCountInFeed().get(0), 10);
+							if (!result) {
+								feedPageMsglist.add("The count of ques in the quiz is not visible");
+								return result;
+							}
+
+							result = cfObj.commonWaitForElementToBeVisible(driver,
+									feedPageORObj.listOfquizDurationInFeed().get(0), 10);
+							if (!result) {
+								feedPageMsglist.add("The duration of the quiz is not visible");
+								return result;
+							}
+
+							result = cfObj.commonWaitForElementToBeVisible(driver,
+									feedPageORObj.listOfquizStartNowInFeed().get(0), 10);
+							if (!result) {
+								feedPageMsglist.add("The start now in the quiz is not visible");
+								return result;
+							}
+
+							cfObj.commonClick(feedPageORObj.listOfquizStartNowInFeed().get(0));
+
+							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+									"quiz_language_label", "id", 5);
+							if (!result) {
+								feedPageMsglist.add("The test page has not opened");
+								return result;
+							}
+
+							driver.navigate().back();
+
+						} else if (titleOfFeedTypeElement.equalsIgnoreCase("Job alerts")) {
+
+							result = feedTypeBoxVerify(driver, titleOfFeedTypeElement);
+							if (!result) {
+								return result;
+							}
+
+						} else {
+
+							feedPageMsglist.add("Extra type not explored");
+							return false;
+						}
 					}
 				}
-				cfObj.swipeLeftOnElement(typesOfFeed.get(i), driver);
+
+				for (int k = 0; k < 3; k++) {
+					cfObj.swipeLeftOnElement(typesOfFeed.get(k), driver);
+				}
 			}
 
 		} catch (Exception e) {
@@ -448,7 +491,7 @@ public class FeedPageUtil {
 				}
 
 			} else {
-				
+
 				feedPageMsglist.add("The text of feed type is not same as next page heading");
 				return false;
 			}

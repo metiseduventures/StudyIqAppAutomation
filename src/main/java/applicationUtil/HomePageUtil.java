@@ -138,11 +138,14 @@ public class HomePageUtil {
 				return result;
 			}
 
-			result = verifyBuyNowProcess(driver, testData);
+			cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.getListBtnBuyNow().get(0), 5);
 			if (!result) {
+				homePageMsglist.add("Buy btn is not visible");
 				return result;
 			}
-
+			
+			cfObj.commonClick(homePageORObj.getListBtnBuyNow().get(0));
+			
 			while (bool) {
 				driver.navigate().back();
 				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 5);
@@ -337,8 +340,9 @@ public class HomePageUtil {
 				return result;
 			}
 
-			result = verifyBuyNowProcess(driver, testData);
+			result = courseDetailPageUtil.clickOnBuyNow(driver);
 			if (!result) {
+				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
 
@@ -489,7 +493,7 @@ public class HomePageUtil {
 				return false;
 			}
 
-			//my feed
+			// my feed
 			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.getListBottomMenuMyFeed().get(0), 10);
 			if (!result) {
 				homePageMsglist.add("The text of my feed on bottom is not visible");
@@ -753,68 +757,86 @@ public class HomePageUtil {
 		return result;
 	}
 
-	public boolean verifyBuyNowProcess(AppiumDriver<MobileElement> driver, TestData testData) {
-		boolean result = true;
-		try {
-
-			result = courseDetailPageUtil.clickOnBuyNow(driver);
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.verifyEMIoption(driver,null);
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.verifyPacks(driver,null);
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.selectCoupon_verifyAmount(driver);
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.changeCoupon(driver);
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.applyManualCoupon(driver);
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.chooseYourPack(driver, testData.getChoosePack());
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.buyNowPack(driver);
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.verifyViewDetails(driver);
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-		} catch (Exception e) {
-			homePageMsglist.add("verifyBuyNowProcess_Exception " + e.getMessage());
-			return result;
-		}
-		return result;
-	}
+//	public boolean verifyBuyNowProcess(AppiumDriver<MobileElement> driver, TestData testData) {
+//		boolean result = true;
+//		try {
+//
+//			result = courseDetailPageUtil.clickOnBuyNow(driver);
+//			if (!result) {
+//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//				return result;
+//			}
+//
+//			result = courseDetailPageUtil.verifyEMIoption(driver, null);
+//			if (!result) {
+//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//				return result;
+//			}
+//
+//			result = courseDetailPageUtil.verifyPacks(driver, null);
+//			if (!result) {
+//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//				return result;
+//			}
+//
+//			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.noOfOffersAvail(), 10);
+//			if (result) {
+//
+//				String noOfOffersAvail = homePageORObj.noOfOffersAvail().getText();
+//				String[] arr = noOfOffersAvail.split(" ");
+//				int countOfOffers = Integer.parseInt(arr[0]);
+//
+//				if (countOfOffers > 0) {
+//					
+//					result = courseDetailPageUtil.verifyInvalidCoupon(driver);
+//					if (!result) {
+//						homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//						return result;
+//					}
+//
+//					result = courseDetailPageUtil.selectCoupon_verifyAmount(driver);
+//					if (!result) {
+//						homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//						return result;
+//					}
+//
+//					result = courseDetailPageUtil.changeCoupon(driver);
+//					if (!result) {
+//						homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//						return result;
+//					}
+//
+//					result = courseDetailPageUtil.applyManualCoupon(driver);
+//					if (!result) {
+//						homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//						return result;
+//					}
+//
+//				}
+//			}
+//
+//			result = courseDetailPageUtil.chooseYourPack(driver, testData.getChoosePack());
+//			if (!result) {
+//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//				return result;
+//			}
+//
+//			result = courseDetailPageUtil.buyNowPack(driver);
+//			if (!result) {
+//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//				return result;
+//			}
+//
+//			result = courseDetailPageUtil.verifyViewDetails(driver);
+//			if (!result) {
+//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
+//				return result;
+//			}
+//
+//		} catch (Exception e) {
+//			homePageMsglist.add("verifyBuyNowProcess_Exception " + e.getMessage());
+//			return result;
+//		}
+//		return result;
+//	}
 }
