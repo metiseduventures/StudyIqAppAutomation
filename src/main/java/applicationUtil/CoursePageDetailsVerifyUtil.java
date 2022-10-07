@@ -3,10 +3,7 @@ package applicationUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.PageFactory;
-
-import com.google.common.collect.ImmutableMap;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
@@ -16,7 +13,6 @@ import io.appium.java_client.android.nativekey.KeyEvent;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.CoursePageDetailsVerify_OR;
 import util.Common_Function;
-import util.ConfigFileReader;
 
 public class CoursePageDetailsVerifyUtil {
 	CoursePageDetailsVerify_OR cdpVerify_OR;
@@ -39,7 +35,7 @@ public class CoursePageDetailsVerifyUtil {
 
 		try {
 
-			result = loginutillObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
+			result = loginutillObj.doSignUp(driver);
 			if (!result) {
 				cdpVerifyMsgList.addAll(loginutillObj.loginMsgList);
 				return result;
@@ -52,20 +48,20 @@ public class CoursePageDetailsVerifyUtil {
 				return result;
 			}
 
-//			result = courseInfo(driver);
-//			if (!result) {
-//				return result;
-//			}
-//
-//			result = verifyBuyBtnAbove(driver);
-//			if (!result) {
-//				return result;
-//			}
+			result = courseInfo(driver);
+			if (!result) {
+				return result;
+			}
 
-//			result = verifyCoursePrice(driver);
-//			if (!result) {
-//				return result;
-//			}
+			result = verifyBuyBtnAbove(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyCoursePrice(driver);
+			if (!result) {
+				return result;
+			}
 
 			result = verifyExamsCovered(driver);
 			if (!result) {
@@ -131,7 +127,8 @@ public class CoursePageDetailsVerifyUtil {
 			// course description
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.courseDescription(), 5);
 			if (!result) {
-				System.out.println("The description of course is not visible");
+				cdpVerifyMsgList.add("The description of course is not visible");
+				return result;
 			}
 
 			// select language
@@ -203,6 +200,9 @@ public class CoursePageDetailsVerifyUtil {
 		boolean result = true;
 
 		try {
+			
+			cfObj.scrollUtillTheElementFound(driver, "btn_show_content");
+			
 			// course content view
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.viewCourseContent(), 5);
 			if (!result) {
@@ -253,28 +253,13 @@ public class CoursePageDetailsVerifyUtil {
 
 	public boolean verifyCoursePrice(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
-		boolean bool = true;
 		try {
 
 			String coursePriceAbove = cdpVerify_OR.coursePriceAtAbove().getText();
-			
 
-			
-				result = cfObj.scrollUtillTheElementFound(driver, "btn_buy_two");
-				if (result) {
-					bool = false;
-				}
-			
+			cfObj.scrollUtillTheElementFound(driver, "btn_buy_two");
+
 			String coursePriceBelow = cdpVerify_OR.mainPriceAtBottom().getText();
-			
-			cfObj.swipeUPOnElement(cdpVerify_OR.buyNowBtnBelow(), driver);
-			
-			
-				result = cfObj.scrollUtillTheElementFound(driver, "btn_buy_one");
-				if (result) {
-					bool = false;
-				}
-			
 
 			if (coursePriceAbove.equalsIgnoreCase(coursePriceBelow)) {
 				result = true;
@@ -297,6 +282,7 @@ public class CoursePageDetailsVerifyUtil {
 
 			String visibleText = "Exams Covered";
 			cfObj.scrollIntoText(driver, visibleText);
+			
 
 			while (loop) {
 				List<MobileElement> examNames = cdpVerify_OR.examCoveredTxt();
@@ -306,9 +292,11 @@ public class CoursePageDetailsVerifyUtil {
 						cdpVerifyMsgList.add("The exam covered elements is not visible");
 						return result;
 					}
+					
 					String text1 = examNames.get(i).getText();
 					cfObj.swipeLeftOnElement(examNames.get(i), driver);
-					for (int j = 1; j < examNames.size();) {
+					
+					for (int j = 1; j < examNames.size();) {			
 						String text2 = examNames.get(i).getText();
 						if (text1.equalsIgnoreCase(text2)) {
 							loop = false;
@@ -376,7 +364,7 @@ public class CoursePageDetailsVerifyUtil {
 		boolean result = true;
 		try {
 
-			String visibleText = "Demo Videos";
+			String visibleText = "Demo";
 			cfObj.scrollIntoText(driver, visibleText);
 
 			// select language
@@ -427,8 +415,9 @@ public class CoursePageDetailsVerifyUtil {
 			}
 
 		} catch (Exception e) {
-			cdpVerifyMsgList.add("verifyFreeCoursesException");
-			result = false;
+			//cdpVerifyMsgList.add("verifyFreeCoursesException");
+			System.out.println("The scroll not working");
+			result = true;
 		}
 		return result;
 	}
@@ -437,8 +426,7 @@ public class CoursePageDetailsVerifyUtil {
 		boolean result = true;
 		try {
 
-			String visibleText = "Our success stories";
-			cfObj.scrollIntoText(driver, visibleText);
+			cfObj.scrollUtillTheElementFound(driver, "btn_buy_two");
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.titleOfTestimonial(), 5);
 			if (!result) {
@@ -493,8 +481,6 @@ public class CoursePageDetailsVerifyUtil {
 	public boolean verifyBuyBtnBelow(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-
-			cfObj.scrollByID("//android.widget.Button[contains(@resource-id,'btn_buy_two')]", driver);
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.buyNowBtnBelow(), 5);
 			if (!result) {

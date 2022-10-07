@@ -47,7 +47,7 @@ public class LibraryPageUtil {
 				System.out.println("It is prod env so cant buy course and no library");
 
 			} else {
-				
+
 				if (testData.getIsKey().equalsIgnoreCase("pass")) {
 
 					result = orderPlacedOrNot(driver);
@@ -82,7 +82,7 @@ public class LibraryPageUtil {
 		boolean result = true;
 
 		try {
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "bt_action_pc", "id", 10);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "bt_action_pc", "id", 5);
 			if (!result) {
 				libraryPageMsgList.add("The order status page is not visible");
 				return result;
@@ -101,7 +101,7 @@ public class LibraryPageUtil {
 
 		try {
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myLibraryTextList().get(0), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myLibraryTextList().get(0), 5);
 			if (!result) {
 				libraryPageMsgList.add("My library page not open");
 				return result;
@@ -118,16 +118,16 @@ public class LibraryPageUtil {
 		boolean result = true;
 
 		try {
-			driver.findElement(By.id("tv_nav_library")).click();
+			// driver.findElement(By.id("tv_nav_library")).click();
 
 			List<MobileElement> titleOfCourses = libraryPage_OR.titleOfCoursesList();
 			List<MobileElement> titleBoxOfCourses = libraryPage_OR.titleOfCoursesBoxList();
 			for (int i = 0; i < titleOfCourses.size(); i++) {
 				String titleOfCourseString = titleOfCourses.get(i).getText();
 
-				if (titleOfCourseString.equalsIgnoreCase("Smart Courses")) {
+				if (titleOfCourseString.equalsIgnoreCase("Smart Course")) {
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, titleOfCourses.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, titleOfCourses.get(i), 5);
 					if (!result) {
 						libraryPageMsgList.add("The smart courses are not visible");
 						return result;
@@ -170,6 +170,12 @@ public class LibraryPageUtil {
 
 					cfObj.commonClick(subCourseBoxes.get(0));
 
+					result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+							"//androidx.appcompat.app.ActionBar.b[@content-desc=\"My Course\"]", "xpath", 5);
+					if (!result) {
+						cfObj.commonClick(libraryPage_OR.popUpLaterBtn());
+					}
+
 					result = verifyMyDownloadsSection(driver);
 					if (!result) {
 						return result;
@@ -209,9 +215,9 @@ public class LibraryPageUtil {
 
 					driver.navigate().back();
 
-				} else if (titleOfCourseString.equalsIgnoreCase("Micro Courses")) {
+				} else if (titleOfCourseString.equalsIgnoreCase("Micro Course")) {
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, titleOfCourses.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, titleOfCourses.get(i), 5);
 					if (!result) {
 						libraryPageMsgList.add("The micro courses are not visible");
 						return result;
@@ -243,9 +249,14 @@ public class LibraryPageUtil {
 
 					cfObj.commonClick(subCourseStatus.get(0));
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myCourseBtn(), 5);
+					result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+							"//androidx.appcompat.app.ActionBar.b[@content-desc=\"My Course\"]", "xpath", 5);
 					if (!result) {
-						cfObj.commonClick(libraryPage_OR.closePopUpInMicro());
+						result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "txt_notification_title", "id",
+								5);
+						if (result) {
+							cfObj.commonClick(libraryPage_OR.closePopUpInMicro());
+						}
 					}
 
 					result = verifyMyDownloadsSection(driver);
@@ -293,7 +304,6 @@ public class LibraryPageUtil {
 					driver.navigate().back();
 
 				}
-
 			}
 
 		} catch (Exception e) {

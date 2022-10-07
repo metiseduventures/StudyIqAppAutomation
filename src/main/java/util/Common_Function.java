@@ -89,14 +89,14 @@ public class Common_Function {
 			if (ConfigFileReader.strRunMode.equalsIgnoreCase("local")) {
 				capability.setCapability("automationName", getCapebility().get("automationName"));
 			}
-//			capability.setCapability("deviceName", getCapebility().get("deviceName"));
-//			capability.setCapability(CapabilityType.VERSION, getCapebility().get("deviceVersion"));
+			capability.setCapability("deviceName", getCapebility().get("deviceName"));
+			capability.setCapability(CapabilityType.VERSION, getCapebility().get("deviceVersion"));
 			capability.setCapability("platformName", "Android");
 			// capability.setCapability("clearDeviceLogsOnStart",true);
 			capability.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, 30000);
 			capability.setCapability("appPackage", getCapebility().get("appPackage"));
 			capability.setCapability("appActivity", "com.studyiq.android.activities.SplashActivity");
-//			capability.setCapability("clearDeviceLogsOnStart", true);
+			capability.setCapability("clearDeviceLogsOnStart", true);
 			capability.setCapability("noReset", false);
 			capability.setCapability("unicodeKeyboard", false);
 			capability.setCapability("resetKeyboard", false);
@@ -924,7 +924,7 @@ public class Common_Function {
 			int middleOfX = width / 2;
 			int startYCoordinate = (int) (height * .7);
 			int endYCoordinate = (int) (height * .2);
-			while (!isFound && count < 10) {
+			while (!isFound && count < 8) {
 				count = count + 1;
 				action.press(PointOption.point(middleOfX, startYCoordinate))
 						.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(2)))
@@ -977,17 +977,13 @@ public class Common_Function {
 				.moveTo(PointOption.point(moveToX, moveToY)).release().perform();
 	}
 
-	public void swipeUPOnElement(WebElement element, AppiumDriver<MobileElement> driver) {
-		Point point = element.getLocation();
-		Dimension eleSize = element.getSize();
-		int centerX = point.getX() + (eleSize.getWidth() / 2);
-		int centerY = point.getY() + (eleSize.getHeight() / 2);
-		int moveToX = point.getX() + (eleSize.getWidth() / 2);
-		int moveToY = point.getY();
-
-		new TouchAction(driver).press(PointOption.point(centerX, centerY))
-				.waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
-				.moveTo(PointOption.point(moveToX, moveToY)).release().perform();
+	public void scrollToMobileElement(MobileElement locator, AppiumDriver<MobileElement> driver) {
+		try {
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].scrollIntoView();", locator);
+		} catch (Exception e) {
+			System.err.println("Unable to scroll to MobileElement. MobileElement is not visible.");
+		}
 	}
 
 }

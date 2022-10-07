@@ -19,16 +19,15 @@ import pojo.testdata.TestData;
 public class LibraryPageTest extends BaseTest{
 	
 	LibraryPageUtil libraryPageUtil;
-	
+	boolean result = true;
+
 	@Test(dataProvider = "getData", enabled = true)
 	public void verifyLibraryPageMain(TestData testData) {
-		boolean result = true;
 		libraryPageUtil = new LibraryPageUtil(driver);
-		libraryPageUtil.verifyLibraryPage(driver, testData);
+		result = libraryPageUtil.verifyLibraryPage(driver, testData);
 		Assert.assertEquals(result, true, libraryPageUtil.libraryPageMsgList.toString());
 	}
 
-	
 	@DataProvider
 	public Object[][] getData() throws FileNotFoundException {
 		JsonElement jsonData = new JsonParser().parse(new FileReader("src/main/resources/TestData.json"));

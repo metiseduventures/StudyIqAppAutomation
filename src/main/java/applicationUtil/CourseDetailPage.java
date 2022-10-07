@@ -292,7 +292,7 @@ public class CourseDetailPage {
 			String invalidCode = "INVALID123";
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.getListTextCouponCode().get(0),
-					10);
+					5);
 			if (!result) {
 				coursePageMsgList.add("The input of enter code is not visible");
 				return result;
@@ -303,13 +303,13 @@ public class CourseDetailPage {
 
 			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListTextCouponCode().get(0), invalidCode);
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.applyCodeAfterInputBtn(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.applyCodeAfterInputBtn(), 5);
 			if (!result) {
 				coursePageMsgList.add("The Apply btn is not visible");
 				return result;
 			}
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.cancelCodeAfterInputBtn(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.cancelCodeAfterInputBtn(), 5);
 			if (!result) {
 				coursePageMsgList.add("The cancel btn is not visible");
 				return result;
@@ -517,7 +517,7 @@ public class CourseDetailPage {
 	public boolean verifyPacks(AppiumDriver<MobileElement> driver, CourseView courseViewObj) {
 		boolean result = true;
 		try {
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 5);
 			if (!result) {
 				coursePageMsgList.add("The pack title is not visible");
 				return result;
@@ -527,7 +527,7 @@ public class CourseDetailPage {
 
 				cfObj.swipeLeftOnElement(courseDetailPageObj.packTitle(), driver);
 
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
+				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 5);
 				if (!result) {
 					coursePageMsgList.add("The next pack title is not visible");
 					return result;
@@ -538,7 +538,7 @@ public class CourseDetailPage {
 					cfObj.swipeRightOnElement(courseDetailPageObj.packTitle(), driver);
 					cfObj.swipeRightOnElement(courseDetailPageObj.packTitle(), driver);
 
-					result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
+					result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 5);
 					if (!result) {
 						coursePageMsgList.add("The next pack title is not visible");
 						return result;
@@ -546,7 +546,7 @@ public class CourseDetailPage {
 				}
 			}
 
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 5);
 			if (!result) {
 				coursePageMsgList.add("The next pack title is not visible");
 				return result;
@@ -622,7 +622,7 @@ public class CourseDetailPage {
 	public boolean verifyViewDetails(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.viewDetailsBtn(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.viewDetailsBtn(), 5);
 			if (!result) {
 				coursePageMsgList.add("The view details btn not visible");
 				return false;
@@ -680,7 +680,7 @@ public class CourseDetailPage {
 					return result;
 
 				}
-				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDesc(), 10);
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDesc(), 5);
 				if (!result) {
 					coursePageMsgList.add("The show details of emi desc not visible");
 				}
@@ -693,24 +693,24 @@ public class CourseDetailPage {
 
 				for (int i = 0; i < noOfInstallments.size(); i++) {
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, noOfInstallments.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, noOfInstallments.get(i), 5);
 					if (!result) {
 						coursePageMsgList.add("The emi installment title is not visible");
 					}
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, emiValidities.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, emiValidities.get(i), 5);
 					if (!result) {
 						coursePageMsgList.add("The emi validity is not visible");
 					}
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, emiAmounts.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, emiAmounts.get(i), 5);
 					if (!result) {
 						coursePageMsgList.add("The emi amount is not visible");
 					}
 
 				}
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDialogBtn(), 10);
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDialogBtn(), 5);
 				if (!result) {
 					coursePageMsgList.add("The avail btn is not visible");
 				}
@@ -746,7 +746,7 @@ public class CourseDetailPage {
 		boolean result = true;
 		try {
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatus(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatus(), 5);
 			if (!result) {
 				coursePageMsgList.add("The status of course purchase is not visible or wrong page");
 				return result;
@@ -757,13 +757,13 @@ public class CourseDetailPage {
 
 			if (expectedPayStatus.equalsIgnoreCase(actualPayStatus)) {
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatusDesc(), 10);
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatusDesc(), 5);
 				if (!result) {
 					coursePageMsgList.add("The description of course purchase is not visible");
 					return result;
 				}
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.goToLibraryBtn(), 10);
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.goToLibraryBtn(), 5);
 				if (!result) {
 					coursePageMsgList.add("The go to library btn is not visible");
 					return result;

@@ -46,33 +46,38 @@ public class PaymentPageUtil {
 
 					cfObj.commonClick(paymentOptions.get(i));
 
-					Thread.sleep(4000);
-
-					driver.hideKeyboard();
+					result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+							"//android.view.View[@resource-id='ptm-login']", "xpath", 5);
+					if (!result) {
+						paymentPageMsgList.add("It is not paytm payment page");
+						return result;
+					}
 
 					cfObj.scrollIntoText(driver, "Net Banking");
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.netBankPaymentOption(), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.netBankPaymentOption(), 5);
 					if (!result) {
 						paymentPageMsgList.add("The netbanking option in paytm is not visible");
 						return result;
 					}
 					cfObj.commonClick(paymentPageObj.netBankPaymentOption());
+					cfObj.commonClick(paymentPageObj.netBankPaymentOption());
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 5);
 					if (!result) {
 						paymentPageMsgList.add("The payBtn is not visible");
 						return result;
 					}
+
 					cfObj.commonClick(paymentPageObj.payBtn());
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.successfulPayBtn(), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.successfulPayBtn(), 5);
 					if (!result) {
 						paymentPageMsgList.add("The successful Paytm payment btn is not visible");
 						return result;
 					}
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.failurePayBtn(), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.failurePayBtn(), 5);
 					if (!result) {
 						paymentPageMsgList.add("The successful Paytm payment btn is not visible");
 						return result;
@@ -81,7 +86,7 @@ public class PaymentPageUtil {
 					if (testData.getIsKey().equalsIgnoreCase("pass")) {
 
 						cfObj.commonClick(paymentPageObj.successfulPayBtn());
-						
+
 						return true;
 
 					} else if (testData.getIsKey().equalsIgnoreCase("fail")) {
@@ -90,13 +95,13 @@ public class PaymentPageUtil {
 
 						result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
 								"//android.widget.TextView[contains(@text,'Your transaction has failed.')]", "xpath",
-								10);
+								5);
 						if (!result) {
 							paymentPageMsgList.add("The transaction failed popup not visible");
 							return result;
 						}
 
-						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.retryPaymentBtn(), 10);
+						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.retryPaymentBtn(), 5);
 						if (!result) {
 							paymentPageMsgList.add("The retry btn is not visible");
 							return result;
@@ -104,12 +109,12 @@ public class PaymentPageUtil {
 
 						cfObj.commonClick(paymentPageObj.retryPaymentBtn());
 
-						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 10);
+						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 5);
 						if (!result) {
 							paymentPageMsgList.add("The payBtn is not visible");
 							return result;
 						}
-						
+
 						return true;
 
 					} else {
