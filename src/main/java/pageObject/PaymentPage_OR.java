@@ -22,7 +22,7 @@ public class PaymentPage_OR {
 		return netBankPaymentOptionElement;
 	}
 	
-	@AndroidFindBy(xpath = "//android.widget.Button[contains(@text,'PAY')]")
+	@AndroidFindBy(xpath = "//android.view.View/android.view.View/android.widget.Button[contains(@text,'PAY')]")
 	private MobileElement payBtnElement;
 	
 	public MobileElement payBtn() {
@@ -56,7 +56,5 @@ public class PaymentPage_OR {
 	public MobileElement retryPayAfterUnsuccessBtn() {
 		return retryPayAfterUnsuccessBtn;
 	}
-	
-	
 
 }

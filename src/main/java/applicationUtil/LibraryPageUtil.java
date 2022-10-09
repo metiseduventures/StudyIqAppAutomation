@@ -12,6 +12,7 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.LibraryPage_OR;
 import pojo.testdata.TestData;
 import util.Common_Function;
+import util.ConfigFileReader;
 
 public class LibraryPageUtil {
 
@@ -32,59 +33,41 @@ public class LibraryPageUtil {
 
 	public boolean verifyLibraryPage(AppiumDriver<MobileElement> driver, TestData testData) {
 		boolean result = true;
+		courseDetailPageUtil = new CourseDetailPage(driver);
 		try {
-			loginUtillObj = new LoginUtil(driver);
-			boolean checkLoginPageOrNot = loginUtillObj.checkSignUpLoginPage(driver);
-			if (checkLoginPageOrNot == true) {
 
-				result = loginUtillObj.doSignUp(driver);
-				if (!result) {
-					libraryPageMsgList.addAll(loginUtillObj.loginMsgList);
-					return result;
-				}
-			} else {
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 30);
-				if (result) {
-					cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
-				}
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
-				if (!result) {
-					libraryPageMsgList.add("Home page not opened after login");
-					return result;
-				}
-			}
-
-			homePageUtilObj = new HomePageUtil(driver);
-			result = homePageUtilObj.clickOnCourseOnHomePage(driver);
+			result = courseDetailPageUtil.verifyPurchaseCourse(driver, testData);
 			if (!result) {
+				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
 
-			result = buyProcess(driver, testData);
-			if (!result) {
-				return result;
-			}
+			if ((ConfigFileReader.strEnv).equalsIgnoreCase("prod")) {
 
-			if (testData.getIsKey().equalsIgnoreCase("pass")) {
+				System.out.println("It is prod env so cant buy course and no library");
 
-				result = orderPlacedOrNot(driver);
-				if (!result) {
-					return result;
-				}
-
-				result = verifyMyLibraryTitle(driver);
-				if (!result) {
-					return result;
-				}
-
-				result = openCoursesInLibrary(driver);
-				if (!result) {
-					return result;
-				}
 			} else {
-				System.out.println("Failed the payment");
+
+				if (testData.getIsKey().equalsIgnoreCase("pass")) {
+
+					result = orderPlacedOrNot(driver);
+					if (!result) {
+						return result;
+					}
+
+					result = verifyMyLibraryTitle(driver);
+					if (!result) {
+						return result;
+					}
+
+					result = openCoursesInLibrary(driver);
+					if (!result) {
+						return result;
+					}
+
+				} else {
+					System.out.println("Failed the payment and can not explore library");
+				}
 			}
 
 		} catch (Exception e) {
@@ -95,115 +78,11 @@ public class LibraryPageUtil {
 		return result;
 	}
 
-	public boolean buyProcess(AppiumDriver<MobileElement> driver, TestData testData) {
-		boolean result = true;
-		courseDetailPageUtil = new CourseDetailPage(driver);
-		try {
-			result = courseDetailPageUtil.clickOnBuyNow(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.verifyEMIoption(driver,null);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.verifyPacks(driver,null);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.noOfOffersAvail(), 10);
-			if (result) {
-
-				String noOfOffersAvail = libraryPage_OR.noOfOffersAvail().getText();
-				String[] arr = noOfOffersAvail.split(" ");
-				int countOfOffers = Integer.parseInt(arr[0]);
-
-				if (countOfOffers > 0) {
-
-					result = courseDetailPageUtil.verifyInvalidCoupon(driver);
-					if (!result) {
-						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-						return result;
-					}
-
-					result = courseDetailPageUtil.selectCoupon_verifyAmount(driver);
-					if (!result) {
-						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-						return result;
-					}
-
-					result = courseDetailPageUtil.changeCoupon(driver);
-					if (!result) {
-						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-						return result;
-					}
-
-					result = courseDetailPageUtil.applyManualCoupon(driver);
-					if (!result) {
-						libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-						return result;
-					}
-
-				}
-			}
-
-			result = courseDetailPageUtil.chooseYourPack(driver, testData.getChoosePack());
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.buyNowPack(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			result = courseDetailPageUtil.verifyViewDetails(driver);
-			if (!result) {
-				libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-				return result;
-			}
-
-			paymentPageUtilObj = new PaymentPageUtil(driver);
-
-			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
-			if (!result) {
-				libraryPageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
-				return result;
-			}
-
-			if (testData.getIsKey().equalsIgnoreCase("pass")) {
-
-				result = courseDetailPageUtil.courseBuyStatus(driver);
-				if (!result) {
-					libraryPageMsgList.addAll(courseDetailPageUtil.coursePageMsgList);
-					return result;
-				}
-
-			} else {
-				libraryPageMsgList.add("There is failure in course purchase");
-				return true;
-			}
-
-		} catch (Exception e) {
-			result = false;
-			libraryPageMsgList.add("Exception in buyProcess  " + e.getMessage());
-		}
-		return result;
-	}
-
 	public boolean orderPlacedOrNot(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 
 		try {
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "bt_action_pc", "id", 10);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "bt_action_pc", "id", 5);
 			if (!result) {
 				libraryPageMsgList.add("The order status page is not visible");
 				return result;
@@ -222,7 +101,7 @@ public class LibraryPageUtil {
 
 		try {
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myLibraryTextList().get(0), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myLibraryTextList().get(0), 5);
 			if (!result) {
 				libraryPageMsgList.add("My library page not open");
 				return result;
@@ -239,16 +118,16 @@ public class LibraryPageUtil {
 		boolean result = true;
 
 		try {
-			driver.findElement(By.id("tv_nav_library")).click();
+			// driver.findElement(By.id("tv_nav_library")).click();
 
 			List<MobileElement> titleOfCourses = libraryPage_OR.titleOfCoursesList();
 			List<MobileElement> titleBoxOfCourses = libraryPage_OR.titleOfCoursesBoxList();
 			for (int i = 0; i < titleOfCourses.size(); i++) {
 				String titleOfCourseString = titleOfCourses.get(i).getText();
 
-				if (titleOfCourseString.equalsIgnoreCase("Smart Courses")) {
+				if (titleOfCourseString.equalsIgnoreCase("Smart Course")) {
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, titleOfCourses.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, titleOfCourses.get(i), 5);
 					if (!result) {
 						libraryPageMsgList.add("The smart courses are not visible");
 						return result;
@@ -291,6 +170,12 @@ public class LibraryPageUtil {
 
 					cfObj.commonClick(subCourseBoxes.get(0));
 
+					result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+							"//androidx.appcompat.app.ActionBar.b[@content-desc=\"My Course\"]", "xpath", 5);
+					if (!result) {
+						cfObj.commonClick(libraryPage_OR.popUpLaterBtn());
+					}
+
 					result = verifyMyDownloadsSection(driver);
 					if (!result) {
 						return result;
@@ -330,9 +215,9 @@ public class LibraryPageUtil {
 
 					driver.navigate().back();
 
-				} else if (titleOfCourseString.equalsIgnoreCase("Micro Courses")) {
+				} else if (titleOfCourseString.equalsIgnoreCase("Micro Course")) {
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, titleOfCourses.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, titleOfCourses.get(i), 5);
 					if (!result) {
 						libraryPageMsgList.add("The micro courses are not visible");
 						return result;
@@ -364,9 +249,14 @@ public class LibraryPageUtil {
 
 					cfObj.commonClick(subCourseStatus.get(0));
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myCourseBtn(), 5);
+					result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+							"//androidx.appcompat.app.ActionBar.b[@content-desc=\"My Course\"]", "xpath", 5);
 					if (!result) {
-						cfObj.commonClick(libraryPage_OR.closePopUpInMicro());
+						result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "txt_notification_title", "id",
+								5);
+						if (result) {
+							cfObj.commonClick(libraryPage_OR.closePopUpInMicro());
+						}
 					}
 
 					result = verifyMyDownloadsSection(driver);
@@ -414,7 +304,6 @@ public class LibraryPageUtil {
 					driver.navigate().back();
 
 				}
-
 			}
 
 		} catch (Exception e) {

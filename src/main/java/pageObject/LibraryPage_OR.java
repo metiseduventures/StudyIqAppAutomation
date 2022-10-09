@@ -405,4 +405,5 @@ public class LibraryPage_OR {
 	public MobileElement noOfOffersAvail() {
 		return noOfOffersAvailElement;
 	}
+
 }

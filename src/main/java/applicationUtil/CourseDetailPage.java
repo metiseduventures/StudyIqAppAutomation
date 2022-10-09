@@ -22,6 +22,9 @@ public class CourseDetailPage {
 	LoginUtil loginutillObj;
 	HomePageUtil homePageUtilObj;
 	PaymentPageUtil paymentPageUtilObj;
+	CourseApiUtil courseApiUtilObj;
+	CourseView courseViewObj;
+	CourseList courseListObj;
 	public ArrayList<String> coursePageMsgList = new ArrayList<String>();
 
 	public Common_Function cfObj = new Common_Function();
@@ -33,10 +36,9 @@ public class CourseDetailPage {
 	}
 
 	public boolean verifyPurchaseCourse(AppiumDriver<MobileElement> driver, TestData testData) {
-		boolean result = true;
-		CourseApiUtil courseApiUtilObj;
-		CourseView courseViewObj;
-		CourseList courseListObj;
+		boolean result = true;		
+		loginutillObj = new LoginUtil(driver);
+
 		try {
 			courseApiUtilObj = new CourseApiUtil();
 			courseListObj = courseApiUtilObj.getCourseList("bestselling-courses");
@@ -47,98 +49,221 @@ public class CourseDetailPage {
 			courseViewObj = courseApiUtilObj
 					.getCourseViewData(courseListObj.getData().getCourses().get(0).getCourseSlug());
 			System.out.println(courseViewObj.getData().getPriceInfo());
-			// login to application
-			loginutillObj = new LoginUtil(driver);
-			result = loginutillObj.doSignUp(driver);
-			if (!result) {
-				coursePageMsgList.addAll(loginutillObj.loginMsgList);
-				return result;
-			}
-			homePageUtilObj = new HomePageUtil(driver);
-			result = homePageUtilObj.clickOnCourseOnHomePage(driver);
-			if (!result) {
-				return result;
-			}
 
-			result = clickOnBuyNow(driver);
-			if (!result) {
-				return result;
-			}
-
-			result = verifyEMIoption(driver, courseViewObj);
-			if (!result) {
-				return result;
-			}
-
-			result = verifyPacks(driver, courseViewObj);
-			if (!result) {
-				return result;
-			}
-
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.noOfOffersAvail(), 10);
-			if (result) {
-
-				String noOfOffersAvail = courseDetailPageObj.noOfOffersAvail().getText();
-				String[] arr = noOfOffersAvail.split(" ");
-				int countOfOffers = Integer.parseInt(arr[0]);
-
-				if (countOfOffers > 0) {
-
-					result = verifyInvalidCoupon(driver);
-					if (!result) {
-						return result;
-					}
-
-					result = selectCoupon_verifyAmount(driver);
-					if (!result) {
-						return result;
-					}
-
-					result = changeCoupon(driver);
-					if (!result) {
-						return result;
-					}
-
-					result = applyManualCoupon(driver);
-					if (!result) {
-						return result;
-					}
-
+			if (testData.isGuestUser()) {
+				
+				result = loginutillObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
+				if (!result) {
+					coursePageMsgList.addAll(loginutillObj.loginMsgList);
+					return result;
 				}
-			}
 
-			result = chooseYourPack(driver, testData.getChoosePack());
-			if (!result) {
-				return result;
-			}
-
-			result = buyNowPack(driver);
-			if (!result) {
-				return result;
-			}
-
-			result = verifyViewDetails(driver);
-			if (!result) {
-				return result;
-			}
-
-			paymentPageUtilObj = new PaymentPageUtil(driver);
-
-			result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
-			if (!result) {
-				return result;
-			}
-
-			if (testData.getIsKey().equalsIgnoreCase("pass")) {
-
-				result = courseBuyStatus(driver);
+				homePageUtilObj = new HomePageUtil(driver);
+				result = homePageUtilObj.clickOnCourseOnHomePage(driver);
 				if (!result) {
 					return result;
 				}
 
-			} else {
+				result = clickOnBuyNow(driver);
+				if (!result) {
+					return result;
+				}
 
-				System.out.println("User on course page - the payment is failed");
+				result = verifyEMIoption(driver, courseViewObj);
+				if (!result) {
+					return result;
+				}
+
+				result = verifyPacks(driver, courseViewObj);
+				if (!result) {
+					return result;
+				}
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.noOfOffersAvail(), 10);
+				if (result) {
+
+					String noOfOffersAvail = courseDetailPageObj.noOfOffersAvail().getText();
+					String[] arr = noOfOffersAvail.split(" ");
+					int countOfOffers = Integer.parseInt(arr[0]);
+
+					if (countOfOffers > 0) {
+
+						result = verifyInvalidCoupon(driver);
+						if (!result) {
+							return result;
+						}
+
+						result = selectCoupon_verifyAmount(driver);
+						if (!result) {
+							return result;
+						}
+
+						result = changeCoupon(driver);
+						if (!result) {
+							return result;
+						}
+
+						result = applyManualCoupon(driver);
+						if (!result) {
+							return result;
+						}
+
+					}
+				}
+
+				result = chooseYourPack(driver, testData.getChoosePack());
+				if (!result) {
+					return result;
+				}
+
+				result = buyNowPack(driver);
+				if (!result) {
+					return result;
+				}
+
+				result = verifyViewDetails(driver);
+				if (!result) {
+					return result;
+				}
+
+				if ((ConfigFileReader.strEnv).equalsIgnoreCase("stag")
+						|| (ConfigFileReader.strEnv).equalsIgnoreCase("dev")) {
+
+					paymentPageUtilObj = new PaymentPageUtil(driver);
+
+					result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
+					if (!result) {
+						coursePageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
+						return result;
+					}
+
+					if (testData.getIsKey().equalsIgnoreCase("pass")) {
+
+						result = courseBuyStatus(driver);
+						if (!result) {
+							return result;
+						}
+
+					} else {
+						System.out.println("User on course page - the payment is failed");
+					}
+					
+				} else if ((ConfigFileReader.strEnv).equalsIgnoreCase("prod")) {
+
+					System.out.println("The envirnonment is production, everything working fine");
+
+				} else {
+
+					coursePageMsgList.add("The envirnoment is different from dev, stag and prod");
+					return false;
+
+				}
+			} else {
+				result = loginutillObj.doSignUp(driver);
+				if (!result) {
+					coursePageMsgList.addAll(loginutillObj.loginMsgList);
+					return result;
+				}
+
+				homePageUtilObj = new HomePageUtil(driver);
+				result = homePageUtilObj.clickOnCourseOnHomePage(driver);
+				if (!result) {
+					return result;
+				}
+
+				result = clickOnBuyNow(driver);
+				if (!result) {
+					return result;
+				}
+
+				result = verifyEMIoption(driver, courseViewObj);
+				if (!result) {
+					return result;
+				}
+
+				result = verifyPacks(driver, courseViewObj);
+				if (!result) {
+					return result;
+				}
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.noOfOffersAvail(), 10);
+				if (result) {
+
+					String noOfOffersAvail = courseDetailPageObj.noOfOffersAvail().getText();
+					String[] arr = noOfOffersAvail.split(" ");
+					int countOfOffers = Integer.parseInt(arr[0]);
+
+					if (countOfOffers > 0) {
+
+						result = verifyInvalidCoupon(driver);
+						if (!result) {
+							return result;
+						}
+
+						result = selectCoupon_verifyAmount(driver);
+						if (!result) {
+							return result;
+						}
+
+						result = changeCoupon(driver);
+						if (!result) {
+							return result;
+						}
+
+						result = applyManualCoupon(driver);
+						if (!result) {
+							return result;
+						}
+
+					}
+				}
+
+				result = chooseYourPack(driver, testData.getChoosePack());
+				if (!result) {
+					return result;
+				}
+
+				result = buyNowPack(driver);
+				if (!result) {
+					return result;
+				}
+
+				result = verifyViewDetails(driver);
+				if (!result) {
+					return result;
+				}
+
+				if ((ConfigFileReader.strEnv).equalsIgnoreCase("stag")
+						|| (ConfigFileReader.strEnv).equalsIgnoreCase("dev")) {
+
+					paymentPageUtilObj = new PaymentPageUtil(driver);
+
+					result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
+					if (!result) {
+						coursePageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
+						return result;
+					}
+
+					if (testData.getIsKey().equalsIgnoreCase("pass")) {
+
+						result = courseBuyStatus(driver);
+						if (!result) {
+							return result;
+						}
+
+					} else {
+						System.out.println("User on course page - the payment is failed");
+					}
+				} else if ((ConfigFileReader.strEnv).equalsIgnoreCase("prod")) {
+
+					System.out.println("The envirnonment is production, everything working fine");
+
+				} else {
+
+					coursePageMsgList.add("The envirnoment is different from dev, stag and prod");
+					return false;
+
+				}
 
 			}
 
@@ -167,7 +292,7 @@ public class CourseDetailPage {
 			String invalidCode = "INVALID123";
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.getListTextCouponCode().get(0),
-					10);
+					5);
 			if (!result) {
 				coursePageMsgList.add("The input of enter code is not visible");
 				return result;
@@ -178,13 +303,13 @@ public class CourseDetailPage {
 
 			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListTextCouponCode().get(0), invalidCode);
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.applyCodeAfterInputBtn(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.applyCodeAfterInputBtn(), 5);
 			if (!result) {
 				coursePageMsgList.add("The Apply btn is not visible");
 				return result;
 			}
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.cancelCodeAfterInputBtn(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.cancelCodeAfterInputBtn(), 5);
 			if (!result) {
 				coursePageMsgList.add("The cancel btn is not visible");
 				return result;
@@ -195,11 +320,11 @@ public class CourseDetailPage {
 
 			String toastMsgLangChange = courseDetailPageObj.toastInvalidCoupon().getAttribute("name");
 
-			if (toastMsgLangChange.equalsIgnoreCase("Invalid Coupon Code")) {
+			if(toastMsgLangChange.equalsIgnoreCase("Entered coupon code is invalid. Please try another code.")
+					|| toastMsgLangChange.equalsIgnoreCase("Invalid Coupon Code")) {
 				return true;
-
-			} else {
-
+			}
+			else {
 				coursePageMsgList.add("The coupon is invalid but the toast is not visible");
 				return false;
 			}
@@ -256,7 +381,9 @@ public class CourseDetailPage {
 	public boolean clickOnBuyNow(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-
+			
+			cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.getListBtnBuyNow().get(0), 5);
+			
 			cfObj.commonClick(courseDetailPageObj.getListBtnBuyNow().get(0));
 
 			// wait for buy now pack page is display
@@ -390,20 +517,39 @@ public class CourseDetailPage {
 	public boolean verifyPacks(AppiumDriver<MobileElement> driver, CourseView courseViewObj) {
 		boolean result = true;
 		try {
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 5);
 			if (!result) {
 				coursePageMsgList.add("The pack title is not visible");
 				return result;
 			}
 
 			for (int i = 1; i < courseViewObj.getData().getPackages().get(0).getPackages().size(); i++) {
+
 				cfObj.swipeLeftOnElement(courseDetailPageObj.packTitle(), driver);
 
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 10);
+				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 5);
 				if (!result) {
 					coursePageMsgList.add("The next pack title is not visible");
 					return result;
 				}
+
+				if (courseViewObj.getData().getPackages().get(0).getPackages().size() > 2) {
+
+					cfObj.swipeRightOnElement(courseDetailPageObj.packTitle(), driver);
+					cfObj.swipeRightOnElement(courseDetailPageObj.packTitle(), driver);
+
+					result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 5);
+					if (!result) {
+						coursePageMsgList.add("The next pack title is not visible");
+						return result;
+					}
+				}
+			}
+
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tv_pack_title", "id", 5);
+			if (!result) {
+				coursePageMsgList.add("The next pack title is not visible");
+				return result;
 			}
 
 		} catch (Exception e) {
@@ -418,6 +564,32 @@ public class CourseDetailPage {
 		boolean result = true;
 		boolean bool = true;
 		try {
+			
+			int noOfPacks = courseViewObj.getData().getPackages().get(0).getPackages().size();
+			
+			if (noOfPacks == 1) {
+				
+				String titleOfPack = courseDetailPageObj.packTitle().getText();
+				if (titleOfPack.equalsIgnoreCase(choosenPack)) {
+					return true;
+				}
+				else {
+					System.out.println("The required pack is not present");
+					return true;			//in prod and stag different packs, so test case fails
+				}
+			}
+			
+			for(int i=1;i<noOfPacks;i++) {
+				String titleOfPack = courseDetailPageObj.packTitle().getText();
+				if (titleOfPack.equalsIgnoreCase(choosenPack)) {
+					return true;
+				}else {
+					cfObj.swipeLeftOnElement(courseDetailPageObj.packTitle(), driver);
+				}
+				
+			}
+			
+			
 
 			while (bool) {
 				String titleOfPack = courseDetailPageObj.packTitle().getText();
@@ -450,7 +622,7 @@ public class CourseDetailPage {
 	public boolean verifyViewDetails(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.viewDetailsBtn(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.viewDetailsBtn(), 5);
 			if (!result) {
 				coursePageMsgList.add("The view details btn not visible");
 				return false;
@@ -508,7 +680,7 @@ public class CourseDetailPage {
 					return result;
 
 				}
-				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDesc(), 10);
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDesc(), 5);
 				if (!result) {
 					coursePageMsgList.add("The show details of emi desc not visible");
 				}
@@ -521,24 +693,24 @@ public class CourseDetailPage {
 
 				for (int i = 0; i < noOfInstallments.size(); i++) {
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, noOfInstallments.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, noOfInstallments.get(i), 5);
 					if (!result) {
 						coursePageMsgList.add("The emi installment title is not visible");
 					}
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, emiValidities.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, emiValidities.get(i), 5);
 					if (!result) {
 						coursePageMsgList.add("The emi validity is not visible");
 					}
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, emiAmounts.get(i), 10);
+					result = cfObj.commonWaitForElementToBeVisible(driver, emiAmounts.get(i), 5);
 					if (!result) {
 						coursePageMsgList.add("The emi amount is not visible");
 					}
 
 				}
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDialogBtn(), 10);
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiDialogBtn(), 5);
 				if (!result) {
 					coursePageMsgList.add("The avail btn is not visible");
 				}
@@ -558,6 +730,7 @@ public class CourseDetailPage {
 					coursePageMsgList.add("Emi option is  availabe for non emi course");
 					return false;
 				} else {
+					System.out.println("Emi option is not available");
 					return true;
 				}
 			}
@@ -573,7 +746,7 @@ public class CourseDetailPage {
 		boolean result = true;
 		try {
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatus(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatus(), 5);
 			if (!result) {
 				coursePageMsgList.add("The status of course purchase is not visible or wrong page");
 				return result;
@@ -584,13 +757,13 @@ public class CourseDetailPage {
 
 			if (expectedPayStatus.equalsIgnoreCase(actualPayStatus)) {
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatusDesc(), 10);
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.paymentStatusDesc(), 5);
 				if (!result) {
 					coursePageMsgList.add("The description of course purchase is not visible");
 					return result;
 				}
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.goToLibraryBtn(), 10);
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.goToLibraryBtn(), 5);
 				if (!result) {
 					coursePageMsgList.add("The go to library btn is not visible");
 					return result;

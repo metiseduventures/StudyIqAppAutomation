@@ -18,7 +18,7 @@ import pojo.testdata.TestData;
 
 public class CoursePageTest extends BaseTest {
 
-	CourseDetailPage coursePageUtilObj;;
+	CourseDetailPage coursePageUtilObj;
 
 	@Test(dataProvider = "getData", enabled = true)
 	public void verifyPurchaseCourse(TestData testData) {

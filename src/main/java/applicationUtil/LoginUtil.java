@@ -54,6 +54,9 @@ public class LoginUtil {
 			}
 
 			result = clickOnLoginButton(driver);
+			if (!result) {
+				return result;
+			}
 
 		} catch (Exception e) {
 			result = false;
@@ -117,13 +120,13 @@ public class LoginUtil {
 			cfObj.commonClick(loginPageObj.getBtnLogin());
 
 			// check if permission is display then allow permission
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.PERMISSION_ALLOW, "id", 30);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.PERMISSION_ALLOW, "id", 10);
 			if (result) {
 				cfObj.commonClick(loginPageObj.getBtnPermissionAllowed());
 			}
 
 			// close pop up on home page
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 30);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 10);
 			if (result) {
 
 				cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
@@ -287,7 +290,7 @@ public class LoginUtil {
 	public boolean checkSignUpLoginPage(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.getBtnGetOtp(), 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.getBtnGetOtp(), 5);
 
 		} catch (Exception e) {
 			System.out.println("checkSignUpLoginPageException " + e.getMessage());
