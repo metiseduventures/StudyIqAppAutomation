@@ -32,7 +32,7 @@ public class ConfigFileReader {
 		strFilePath = System.getProperty("apkId");
 		strFilePath = "bs://af78bcd6b02986208d034c691a4e02f72f686392";
 		strUserMobileNumber = System.getProperty("mobileNumber");
-		strUserMobileNumber = "3188517131";
+		strUserMobileNumber = "9878252339";
 	}
 
 	private Properties properties;
