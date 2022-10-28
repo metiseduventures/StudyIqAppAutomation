@@ -41,23 +41,13 @@ public class HomePageTest extends BaseTest {
 	}
 
 	@Test
-	public void verifyMyLibraryGuestUser() {
+	public void verifyMyHomePage() {
 
 		boolean result = true;
 		homePageUtilObj = new HomePageUtil(driver);
-		result = homePageUtilObj.verifyMylibraryForGuestUser(driver);
+		result = homePageUtilObj.verifyHomePage(driver);
 		Assert.assertEquals(result, true, homePageUtilObj.homePageMsglist.toString());
 
-	}
-
-	@Test(dataProvider = "getData", enabled = true)
-	public void verifyMyHomePage(TestData testData) {
-
-		boolean result = true;
-		homePageUtilObj = new HomePageUtil(driver);
-		result = homePageUtilObj.verifyHomePage(driver, testData);
-		Assert.assertEquals(result, true, homePageUtilObj.homePageMsglist.toString());
-		
 	}
 
 	@DataProvider

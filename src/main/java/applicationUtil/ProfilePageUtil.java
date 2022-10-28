@@ -37,27 +37,11 @@ public class ProfilePageUtil {
 		boolean result = true;
 		loginUtillObj = new LoginUtil(driver);
 		try {
-			boolean checkLoginPageOrNot = loginUtillObj.checkSignUpLoginPage(driver);
-			if (checkLoginPageOrNot == true) {
-				loginUtillObj = new LoginUtil(driver);
 
-				result = loginUtillObj.doSignUp(driver);
-				if (!result) {
-					ProfilePageMsglist.addAll(loginUtillObj.loginMsgList);
-					return result;
-				}
-			} else {
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 30);
-				if (result) {
-					cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
-				}
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
-				if (!result) {
-					ProfilePageMsglist.add("Home page not opened after login");
-					return result;
-				}
+			result = loginUtillObj.doSignUp(driver);
+			if (!result) {
+				ProfilePageMsglist.addAll(loginUtillObj.loginMsgList);
+				return result;
 			}
 
 			result = openNavigationAndClickProfile(driver);

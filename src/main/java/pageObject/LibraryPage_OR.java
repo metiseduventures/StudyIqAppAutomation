@@ -406,4 +406,18 @@ public class LibraryPage_OR {
 		return noOfOffersAvailElement;
 	}
 
+	@AndroidFindBy(id = "tv_nav_library")
+	private List<MobileElement> listBottomMenuMyLibrary;
+
+	public List<MobileElement> getListBottomMenuMyLibrary() {
+		return listBottomMenuMyLibrary;
+	}
+
+	@AndroidFindBy(xpath = "//android.view.ViewGroup/android.widget.TextView")
+	private List<MobileElement> listOfTextViewElements;
+
+	public List<MobileElement> listOfTextView() {
+		return listOfTextViewElements;
+	}
+
 }

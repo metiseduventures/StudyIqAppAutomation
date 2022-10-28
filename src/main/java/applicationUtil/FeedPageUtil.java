@@ -28,26 +28,11 @@ public class FeedPageUtil {
 		boolean result = true;
 		loginutillObj = new LoginUtil(driver);
 		try {
-			boolean checkLoginPageOrNot = loginutillObj.checkSignUpLoginPage(driver);
-			if (checkLoginPageOrNot == true) {
-
-				result = loginutillObj.doSignUp(driver);
-				if (!result) {
-					feedPageMsglist.addAll(loginutillObj.loginMsgList);
-					return result;
-				}
-			} else {
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 30);
-				if (result) {
-					cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
-				}
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
-				if (!result) {
-					feedPageMsglist.add("Home page not opened after login");
-					return result;
-				}
+			
+			result = loginutillObj.doSignUp(driver);
+			if (!result) {
+				feedPageMsglist.addAll(loginutillObj.loginMsgList);
+				return result;
 			}
 
 			result = verifyFeedBtnOnHomeBottom(driver);
@@ -137,7 +122,6 @@ public class FeedPageUtil {
 			List<MobileElement> langs = feedPageORObj.listOfFeedLang();
 			List<MobileElement> langTitles = feedPageORObj.listOfFeedTitleLang();
 
-			// make for loop to check if english lang is selected
 			for (int i = 0; i < langTitles.size(); i++) {
 				result = cfObj.commonWaitForElementToBeVisible(driver, langTitles.get(i), 10);
 				if (!result) {
@@ -399,16 +383,17 @@ public class FeedPageUtil {
 								return result;
 							}
 
-							cfObj.commonClick(feedPageORObj.listOfquizStartNowInFeed().get(0));
-
-							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
-									"quiz_language_label", "id", 5);
-							if (!result) {
-								feedPageMsglist.add("The test page has not opened");
-								return result;
-							}
-
-							driver.navigate().back();
+//							cfObj.commonClick(feedPageORObj.listOfquizStartNowInFeed().get(0));
+//
+//							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+//									"quiz_language_label", "id", 5);
+//							if (!result) {
+//								feedPageMsglist.add("The test page has not opened");
+//								return result;
+//							}
+//							Thread.sleep(1000);
+//
+//							driver.navigate().back();
 
 						} else if (titleOfFeedTypeElement.equalsIgnoreCase("Job alerts")) {
 

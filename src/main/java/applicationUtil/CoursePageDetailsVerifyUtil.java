@@ -415,9 +415,8 @@ public class CoursePageDetailsVerifyUtil {
 			}
 
 		} catch (Exception e) {
-			//cdpVerifyMsgList.add("verifyFreeCoursesException");
-			System.out.println("The scroll not working");
-			result = true;
+			cdpVerifyMsgList.add("verifyFreeCoursesException");
+			result = false;
 		}
 		return result;
 	}
@@ -430,8 +429,8 @@ public class CoursePageDetailsVerifyUtil {
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.titleOfTestimonial(), 5);
 			if (!result) {
-				cdpVerifyMsgList.add("The title of testimonial is not visible");
-				return result;
+				System.out.println("The testimonial is not present for this course");
+				return true;
 			}
 
 			List<MobileElement> nameTestimonials = cdpVerify_OR.nameTestimonials();
