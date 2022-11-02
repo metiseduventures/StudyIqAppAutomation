@@ -4,6 +4,7 @@ public class TestData {
 
 	private String courseName;
 	private String courseId;
+	private String courseType;
 	private String paymentMethod;
 	private String couponCode;
 	private String paymentType;
@@ -118,6 +119,14 @@ public class TestData {
 
 	public void setChoosePack(String choosePack) {
 		this.choosePack = choosePack;
+	}
+	
+	public String getCourseType() {
+		return courseType;
+	}
+
+	public void setCourseType(String courseType) {
+		this.courseType = courseType;
 	}
 
 }

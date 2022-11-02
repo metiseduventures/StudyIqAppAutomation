@@ -28,7 +28,7 @@ public class FeedPageUtil {
 		boolean result = true;
 		loginutillObj = new LoginUtil(driver);
 		try {
-			
+
 			result = loginutillObj.doSignUp(driver);
 			if (!result) {
 				feedPageMsglist.addAll(loginutillObj.loginMsgList);
@@ -177,7 +177,6 @@ public class FeedPageUtil {
 
 					cfObj.commonClick(feedPageORObj.feedLangClose());
 					cfObj.commonClick(feedPageORObj.langFeedBtn());
-					
 
 				} else {
 					cfObj.commonClick(langs.get(i));
@@ -244,28 +243,21 @@ public class FeedPageUtil {
 
 			cfObj.swipeRightOnElement(feedPageORObj.videoThumbnailSlider(), driver);
 
-			String trendingTitle = feedPageORObj.titleThumbnailSlider().getText();
 			String desc = feedPageORObj.descThumbnailSlider().getText();
 
 			cfObj.commonClick(feedPageORObj.videoThumbnailSlider());
 
-			if (trendingTitle.equalsIgnoreCase(feedPageORObj.listOfTextView().get(0).getText())) {
+			if (desc.equalsIgnoreCase(feedPageORObj.titleOfFeedInBox().getText())) {
 
-				if (desc.equalsIgnoreCase(feedPageORObj.titleOfFeedInBox().getText())) {
-
-					result = cfObj.commonWaitForElementToBeVisible(driver, feedPageORObj.dateOfFeedInBox(), 10);
-					if (!result) {
-						feedPageMsglist.add("The publishing date text is not visible");
-						return result;
-					}
-
-					cfObj.scrollUtill(driver, 1);
-				} else {
-					feedPageMsglist.add("The description is not same as next page title");
-					return false;
+				result = cfObj.commonWaitForElementToBeVisible(driver, feedPageORObj.dateOfFeedInBox(), 10);
+				if (!result) {
+					feedPageMsglist.add("The publishing date text is not visible");
+					return result;
 				}
+
+				cfObj.scrollUtill(driver, 1);
 			} else {
-				feedPageMsglist.add("The text of trending title is not same as next page heading");
+				feedPageMsglist.add("The description is not same as next page title");
 				return false;
 			}
 
@@ -382,18 +374,6 @@ public class FeedPageUtil {
 								feedPageMsglist.add("The start now in the quiz is not visible");
 								return result;
 							}
-
-//							cfObj.commonClick(feedPageORObj.listOfquizStartNowInFeed().get(0));
-//
-//							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
-//									"quiz_language_label", "id", 5);
-//							if (!result) {
-//								feedPageMsglist.add("The test page has not opened");
-//								return result;
-//							}
-//							Thread.sleep(1000);
-//
-//							driver.navigate().back();
 
 						} else if (titleOfFeedTypeElement.equalsIgnoreCase("Job alerts")) {
 

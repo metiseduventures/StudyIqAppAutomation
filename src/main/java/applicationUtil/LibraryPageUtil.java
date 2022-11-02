@@ -11,7 +11,6 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.LibraryPage_OR;
 import pojo.testdata.TestData;
 import util.Common_Function;
-import util.ConfigFileReader;
 
 public class LibraryPageUtil {
 
@@ -796,6 +795,100 @@ public class LibraryPageUtil {
 		} catch (Exception e) {
 			result = false;
 			libraryPageMsgList.add("verifyMyDoubtsSectionException " + e.getMessage());
+		}
+		return result;
+	}
+
+	public boolean checkCourseInLibrary(AppiumDriver<MobileElement> driver, TestData testData,
+			String actualCourseName) {
+		boolean result = true;
+		try {
+			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.yourPurchaseText(), 5);
+			if (!result) {
+				libraryPageMsgList.add("It is not library page or purchase text is not visible");
+				return result;
+			}
+
+			if (testData.getCourseType().equalsIgnoreCase("video")) {
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.videoCoursesBtn(), 5);
+				if (!result) {
+					libraryPageMsgList.add("The video courses btn is not visible");
+					return result;
+				}
+
+				cfObj.commonClick(libraryPage_OR.videoCoursesBtn());
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.listOfCourseTitlesInLib().get(0),
+						5);
+				if (!result) {
+					libraryPageMsgList.add("The title of the first course is not visible");
+					return result;
+				}
+
+				String firstCourseInLib = libraryPage_OR.listOfCourseTitlesInLib().get(0).getText();
+				if (firstCourseInLib.equalsIgnoreCase(actualCourseName)) {
+					return true;
+				} else {
+					libraryPageMsgList.add("The first course present in lib is not the course bought");
+					return false;
+				}
+			} else if (testData.getCourseType().equalsIgnoreCase("test-series")) {
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.testSeriesBtn(), 5);
+				if (!result) {
+					libraryPageMsgList.add("The test series btn is not visible");
+					return result;
+				}
+
+				cfObj.commonClick(libraryPage_OR.testSeriesBtn());
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.listOfCourseTitlesInLib().get(0),
+						5);
+				if (!result) {
+					libraryPageMsgList.add("The title of the first course is not visible");
+					return result;
+				}
+
+				String firstCourseInLib = libraryPage_OR.listOfCourseTitlesInLib().get(0).getText();
+				if (firstCourseInLib.equalsIgnoreCase(actualCourseName)) {
+					return true;
+				} else {
+					libraryPageMsgList.add("The first course present in lib is not the course bought");
+					return false;
+				}
+			} else if (testData.getCourseType().equalsIgnoreCase("live")) {
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.liveClassesBtn(), 5);
+				if (!result) {
+					libraryPageMsgList.add("The live btn is not visible");
+					return result;
+				}
+
+				cfObj.commonClick(libraryPage_OR.liveClassesBtn());
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.listOfCourseTitlesInLib().get(0),
+						5);
+				if (!result) {
+					libraryPageMsgList.add("The title of the first course is not visible");
+					return result;
+				}
+
+				String firstCourseInLib = libraryPage_OR.listOfCourseTitlesInLib().get(0).getText();
+				if (firstCourseInLib.equalsIgnoreCase(actualCourseName)) {
+					return true;
+				} else {
+					libraryPageMsgList.add("The first course present in lib is not the course bought");
+					return false;
+				}
+			}else {
+				libraryPageMsgList.add("The coursetype is wrong");
+				result = false;
+			}
+
+		} catch (Exception e) {
+			result = false;
+			libraryPageMsgList.add("checkCourseInLibrary_Exception " + e.getMessage());
 		}
 		return result;
 	}

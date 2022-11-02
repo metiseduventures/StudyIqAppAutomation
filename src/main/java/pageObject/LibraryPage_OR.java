@@ -419,5 +419,54 @@ public class LibraryPage_OR {
 	public List<MobileElement> listOfTextView() {
 		return listOfTextViewElements;
 	}
+	
+	@AndroidFindBy(xpath = "//android.widget.LinearLayout[@content-desc=\"Video Courses\"]/android.widget.TextView")
+	private MobileElement videoCoursesBtnElement;
+	
+	public MobileElement videoCoursesBtn() {
+		return videoCoursesBtnElement;
+	}
+	
+	@AndroidFindBy(xpath = "//android.widget.LinearLayout[@content-desc=\"Live Classes\"]/android.widget.TextView")
+	private MobileElement liveClassesBtnElement;
+	
+	public MobileElement liveClassesBtn() {
+		return liveClassesBtnElement;
+	}
+	
+	@AndroidFindBy(xpath = "//android.widget.LinearLayout[@content-desc=\"Test Series\"]/android.widget.TextView")
+	private MobileElement testSeriesBtnElement;
+	
+	public MobileElement testSeriesBtn() {
+		return testSeriesBtnElement;
+	}
+	
+	@AndroidFindBy(id = "your_purchases")
+	private MobileElement yourPurchaseTextElement;
+	
+	public MobileElement yourPurchaseText() {
+		return yourPurchaseTextElement;
+	}
+	
+	@AndroidFindBy(id = "txt_course_title")
+	private List<MobileElement> courseTitlesElement;
+	
+	public List<MobileElement> listOfCourseTitlesInLib(){
+		return courseTitlesElement;
+	}
+	
+	@AndroidFindBy(id = "course_image_card")
+	private List<MobileElement> courseImagesElement;
+	
+	public List<MobileElement> listOfCourseImagesInLib(){
+		return courseImagesElement;
+	}
+	
+	@AndroidFindBy(id = "course_status_layout")
+	private List<MobileElement> courseValidaitiesElement;
+	
+	public List<MobileElement> listOfCourseValiditiesInLib(){
+		return courseValidaitiesElement;
+	}
 
 }
