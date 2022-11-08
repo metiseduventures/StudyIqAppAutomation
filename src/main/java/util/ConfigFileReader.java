@@ -90,5 +90,37 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException("Otp token is not defined.");
 	}
+	
+	public String getVideoSlug() {
+		String strVideoSlug = properties.getProperty("video");
+		if (strVideoSlug != null)
+			return strVideoSlug;
+		else
+			throw new RuntimeException(strVideoSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getBooksSlug() {
+		String strBooksSlug = properties.getProperty("books");
+		if (strBooksSlug != null)
+			return strBooksSlug;
+		else
+			throw new RuntimeException(strBooksSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getLiveSlug() {
+		String strLiveSlug = properties.getProperty("live");
+		if (strLiveSlug != null)
+			return strLiveSlug;
+		else
+			throw new RuntimeException(strLiveSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getTestseriesSlug() {
+		String strTestseriesSlug = properties.getProperty("testseries");
+		if (strTestseriesSlug != null)
+			return strTestseriesSlug;
+		else
+			throw new RuntimeException(strTestseriesSlug + "not specified in the Configuration properties file.");
+	}
 
 }

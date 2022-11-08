@@ -100,10 +100,7 @@ public class LoginUtil {
 				cfObj.commonClick(loginPageObj.noneOfTheAboveBtn());
 			}
 
-			result = cfObj.commonSetTextTextBox(loginPageObj.numberInputBox(), strMobileNo);
-			if (!result) {
-				loginMsgList.add("The number input box is not working");
-			}
+			loginPageObj.numberInputBox().sendKeys(strMobileNo);
 
 			cfObj.commonClick(loginPageObj.continueBtn());
 
@@ -304,6 +301,15 @@ public class LoginUtil {
 	public boolean chooseExamPreference(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
+
+			// close pop up on home page
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 5);
+			if (result) {
+
+				cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
+
+			}
+
 			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.searchGoalInputBox(), 5);
 			if (!result) {
 				System.out.println("The exam preference page is not displayed or search box is not visible");

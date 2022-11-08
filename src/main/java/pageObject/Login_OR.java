@@ -27,6 +27,13 @@ public class Login_OR {
 	public MobileElement noneOfTheAboveBtn() {
 		return noneOfTheAboveElement;
 	}
+	
+	@AndroidFindBy(id = "com.google.android.gms:id/credential_picker_options")
+	private MobileElement mobilePresentElement;
+
+	public MobileElement mobilePresentOnPopuP() {
+		return mobilePresentElement;
+	}
 
 	@AndroidFindBy(id = "btn_getOtp")
 	private MobileElement continueBtnElement;

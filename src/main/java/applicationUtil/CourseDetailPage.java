@@ -25,6 +25,8 @@ public class CourseDetailPage {
 	CourseApiUtil courseApiUtilObj;
 	CourseView courseViewObj;
 	CourseList courseListObj;
+	LibraryPageUtil libraryPageUtil;
+	ConfigFileReader configFileReader;
 	public ArrayList<String> coursePageMsgList = new ArrayList<String>();
 
 	public Common_Function cfObj = new Common_Function();
@@ -36,8 +38,13 @@ public class CourseDetailPage {
 	}
 
 	public boolean verifyPurchaseCourse(AppiumDriver<MobileElement> driver, TestData testData) {
-		boolean result = true;		
+		boolean result = true;
 		loginutillObj = new LoginUtil(driver);
+		String strCourseSlug = null;
+		CourseView courseViewObj;
+		CourseApiUtil courseApiUtilObj;
+		homePageUtilObj = new HomePageUtil(driver);
+		configFileReader = new ConfigFileReader();
 
 		try {
 			courseApiUtilObj = new CourseApiUtil();
@@ -46,25 +53,60 @@ public class CourseDetailPage {
 				coursePageMsgList.add("Error in getting course list from api");
 				return false;
 			}
-			courseViewObj = courseApiUtilObj
-					.getCourseViewData(courseListObj.getData().getCourses().get(0).getCourseSlug());
-			System.out.println(courseViewObj.getData().getPriceInfo());
-
+			// for guest user (existing)
 			if (testData.isGuestUser()) {
-				
+
 				result = loginutillObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
 				if (!result) {
 					coursePageMsgList.addAll(loginutillObj.loginMsgList);
 					return result;
 				}
+				
+				if (testData.getCourseType().contains("video")) {
 
-				homePageUtilObj = new HomePageUtil(driver);
-				result = homePageUtilObj.clickOnCourseOnHomePage(driver);
-				if (!result) {
-					return result;
+					strCourseSlug = configFileReader.getVideoSlug();
+					
+					result = homePageUtilObj.clickOnCourseOnHomePage(driver);
+					if (!result) {
+						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
+						return result;
+					}
+				} else if (testData.getCourseType().contains("books")) {
+					
+					strCourseSlug = configFileReader.getBooksSlug();
+
+					result = homePageUtilObj.clickOnBookOnHomePage(driver);
+					if (!result) {
+						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
+						return result;
+					}
+				} else if (testData.getCourseType().contains("live")) {
+					
+					strCourseSlug = configFileReader.getLiveSlug();
+
+					result = homePageUtilObj.clickOnLiveCourseOnHomePage(driver);
+					if (!result) {
+						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
+						return result;
+					}
+				} else if (testData.getCourseType().contains("test-series")) {
+					
+					strCourseSlug = configFileReader.getTestseriesSlug();
+
+					result = homePageUtilObj.clickOnTestSeriesOnHomePage(driver);
+					if (!result) {
+						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
+						return result;
+					}
 				}
 
-				result = clickOnBuyNow(driver);
+				System.out.println(strCourseSlug);
+				courseApiUtilObj = new CourseApiUtil();
+				courseViewObj = new CourseView();
+				courseViewObj = courseApiUtilObj.getCourseViewData(strCourseSlug);
+				System.out.println(courseViewObj.getData().getPriceInfo());
+
+				result = clickOnBuyNow(driver, testData);
 				if (!result) {
 					return result;
 				}
@@ -74,10 +116,17 @@ public class CourseDetailPage {
 					return result;
 				}
 
-				result = verifyPacks(driver, courseViewObj);
+				result = verifyPackages(driver, courseViewObj);
 				if (!result) {
 					return result;
 				}
+
+				if (testData.getCourseType().equalsIgnoreCase("books")) {
+					cfObj.scrollUtill(driver, 3);
+				}
+
+				testData.setCourseName(courseViewObj.getData().getCourseDetail().getCourseTitle());
+				String courseName = courseViewObj.getData().getCourseDetail().getCourseTitle();
 
 				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.noOfOffersAvail(), 10);
 				if (result) {
@@ -111,11 +160,6 @@ public class CourseDetailPage {
 					}
 				}
 
-				result = chooseYourPack(driver, testData.getChoosePack());
-				if (!result) {
-					return result;
-				}
-
 				result = buyNowPack(driver);
 				if (!result) {
 					return result;
@@ -144,10 +188,15 @@ public class CourseDetailPage {
 							return result;
 						}
 
+						result = checkCourseInLibrary(driver, courseName, testData);
+						if (!result) {
+							return result;
+						}
+
 					} else {
-						System.out.println("User on course page - the payment is failed");
+						System.out.println("User on Choose Payment Method page- the payment is aborted");
 					}
-					
+
 				} else if ((ConfigFileReader.strEnv).equalsIgnoreCase("prod")) {
 
 					System.out.println("The envirnonment is production, everything working fine");
@@ -159,19 +208,58 @@ public class CourseDetailPage {
 
 				}
 			} else {
+
 				result = loginutillObj.doSignUp(driver);
 				if (!result) {
 					coursePageMsgList.addAll(loginutillObj.loginMsgList);
 					return result;
 				}
+				
+				if (testData.getCourseType().contains("video")) {
 
-				homePageUtilObj = new HomePageUtil(driver);
-				result = homePageUtilObj.clickOnCourseOnHomePage(driver);
-				if (!result) {
-					return result;
+					strCourseSlug = configFileReader.getVideoSlug();
+					
+					result = homePageUtilObj.clickOnCourseOnHomePage(driver);
+					if (!result) {
+						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
+						return result;
+					}
+				} else if (testData.getCourseType().contains("books")) {
+					
+					strCourseSlug = configFileReader.getBooksSlug();
+
+					result = homePageUtilObj.clickOnBookOnHomePage(driver);
+					if (!result) {
+						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
+						return result;
+					}
+				} else if (testData.getCourseType().contains("live")) {
+					
+					strCourseSlug = configFileReader.getLiveSlug();
+
+					result = homePageUtilObj.clickOnLiveCourseOnHomePage(driver);
+					if (!result) {
+						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
+						return result;
+					}
+				} else if (testData.getCourseType().contains("test-series")) {
+					
+					strCourseSlug = configFileReader.getTestseriesSlug();
+
+					result = homePageUtilObj.clickOnTestSeriesOnHomePage(driver);
+					if (!result) {
+						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
+						return result;
+					}
 				}
 
-				result = clickOnBuyNow(driver);
+				System.out.println(strCourseSlug);
+				courseApiUtilObj = new CourseApiUtil();
+				courseViewObj = new CourseView();
+				courseViewObj = courseApiUtilObj.getCourseViewData(strCourseSlug);
+				System.out.println(courseViewObj.getData().getPriceInfo());
+
+				result = clickOnBuyNow(driver, testData);
 				if (!result) {
 					return result;
 				}
@@ -181,10 +269,17 @@ public class CourseDetailPage {
 					return result;
 				}
 
-				result = verifyPacks(driver, courseViewObj);
+				result = verifyPackages(driver, courseViewObj);
 				if (!result) {
 					return result;
 				}
+
+				if (testData.getCourseType().equalsIgnoreCase("books")) {
+					cfObj.scrollUtill(driver, 3);
+				}
+
+				testData.setCourseName(courseViewObj.getData().getCourseDetail().getCourseTitle());
+				String courseName = courseViewObj.getData().getCourseDetail().getCourseTitle();
 
 				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.noOfOffersAvail(), 10);
 				if (result) {
@@ -218,11 +313,6 @@ public class CourseDetailPage {
 					}
 				}
 
-				result = chooseYourPack(driver, testData.getChoosePack());
-				if (!result) {
-					return result;
-				}
-
 				result = buyNowPack(driver);
 				if (!result) {
 					return result;
@@ -251,9 +341,15 @@ public class CourseDetailPage {
 							return result;
 						}
 
+						result = checkCourseInLibrary(driver, courseName, testData);
+						if (!result) {
+							return result;
+						}
+
 					} else {
 						System.out.println("User on course page - the payment is failed");
 					}
+
 				} else if ((ConfigFileReader.strEnv).equalsIgnoreCase("prod")) {
 
 					System.out.println("The envirnonment is production, everything working fine");
@@ -264,7 +360,6 @@ public class CourseDetailPage {
 					return false;
 
 				}
-
 			}
 
 		} catch (Exception e) {
@@ -320,11 +415,10 @@ public class CourseDetailPage {
 
 			String toastMsgLangChange = courseDetailPageObj.toastInvalidCoupon().getAttribute("name");
 
-			if(toastMsgLangChange.equalsIgnoreCase("Entered coupon code is invalid. Please try another code.")
+			if (toastMsgLangChange.equalsIgnoreCase("Entered coupon code is invalid. Please try another code.")
 					|| toastMsgLangChange.equalsIgnoreCase("Invalid Coupon Code")) {
 				return true;
-			}
-			else {
+			} else {
 				coursePageMsgList.add("The coupon is invalid but the toast is not visible");
 				return false;
 			}
@@ -378,13 +472,17 @@ public class CourseDetailPage {
 		return result;
 	}
 
-	public boolean clickOnBuyNow(AppiumDriver<MobileElement> driver) {
+	public boolean clickOnBuyNow(AppiumDriver<MobileElement> driver, TestData testData) {
 		boolean result = true;
 		try {
-			
+
 			cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.getListBtnBuyNow().get(0), 5);
-			
+
 			cfObj.commonClick(courseDetailPageObj.getListBtnBuyNow().get(0));
+
+			if (testData.getCourseType().equalsIgnoreCase("books")) {
+				return true;
+			}
 
 			// wait for buy now pack page is display
 
@@ -564,32 +662,29 @@ public class CourseDetailPage {
 		boolean result = true;
 		boolean bool = true;
 		try {
-			
+
 			int noOfPacks = courseViewObj.getData().getPackages().get(0).getPackages().size();
-			
+
 			if (noOfPacks == 1) {
-				
+
 				String titleOfPack = courseDetailPageObj.packTitle().getText();
 				if (titleOfPack.equalsIgnoreCase(choosenPack)) {
 					return true;
-				}
-				else {
+				} else {
 					System.out.println("The required pack is not present");
-					return true;			//in prod and stag different packs, so test case fails
+					return true; // in prod and stag different packs, so test case fails
 				}
 			}
-			
-			for(int i=1;i<noOfPacks;i++) {
+
+			for (int i = 1; i < noOfPacks; i++) {
 				String titleOfPack = courseDetailPageObj.packTitle().getText();
 				if (titleOfPack.equalsIgnoreCase(choosenPack)) {
 					return true;
-				}else {
+				} else {
 					cfObj.swipeLeftOnElement(courseDetailPageObj.packTitle(), driver);
 				}
-				
+
 			}
-			
-			
 
 			while (bool) {
 				String titleOfPack = courseDetailPageObj.packTitle().getText();
@@ -672,11 +767,17 @@ public class CourseDetailPage {
 	public boolean verifyEMIoption(AppiumDriver<MobileElement> driver, CourseView courseViewObj) {
 		boolean result = true;
 		try {
-			cfObj.scrollUtill(driver, 1);
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiOptionTitle(), 5);
+			if (courseViewObj.getData().getCourseType().getCourseTypeName().equalsIgnoreCase("books")) {
+				return true;
+			}
+
 			if (courseViewObj.getData().getCourseDetail().getIsEmiAvailable() != 0) {
+
+				cfObj.scrollUtill(driver, 2);
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.emiOptionTitle(), 5);
 				if (!result) {
-					coursePageMsgList.add("Emi option is not availabe for emi course");
+					coursePageMsgList.add("Emi option title is not visible");
 					return result;
 
 				}
@@ -726,13 +827,8 @@ public class CourseDetailPage {
 					return false;
 				}
 			} else {
-				if (result) {
-					coursePageMsgList.add("Emi option is  availabe for non emi course");
-					return false;
-				} else {
-					System.out.println("Emi option is not available");
-					return true;
-				}
+				System.out.println("Emi option is not available");
+				return true;
 			}
 
 		} catch (Exception e) {
@@ -768,6 +864,8 @@ public class CourseDetailPage {
 					coursePageMsgList.add("The go to library btn is not visible");
 					return result;
 				}
+
+				cfObj.commonClick(courseDetailPageObj.goToLibraryBtn());
 
 				return true;
 
@@ -812,4 +910,133 @@ public class CourseDetailPage {
 		}
 		return result;
 	}
+
+	public boolean verifyPackages(AppiumDriver<MobileElement> driver, CourseView courseViewObj) {
+		boolean result = true;
+		try {
+
+			if (courseViewObj.getData().getCourseType().getCourseTypeName().equalsIgnoreCase("books")) {
+
+				result = verifyPackageFormForBooks(driver);
+				if (!result) {
+					return result;
+				}
+
+			} else {
+
+				result = verifyPacks(driver, courseViewObj);
+				if (!result) {
+					return result;
+				}
+			}
+		} catch (Exception e) {
+			result = false;
+			coursePageMsgList.add("verficationOfPackages_Exception: " + e.getMessage());
+		}
+		return result;
+	}
+
+	public boolean verifyPackageFormForBooks(AppiumDriver<MobileElement> driver) { // make these locators of books
+		boolean result = true;
+		try {
+
+			cfObj.scrollIntoText(driver, "State");
+
+			if (courseDetailPageObj.getListBookingFormName().size() == 0) {
+				coursePageMsgList.add("Name field is not display in booking form");
+				result = false;
+			}
+			if (courseDetailPageObj.getListBookingFormPhoneNo().size() == 0) {
+				coursePageMsgList.add("Phone number field is not display in booking form");
+				result = false;
+			}
+			if (courseDetailPageObj.getListBookingFormEmail().size() == 0) {
+				coursePageMsgList.add("Email field is not display in booking form");
+				result = false;
+			}
+			if (courseDetailPageObj.getListBookingFormAddress().size() == 0) {
+				coursePageMsgList.add("Address field is not display in booking form");
+				result = false;
+			}
+			if (courseDetailPageObj.getListBookingFormPinCode().size() == 0) {
+				coursePageMsgList.add("Pin code field is not display in booking form");
+				result = false;
+			}
+			if (courseDetailPageObj.getListBookingFormCity().size() == 0) {
+				coursePageMsgList.add("City field is not display in booking form");
+				result = false;
+			}
+			if (courseDetailPageObj.getListBookingFormState().size() == 0) {
+				coursePageMsgList.add("State field is not display in booking form");
+				result = false;
+			}
+
+			if (!result) {
+				return result;
+			}
+
+			if (courseDetailPageObj.getListBookingFormEmail().get(0).getText().length() < 0) {
+				coursePageMsgList.add("Email field is empty");
+				return result;
+			}
+			if (courseDetailPageObj.getListBookingFormName().get(0).getText().length() < 0) {
+				coursePageMsgList.add("Name field is empty");
+				return result;
+			}
+			if (courseDetailPageObj.getListBookingFormPhoneNo().get(0).getText().length() < 0) {
+				coursePageMsgList.add("Phone field is empty");
+				return result;
+			}
+			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListBookingFormAddress().get(0),
+					"Unitech Cyber park");
+			if (!result) {
+				coursePageMsgList.add("not able to add address");
+				return result;
+			}
+
+			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListBookingFormPinCode().get(0), "122003");
+			if (!result) {
+				coursePageMsgList.add("not able add to pin code");
+				return result;
+			}
+
+			driver.hideKeyboard();
+
+			if (!courseDetailPageObj.getListBookingFormCity().get(0).getText().equalsIgnoreCase("GURUGRAM")) {
+				coursePageMsgList.add("Mismatch in city expected to be Gurugram");
+				return result;
+			}
+
+			if (!courseDetailPageObj.getListBookingFormState().get(0).getText().equalsIgnoreCase("HARYANA")) {
+				coursePageMsgList.add("Mismatch in State expected to be HARYANA");
+				return result;
+			}
+
+		} catch (Exception e) {
+			result = false;
+			coursePageMsgList.add("verifyPackageFormFormBooks_Exception" + e.getMessage());
+		}
+		return result;
+	}
+
+	public boolean checkCourseInLibrary(AppiumDriver<MobileElement> driver, String courseName, TestData testData) {
+		boolean result = true;
+		libraryPageUtil = new LibraryPageUtil(driver);
+		try {
+
+			if (!testData.getCourseType().equalsIgnoreCase("books")) {
+				result = libraryPageUtil.checkCourseInLibrary(driver, testData, courseName);
+				if (!result) {
+					coursePageMsgList.addAll(libraryPageUtil.libraryPageMsgList);
+					return result;
+				}
+			}
+
+		} catch (Exception e) {
+			result = false;
+			coursePageMsgList.add("checkCourseInLibrary_Exception" + e.getMessage());
+		}
+		return result;
+	}
+
 }

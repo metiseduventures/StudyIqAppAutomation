@@ -222,26 +222,82 @@ public class CourseDetailPage_OR {
 	public MobileElement noOfOffersAvail() {
 		return noOfOffersAvailElement;
 	}
-	
+
 	@AndroidFindBy(id = "tv_payment_status_pc")
 	private MobileElement paymentStatusElement;
-	
+
 	public MobileElement paymentStatus() {
 		return paymentStatusElement;
 	}
-	
+
 	@AndroidFindBy(id = "tv_payment_desc_pc")
 	private MobileElement paymentStatusDescElement;
-	
+
 	public MobileElement paymentStatusDesc() {
 		return paymentStatusDescElement;
 	}
-	
+
 	@AndroidFindBy(id = "bt_action_pc")
 	private MobileElement goToLibraryBtnElement;
-	
+
 	public MobileElement goToLibraryBtn() {
 		return goToLibraryBtnElement;
+	}
+
+	@AndroidFindBy(id = "et_name")
+	private List<MobileElement> formName;
+
+	public List<MobileElement> getListBookingFormName() {
+		return formName;
+	}
+
+	@AndroidFindBy(id = "et_mobile")
+	private List<MobileElement> formPhoneNo;
+
+	public List<MobileElement> getListBookingFormPhoneNo() {
+		return formPhoneNo;
+	}
+
+	@AndroidFindBy(id = "et_addresss")
+	private List<MobileElement> formAddress;
+
+	public List<MobileElement> getListBookingFormAddress() {
+		return formAddress;
+	}
+
+	@AndroidFindBy(id = "et_email")
+	private List<MobileElement> formEmail;
+
+	public List<MobileElement> getListBookingFormEmail() {
+		return formEmail;
+	}
+
+	@AndroidFindBy(id = "et_pin_code")
+	private List<MobileElement> formPincode;
+
+	public List<MobileElement> getListBookingFormPinCode() {
+		return formPincode;
+	}
+
+	@AndroidFindBy(id = "et_city")
+	private List<MobileElement> formCity;
+
+	public List<MobileElement> getListBookingFormCity() {
+		return formCity;
+	}
+
+	@AndroidFindBy(id = "et_state")
+	private List<MobileElement> formState;
+
+	public List<MobileElement> getListBookingFormState() {
+		return formState;
+	}
+
+	@AndroidFindBy(id = "bt_buy_now_pack")
+	private MobileElement buyNowElement;
+
+	public MobileElement buyNowBtn() {
+		return buyNowElement;
 	}
 
 }
