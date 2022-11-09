@@ -16,6 +16,24 @@ public class TestData {
 	private String state;
 	private String choosePack;
 	private String isKey;
+	private boolean isExpire;
+	private boolean isFree;
+
+	public boolean getIsFree() {
+		return isFree;
+	}
+
+	public void setFree(boolean isFree) {
+		this.isFree = isFree;
+	}
+
+	public boolean getIsExpire() {
+		return isExpire;
+	}
+
+	public void setIsExpire(Boolean isExpire) {
+		this.isExpire = isExpire;
+	}
 
 	public String getIsKey() {
 		return isKey;
@@ -120,7 +138,7 @@ public class TestData {
 	public void setChoosePack(String choosePack) {
 		this.choosePack = choosePack;
 	}
-	
+
 	public String getCourseType() {
 		return courseType;
 	}

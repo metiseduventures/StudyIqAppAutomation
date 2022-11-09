@@ -53,11 +53,6 @@ public class LoginUtil {
 				return result;
 			}
 
-			result = chooseExamPreference(driver);
-			if (!result) {
-				return result;
-			}
-
 			result = clickOnLoginButton(driver);
 			if (!result) {
 				return result;

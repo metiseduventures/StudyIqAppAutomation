@@ -15,12 +15,14 @@ import com.google.gson.reflect.TypeToken;
 
 import applicationUtil.LibraryPageUtil;
 import pojo.testdata.TestData;
+import util.ConfigFileReader;
 
 public class LibraryPageTest extends BaseTest{
 	
 	LibraryPageUtil libraryPageUtil;
 	boolean result = true;
-
+	ConfigFileReader configFileReader= new ConfigFileReader();
+	
 	@Test(dataProvider = "getData", enabled = true)
 	public void verifyLibraryPageMain(TestData testData) {
 		libraryPageUtil = new LibraryPageUtil(driver);

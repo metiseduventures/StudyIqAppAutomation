@@ -13,8 +13,27 @@
     "pincode": "110110",
     "city": "south delhi",
     "state": "delhi",	
-    "choosePack": "Platinum"	
+    "choosePack": "Platinum",
+    "isExpire": false,
+    "isFree": false
   },
+{
+    "courseName": "madhya pradesh",
+    "courseId" : "",
+    "courseType" : "video",
+    "paymentMethod" : "Paytm",
+    "couponCode" : "",
+    "isGuestUser" : false,
+    "isKey" : "pass",
+    "name": "harsh",
+    "address": "adarsh nagar",
+    "pincode": "110110",
+    "city": "south delhi",
+    "state": "delhi",	
+    "choosePack": "Platinum",
+    "isExpire": true,
+    "isFree": false
+  }, 
   {
     "courseName": "rajasthan",
     "courseId" : "",
@@ -22,13 +41,15 @@
     "paymentMethod" : "Paytm",
     "couponCode" : "",
     "isGuestUser" : false,
-    "isKey" : "pass",
+    "isKey" : "fail",
     "name": "vipul",
     "address": "roop nagar",
     "pincode": "172829",
     "city": "noida",
     "state": "up",	
-    "choosePack": "Platinum"	
+    "choosePack": "Platinum",
+    "isExpire": false,
+    "isFree": true    
   },
   {
     "courseName": "rajasthan",
@@ -37,13 +58,49 @@
     "paymentMethod" : "Paytm",
     "couponCode" : "",
     "isGuestUser" : false,
-    "isKey" : "pass",
+    "isKey" : "fail",
     "name": "vipul",
     "address": "roop nagar",
     "pincode": "172829",
     "city": "noida",
     "state": "up",	
-    "choosePack": "Platinum"	
+    "choosePack": "Platinum",
+    "isExpire": false,
+    "isFree": false    
+  },
+  {
+    "courseName": "rajasthan",
+    "courseId" : "",
+    "courseType" : "test-series",
+    "paymentMethod" : "Paytm",
+    "couponCode" : "",
+    "isGuestUser" : false,
+    "isKey" : "fail",
+    "name": "vipul",
+    "address": "roop nagar",
+    "pincode": "172829",
+    "city": "noida",
+    "state": "up",	
+    "choosePack": "Platinum",
+    "isExpire": true,
+    "isFree": false    
+  },
+  {
+    "courseName": "rajasthan",
+    "courseId" : "",
+    "courseType" : "live",
+    "paymentMethod" : "Paytm",
+    "couponCode" : "",
+    "isGuestUser" : true,
+    "isKey" : "fail", 
+    "name": "vipul",
+    "address": "roop nagar",
+    "pincode": "172829",
+    "city": "noida",
+    "state": "up",	
+    "choosePack": "Platinum",
+    "isExpire": false,
+    "isFree": false    
   },
   {
     "courseName": "rajasthan",
@@ -58,6 +115,9 @@
     "pincode": "172829",
     "city": "noida",
     "state": "up",	
-    "choosePack": "Platinum"	
+    "choosePack": "Platinum",
+    "isExpire": true,
+    "isFree": false    
   }]
-}
+} 
+
