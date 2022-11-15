@@ -258,4 +258,39 @@ public class CoursePageDetailsVerify_OR {
 	public MobileElement frameDemoVideo() {
 		return frameOfDemoVideo;
 	}
+	
+	@AndroidFindBy(id = "tv_similar_courses")
+	private MobileElement similarCoursesText;
+	
+	public MobileElement similarCoursesText() {
+		return similarCoursesText;
+	}
+	
+	@AndroidFindBy(id = "course_image_card")
+	private List<MobileElement> crossSellImageList;
+	
+	public List<MobileElement> listOfCrossSellImage(){
+		return crossSellImageList;
+	}
+	
+	@AndroidFindBy(id = "txt_course_title")
+	private List<MobileElement> crossSellTitleList;
+	
+	public List<MobileElement> listOfCrossSellTitle(){
+		return crossSellTitleList;
+	}
+	
+	@AndroidFindBy(id = "price")
+	private List<MobileElement> crossSellPriceList;
+	
+	public List<MobileElement> listOfCrossSellPrice(){
+		return crossSellPriceList;
+	}
+	
+	@AndroidFindBy(id = "tv_view_all")
+	private MobileElement crossViewAllBtn;
+	
+	public MobileElement crossViewAllBtn() {
+		return crossViewAllBtn;
+	}
 }
