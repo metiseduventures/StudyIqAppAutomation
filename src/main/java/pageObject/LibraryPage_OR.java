@@ -69,6 +69,13 @@ public class LibraryPage_OR {
 	public List<MobileElement> getListTopicsOfCourse() {
 		return topicsOfCourseList;
 	}
+	
+	@AndroidFindBy(id = "tvSubFolName")
+	private List<MobileElement> subtopicsOfCourseList;
+
+	public List<MobileElement> getListSubTopicsOfCourse() {
+		return subtopicsOfCourseList;
+	}
 
 	@AndroidFindBy(id = "inner_txt_title")
 	private List<MobileElement> titleOfVideosInTopicList;
@@ -152,6 +159,13 @@ public class LibraryPage_OR {
 
 	public MobileElement moreBtn() {
 		return moreBtnElement;
+	}
+	
+	@AndroidFindBy(id = "rl_more_validity_extension")
+	private MobileElement extendValidityElement;
+
+	public MobileElement extendValidity() {
+		return extendValidityElement;
 	}
 
 	@AndroidFindBy(id = "txt_sorry")
@@ -265,6 +279,13 @@ public class LibraryPage_OR {
 	public MobileElement deleteNote() {
 		return deleteNotesElement;
 	}
+	
+	@AndroidFindBy(id = "android:id/button1")
+	private MobileElement continueBtnElement;
+
+	public MobileElement continueBtn() {
+		return continueBtnElement;
+	}
 
 	@AndroidFindBy(id = "rl_more_buy_now")
 	private MobileElement buyNowBtnElement;
@@ -294,7 +315,7 @@ public class LibraryPage_OR {
 		return popUpLaterBtnElement;
 	}
 
-	@AndroidFindBy(xpath = "//androidx.appcompat.app.ActionBar.b[@content-desc=\"Video\"]/android.widget.TextView")
+	@AndroidFindBy(xpath = "//android.widget.LinearLayout[@content-desc=\"Video\"]/android.widget.TextView")
 	private MobileElement videoBoxInNotificationElement;
 
 	public MobileElement videoBoxInNotification() {
@@ -315,7 +336,7 @@ public class LibraryPage_OR {
 		return videoDatesInNotification;
 	}
 
-	@AndroidFindBy(xpath = "//androidx.appcompat.app.ActionBar.b[@content-desc=\"Text\"]/android.widget.TextView")
+	@AndroidFindBy(xpath = "//android.widget.LinearLayout[@content-desc=\"Text\"]/android.widget.TextView")
 	private MobileElement textBoxInNotificationElement;
 
 	public MobileElement textBoxInNotification() {
@@ -343,7 +364,7 @@ public class LibraryPage_OR {
 		return pdfDownloadBtnElement;
 	}
 
-	@AndroidFindBy(xpath = "//androidx.appcompat.app.ActionBar.b[@content-desc=\"Quiz\"]/android.widget.TextView")
+	@AndroidFindBy(xpath = "//android.widget.LinearLayout[@content-desc=\"Quiz\"]/android.widget.TextView")
 	private MobileElement quizBoxInNotificationElement;
 
 	public MobileElement quizBoxInNotification() {
@@ -419,54 +440,116 @@ public class LibraryPage_OR {
 	public List<MobileElement> listOfTextView() {
 		return listOfTextViewElements;
 	}
-	
+
 	@AndroidFindBy(xpath = "//android.widget.LinearLayout[@content-desc=\"Video Courses\"]/android.widget.TextView")
 	private MobileElement videoCoursesBtnElement;
-	
+
 	public MobileElement videoCoursesBtn() {
 		return videoCoursesBtnElement;
 	}
-	
+
 	@AndroidFindBy(xpath = "//android.widget.LinearLayout[@content-desc=\"Live Classes\"]/android.widget.TextView")
 	private MobileElement liveClassesBtnElement;
-	
+
 	public MobileElement liveClassesBtn() {
 		return liveClassesBtnElement;
 	}
-	
+
 	@AndroidFindBy(xpath = "//android.widget.LinearLayout[@content-desc=\"Test Series\"]/android.widget.TextView")
 	private MobileElement testSeriesBtnElement;
-	
+
 	public MobileElement testSeriesBtn() {
 		return testSeriesBtnElement;
 	}
-	
+
 	@AndroidFindBy(id = "your_purchases")
 	private MobileElement yourPurchaseTextElement;
-	
+
 	public MobileElement yourPurchaseText() {
 		return yourPurchaseTextElement;
 	}
-	
+
 	@AndroidFindBy(id = "txt_course_title")
 	private List<MobileElement> courseTitlesElement;
-	
-	public List<MobileElement> listOfCourseTitlesInLib(){
+
+	public List<MobileElement> listOfCourseTitlesInLib() {
 		return courseTitlesElement;
 	}
-	
+
 	@AndroidFindBy(id = "course_image_card")
 	private List<MobileElement> courseImagesElement;
-	
-	public List<MobileElement> listOfCourseImagesInLib(){
+
+	public List<MobileElement> listOfCourseImagesInLib() {
 		return courseImagesElement;
 	}
-	
-	@AndroidFindBy(id = "course_status_layout")
-	private List<MobileElement> courseValidaitiesElement;
-	
-	public List<MobileElement> listOfCourseValiditiesInLib(){
-		return courseValidaitiesElement;
+
+	@AndroidFindBy(id = "txt_renew_now")
+	private List<MobileElement> renewNowBtnElement;
+
+	public List<MobileElement> listOfRenewNowBtn() {
+		return renewNowBtnElement;
 	}
 
+	@AndroidFindBy(id = "txt_course_validity_status")
+	private List<MobileElement> courseExpireStatus;
+
+	public List<MobileElement> listOfCourseExpireStatus() {
+		return courseExpireStatus;
+	}
+
+	@AndroidFindBy(id = "course_status")
+	private List<MobileElement> statusExpireSoon;
+
+	public List<MobileElement> listOfExpireSoon() {
+		return statusExpireSoon;
+	}
+
+	@AndroidFindBy(id = "txt_course_exp")
+	private List<MobileElement> statusValidList;
+
+	public List<MobileElement> listOfValidUptoStatus() {
+		return statusValidList;
+	}
+
+	@AndroidFindBy(id = "btn_course_status")
+	private List<MobileElement> statusFree;
+
+	public List<MobileElement> listOfFreeStatus() {
+		return statusFree;
+	}
+
+	@AndroidFindBy(id = "txt_course_remove")
+	private List<MobileElement> removeBtn;
+
+	public List<MobileElement> listOfRemoveBtn() {
+		return removeBtn;
+	}
+
+	@AndroidFindBy(id = "android:id/button1")
+	private MobileElement removeFreeCoursElement;
+
+	public MobileElement removeFreeCourse() {
+		return removeFreeCoursElement;
+	}
+
+	@AndroidFindBy(id = "tiSearch")
+	private MobileElement searchBoxLib;
+
+	public MobileElement searchBoxLibrary() {
+		return searchBoxLib;
+	}
+
+	@AndroidFindBy(id = "tv_title")
+	private MobileElement resultAfterSearchElement;
+
+	public MobileElement resultAfterSearch() {
+		return resultAfterSearchElement;
+	}
+
+	@AndroidFindBy(xpath = "//android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.TextView")
+	private List<MobileElement> courseValidOrRenewText;
+	
+	public List<MobileElement> listOfCourseValidOrRenewText(){
+		return courseValidOrRenewText;
+	}
 }
