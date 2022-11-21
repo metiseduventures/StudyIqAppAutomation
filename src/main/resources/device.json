@@ -1,0 +1,29 @@
+{
+  "environments": [
+    {
+      "device": "Pixel 6",
+      "osVersion": "12.0"
+    },
+    {
+      "device": "Xiaomi Redmi Note 8",
+      "osVersion": "9.0"
+    },
+    {
+      "device": "Oppo Reno 3 Pro",
+      "osVersion": "10.0"
+    },
+    {
+      "device": "Samsung Galaxy A10",
+      "osVersion": "9.0"
+    },
+    {
+      "device": "Google Pixel 6",
+      "osVersion": "12.0"
+    },
+    {
+      "device": "OnePlus 9",
+      "osVersion": "11.0"
+    }
+    
+  ]
+}

@@ -103,9 +103,12 @@ public class Common_Function {
 
 			if (ConfigFileReader.strRunMode.equalsIgnoreCase("cloud")) {
 				capability.setCapability("app", getCapebility().get("strFilePath"));
+				capability.setCapability("isRealMobile", true);
+				capability.setCapability("visual", true);
 				// capability.setCapability("browserstack.debug", true);
 			}
 			System.out.println("capability " + capability);
+			System.out.println("hubUrl: "+getCapebility().get("remoteAddress"));
 			driver = new AndroidDriver<MobileElement>(new URL(getCapebility().get("remoteAddress")), capability);
 
 			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -848,7 +851,7 @@ public class Common_Function {
 				capebilityMap.put("deviceName", getDeviceData().get(index).getDevice());
 				capebilityMap.put("deviceVersion", getDeviceData().get(index).getOsVersion());
 				capebilityMap.put("remoteAddress", "https://" + ConfigFileReader.userName + ":"
-						+ ConfigFileReader.accessKey + "@hub.lambdatest.com/wd/hub");
+						+ ConfigFileReader.accessKey + "@mobile-hub.lambdatest.com/wd/hub");
 				capebilityMap.put("strFilePath", ConfigFileReader.strFilePath);
 
 			}
