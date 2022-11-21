@@ -14,25 +14,25 @@ public class ConfigFileReader {
 	public static String strApplicationType;
 	static {
 		strEnv = System.getProperty("env");
-		strEnv = "stag";
+		//strEnv = "stprodag";
 		strDeviceName = System.getProperty("deviceId");
 		userName = System.getProperty("userName");
-		userName = "abhay.rai";
+		//userName = "abhay.rai";
 		accessKey = System.getProperty("accessKey");
-		accessKey = "f562ULSQYygxPzwtlVtAvfsna7mnAoWTlVlS4BIC3FYUs6Tf1W";
+		//accessKey = "f562ULSQYygxPzwtlVtAvfsna7mnAoWTlVlS4BIC3FYUs6Tf1W";
 		strDeviceName = System.getProperty("deviceId");
 		System.out.println("strDeviceName " + strDeviceName);
 		strDeviceVersion = System.getProperty("version");
 		strRunMode = System.getProperty("runMode");
-		strRunMode = "local";
-		strDeviceName = "e252241e";
-		strDeviceVersion = "11.0";
+		//strRunMode = "local";
+		//strDeviceName = "e252241e";
+		//strDeviceVersion = "11.0";
 		strDeviceIndex = System.getProperty("deviceIndex");
-		strDeviceIndex = "0";
+		//strDeviceIndex = "0";
 		strFilePath = System.getProperty("apkId");
-		strFilePath = "bs://af78bcd6b02986208d034c691a4e02f72f686392";
+		//strFilePath = "bs://af78bcd6b02986208d034c691a4e02f72f686392";
 		strUserMobileNumber = System.getProperty("mobileNumber");
-		strUserMobileNumber = "3188517131";
+		//strUserMobileNumber = "3188517131";
 	}
 
 	private Properties properties;
