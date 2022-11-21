@@ -33,6 +33,7 @@ public class ConfigFileReader {
 		//strFilePath = "bs://af78bcd6b02986208d034c691a4e02f72f686392";
 		strUserMobileNumber = System.getProperty("mobileNumber");
 		//strUserMobileNumber = "3188517131";
+
 	}
 
 	private Properties properties;
@@ -89,6 +90,70 @@ public class ConfigFileReader {
 			return strOtpToken;
 		else
 			throw new RuntimeException("Otp token is not defined.");
+	}
+	
+	public String getVideoSlug() {
+		String strVideoSlug = properties.getProperty("video");
+		if (strVideoSlug != null)
+			return strVideoSlug;
+		else
+			throw new RuntimeException(strVideoSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getBooksSlug() {
+		String strBooksSlug = properties.getProperty("books");
+		if (strBooksSlug != null)
+			return strBooksSlug;
+		else
+			throw new RuntimeException(strBooksSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getLiveSlug() {
+		String strLiveSlug = properties.getProperty("live");
+		if (strLiveSlug != null)
+			return strLiveSlug;
+		else
+			throw new RuntimeException(strLiveSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getTestseriesSlug() {
+		String strTestseriesSlug = properties.getProperty("testseries");
+		if (strTestseriesSlug != null)
+			return strTestseriesSlug;
+		else
+			throw new RuntimeException(strTestseriesSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getBooksCrossSellSlug() {
+		String strBooksCSSlug = properties.getProperty("booksCrossSell");
+		if (strBooksCSSlug != null)
+			return strBooksCSSlug;
+		else
+			throw new RuntimeException(strBooksCSSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getVideoCrossSellSlug() {
+		String strVideoCSSlug = properties.getProperty("videoCrossSell");
+		if (strVideoCSSlug != null)
+			return strVideoCSSlug;
+		else
+			throw new RuntimeException(strVideoCSSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getLiveCrossSellSlug() {
+		String strLiveCSSlug = properties.getProperty("liveCrossSell");
+		if (strLiveCSSlug != null)
+			return strLiveCSSlug;
+		else
+			throw new RuntimeException(strLiveCSSlug + "not specified in the Configuration properties file.");
+	}
+	
+	public String getTestseriesCrossSellSlug() {
+		String strTestSeriesCSSlug = properties.getProperty("testseriesCrossSell");
+		if (strTestSeriesCSSlug != null)
+			return strTestSeriesCSSlug;
+		else
+			throw new RuntimeException(strTestSeriesCSSlug + "not specified in the Configuration properties file.");
 	}
 
 }

@@ -9,7 +9,6 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.CoursePageDetailsVerify_OR;
 import pageObject.HomePage_OR;
-import pojo.testdata.TestData;
 import util.Common_Function;
 import util.ConfigFileReader;
 
@@ -28,31 +27,15 @@ public class HomePageUtil {
 		PageFactory.initElements(new AppiumFieldDecorator(driver), homePageORObj);
 	}
 
-	public boolean verifyHomePage(AppiumDriver<MobileElement> driver, TestData testData) {
+	public boolean verifyHomePage(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		loginutillObj = new LoginUtil(driver);
 		try {
-			boolean checkLoginPageOrNot = loginutillObj.checkSignUpLoginPage(driver);
-			if (checkLoginPageOrNot == true) {
 
-				result = loginutillObj.doSignUp(driver);
-				if (!result) {
-					homePageMsglist.addAll(loginutillObj.loginMsgList);
-					return result;
-				}
-
-			} else {
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 30);
-				if (result) {
-					cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
-				}
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
-				if (!result) {
-					homePageMsglist.add("Home page not opened after login");
-					return result;
-				}
+			result = loginutillObj.doSignUp(driver);
+			if (!result) {
+				homePageMsglist.addAll(loginutillObj.loginMsgList);
+				return result;
 			}
 
 			result = verifyHomeTabElements(driver);
@@ -65,7 +48,7 @@ public class HomePageUtil {
 				return result;
 			}
 
-			result = verifyCoursesOnHomePage(driver, testData);
+			result = verifyCoursesOnHomePage(driver);
 			if (!result) {
 				return result;
 			}
@@ -75,7 +58,7 @@ public class HomePageUtil {
 				return result;
 			}
 
-			result = verifyHomePageTopToolbar(driver, testData);
+			result = verifyHomePageTopToolbar(driver);
 			if (!result) {
 				return result;
 			}
@@ -87,7 +70,7 @@ public class HomePageUtil {
 		return result;
 	}
 
-	public boolean verifyHomePageTopToolbar(AppiumDriver<MobileElement> driver, TestData testData) {
+	public boolean verifyHomePageTopToolbar(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		boolean bool = true;
 		try {
@@ -143,9 +126,9 @@ public class HomePageUtil {
 				homePageMsglist.add("Buy btn is not visible");
 				return result;
 			}
-			
+
 			cfObj.commonClick(homePageORObj.getListBtnBuyNow().get(0));
-			
+
 			while (bool) {
 				driver.navigate().back();
 				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 5);
@@ -189,10 +172,15 @@ public class HomePageUtil {
 			cfObj.commonClick(navigationMenuElements.get(0));
 
 			openNaviagationMenu();
+			
+			cfObj.scrollIntoText(driver, "Log out");
 
 			int n = navigationMenuElements.size();
 			for (int i = 1; i < n; i++) {
 				bool = true;
+				
+				cfObj.scrollIntoText(driver, "Log out");
+				
 				result = cfObj.commonWaitForElementToBeVisible(driver, navigationMenuElements.get(i), 10);
 				if (!result) {
 					homePageMsglist.add("The menu element is not visible");
@@ -309,7 +297,7 @@ public class HomePageUtil {
 		return result;
 	}
 
-	public boolean verifyCoursesOnHomePage(AppiumDriver<MobileElement> driver, TestData testData) {
+	public boolean verifyCoursesOnHomePage(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		boolean bool = true;
 		courseDetailPageUtil = new CourseDetailPage(driver);
@@ -337,12 +325,6 @@ public class HomePageUtil {
 			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id", 30);
 			if (!result) {
 				System.out.println("Course detail page not opened when click on course from home page");
-				return result;
-			}
-
-			result = courseDetailPageUtil.clickOnBuyNow(driver);
-			if (!result) {
-				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
 				return result;
 			}
 
@@ -410,12 +392,13 @@ public class HomePageUtil {
 
 			cfObj.commonClick(homePageORObj.getListBottomMenuMyLibrary().get(0));
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.listOfTextView().get(0), 10);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tiSearch", "id", 5);
 			if (!result) {
-				homePageMsglist.add("My library title is not visible at top");
+				homePageMsglist.add("The search box of library is not visible");
 				return result;
 			}
-			String libraryPageText = homePageORObj.listOfTextView().get(0).getText();
+
+			String libraryPageText = "My Library";
 			if (libraryBottomText.equalsIgnoreCase(libraryPageText)) {
 				result = true;
 			} else {
@@ -526,6 +509,7 @@ public class HomePageUtil {
 
 	public boolean clickOnCourseOnHomePage(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
+		String strCourse = "GS - Dr";
 		try {
 			int courseSize = homePageORObj.getListCourses().size();
 			System.out.println("courseSize: " + courseSize);
@@ -533,15 +517,195 @@ public class HomePageUtil {
 				return false;
 			}
 
-			System.out.println("Course Attribute: " + homePageORObj.getListCoursesTitle().get(0).getText().toString());
-			System.out.println(
-					"Course Attribute: " + homePageORObj.getListCoursesTitle().get(0).getAttribute("text").toString());
+			// Click on search icon
+			clickOnSearchIcon();
+			// Click on search box
+			clickOnSearchInputBox();
 
-			// Click on course on home page
-			cfObj.commonClick(homePageORObj.getListCourses().get(0));
+			// enter course name
+			result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+			if (!result) {
+				return result;
+			}
+
+			if (homePageORObj.getListSearchResult().size() == 0) {
+				homePageMsglist.add("No result found using search text: " + strCourse);
+				return false;
+			}
+
+			cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
 
 			// wait for course detail page to be opened
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id", 30);
+			if (!result) {
+				System.out.println("Course detail page not opened when click on course from home page");
+				return result;
+			}
 
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean clickOnLiveCourseOnHomePage(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		String strCourse;
+		try {
+
+			if (ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
+				strCourse = "live";
+
+				// Click on search icon
+				clickOnSearchIcon();
+				// Click on search box
+				clickOnSearchInputBox();
+
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + strCourse);
+					return false;
+				}
+
+				cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
+
+			} else {
+
+				cfObj.commonClick(homePageORObj.imgSlider());
+
+			}
+
+			// wait for course detail page to be opened
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id", 30);
+			if (!result) {
+				System.out.println("Course detail page not opened when click on course from home page");
+				return result;
+			}
+
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean clickOnBookOnHomePage(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		String strCourse;
+		try {
+
+			if (ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
+				strCourse = "India Polity";
+
+				// Click on search icon
+				clickOnSearchIcon();
+				// Click on search box
+				clickOnSearchInputBox();
+
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + strCourse);
+					return false;
+				}
+
+				cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
+
+			} else {
+
+				strCourse = "ssc book";
+
+				// Click on search icon
+				clickOnSearchIcon();
+				// Click on search box
+				clickOnSearchInputBox();
+
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + strCourse);
+					return false;
+				}
+
+				cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
+
+			}
+
+			// wait for course detail page to be opened
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id", 30);
+			if (!result) {
+				System.out.println("Course detail page not opened when click on course from home page");
+				return result;
+			}
+
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean clickOnTestSeriesOnHomePage(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		String strCourse;
+		try {
+			if (ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
+				strCourse = "upsc prelims test";
+
+				// Click on search icon
+				clickOnSearchIcon();
+				// Click on search box
+				clickOnSearchInputBox();
+
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + strCourse);
+					return false;
+				}
+
+				cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
+
+			} else {
+
+				strCourse = "p3-";
+
+				// Click on search icon
+				clickOnSearchIcon();
+				// Click on search box
+				clickOnSearchInputBox();
+
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + strCourse);
+					return false;
+				}
+
+				cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
+
+			}
+
+			// wait for course detail page to be opened
 			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id", 30);
 			if (!result) {
 				System.out.println("Course detail page not opened when click on course from home page");
@@ -573,7 +737,7 @@ public class HomePageUtil {
 		return result;
 	}
 
-	public boolean verifyCourseSearch(AppiumDriver<MobileElement> driver, TestData testData) {
+	public boolean verifyCourseSearch(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
 			loginutillObj = new LoginUtil(driver);
@@ -585,7 +749,7 @@ public class HomePageUtil {
 				return result;
 			}
 
-			result = searchCourse(driver, testData.getCourseName());
+			result = searchCourse(driver);
 
 		} catch (Exception e) {
 			result = false;
@@ -594,8 +758,9 @@ public class HomePageUtil {
 		return result;
 	}
 
-	public boolean searchCourse(AppiumDriver<MobileElement> driver, String strCourse) {
+	public boolean searchCourse(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
+		String strCourse = "punjab";
 		try {
 
 			if (homePageORObj.getListSearchButton().size() == 0) {
@@ -680,52 +845,6 @@ public class HomePageUtil {
 		}
 	}
 
-	public boolean verifyMylibraryForGuestUser(AppiumDriver<MobileElement> driver) {
-		boolean result = true;
-		try {
-
-			loginutillObj = new LoginUtil(driver);
-
-			result = loginutillObj.clickOnSkipLogin(driver);
-			if (!result) {
-				homePageMsglist.addAll(loginutillObj.loginMsgList);
-				return result;
-			}
-
-			clickOnMyLibrary();
-
-			// wait for login page to be opened
-
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.TEXT_BOX_MOBILE, "id", 20);
-
-			if (!result) {
-				homePageMsglist.add("Login Page not opened when click on my library for guest user");
-				return result;
-			}
-
-			// Close login pop up
-
-			result = closeLoginPopUp(driver);
-
-		} catch (Exception e) {
-			result = false;
-			homePageMsglist.add("verifyMylibraryForGuestUser_Exception: " + e.getMessage());
-		}
-		return result;
-	}
-
-	public boolean closeLoginPopUp(AppiumDriver<MobileElement> driver) {
-		boolean result = true;
-		try {
-			cfObj.commonClick(homePageORObj.getListBtnLoginClose().get(0));
-
-		} catch (Exception e) {
-			result = false;
-			homePageMsglist.add("closeLoginPopUp_Exception: " + e.getMessage());
-		}
-		return result;
-	}
-
 	public void openNaviagationMenu() {
 		try {
 			cfObj.commonClick(homePageORObj.openNavigationMenu());
@@ -757,86 +876,4 @@ public class HomePageUtil {
 		return result;
 	}
 
-//	public boolean verifyBuyNowProcess(AppiumDriver<MobileElement> driver, TestData testData) {
-//		boolean result = true;
-//		try {
-//
-//			result = courseDetailPageUtil.clickOnBuyNow(driver);
-//			if (!result) {
-//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//				return result;
-//			}
-//
-//			result = courseDetailPageUtil.verifyEMIoption(driver, null);
-//			if (!result) {
-//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//				return result;
-//			}
-//
-//			result = courseDetailPageUtil.verifyPacks(driver, null);
-//			if (!result) {
-//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//				return result;
-//			}
-//
-//			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.noOfOffersAvail(), 10);
-//			if (result) {
-//
-//				String noOfOffersAvail = homePageORObj.noOfOffersAvail().getText();
-//				String[] arr = noOfOffersAvail.split(" ");
-//				int countOfOffers = Integer.parseInt(arr[0]);
-//
-//				if (countOfOffers > 0) {
-//					
-//					result = courseDetailPageUtil.verifyInvalidCoupon(driver);
-//					if (!result) {
-//						homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//						return result;
-//					}
-//
-//					result = courseDetailPageUtil.selectCoupon_verifyAmount(driver);
-//					if (!result) {
-//						homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//						return result;
-//					}
-//
-//					result = courseDetailPageUtil.changeCoupon(driver);
-//					if (!result) {
-//						homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//						return result;
-//					}
-//
-//					result = courseDetailPageUtil.applyManualCoupon(driver);
-//					if (!result) {
-//						homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//						return result;
-//					}
-//
-//				}
-//			}
-//
-//			result = courseDetailPageUtil.chooseYourPack(driver, testData.getChoosePack());
-//			if (!result) {
-//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//				return result;
-//			}
-//
-//			result = courseDetailPageUtil.buyNowPack(driver);
-//			if (!result) {
-//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//				return result;
-//			}
-//
-//			result = courseDetailPageUtil.verifyViewDetails(driver);
-//			if (!result) {
-//				homePageMsglist.addAll(courseDetailPageUtil.coursePageMsgList);
-//				return result;
-//			}
-//
-//		} catch (Exception e) {
-//			homePageMsglist.add("verifyBuyNowProcess_Exception " + e.getMessage());
-//			return result;
-//		}
-//		return result;
-//	}
 }

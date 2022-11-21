@@ -31,17 +31,17 @@ public class LoginUtil {
 		String strOtp = null;
 		OtpUtil otpUtilObj;
 		try {
+			result = enterMobileNumber(strMobileNo, driver);
+			if (!result) {
+				return result;
+			}
 
-			result = enterMobileNumber(strMobileNo);
+			result = checkOtpPage();
 			if (!result) {
 				return result;
 			}
-			result = clickOnGetOtp();
-			if (!result) {
-				return result;
-			}
+
 			otpUtilObj = new OtpUtil();
-
 			strOtp = otpUtilObj.getOtp(strMobileNo, false);
 			if (strOtp == null) {
 				loginMsgList.add("Error in getting otp");
@@ -64,16 +64,60 @@ public class LoginUtil {
 		return result;
 	}
 
-	public boolean enterMobileNumber(String strMobileNo) {
+	public boolean enterMobileNumber(String strMobileNo, AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
 
-			cfObj.commonClick(loginPageObj.getTextMobileNo());
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "tvSignOrLogin", "id", 10);
+			if (!result) {
+				loginMsgList.add("It is not a login page");
+				return result;
+			}
 
-			result = cfObj.commonSetTextTextBox(loginPageObj.getTextMobileNo(), strMobileNo);
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.numberInputBox(), 10);
+			if (!result) {
+				loginMsgList.add("The input box of phone number is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(loginPageObj.numberInputBox());
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.manualDetailBtn(), 10);
+			if (!result) {
+				loginMsgList.add("The truecaller feature has not opened");
+				return result;
+			}
+
+			cfObj.commonClick(loginPageObj.manualDetailBtn());
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.noneOfTheAboveBtn(), 5);
+			if (result) {
+				cfObj.commonClick(loginPageObj.noneOfTheAboveBtn());
+			}
+
+			loginPageObj.numberInputBox().sendKeys(strMobileNo);
+
+			cfObj.commonClick(loginPageObj.continueBtn());
 
 		} catch (Exception e) {
 			result = false;
+		}
+		return result;
+	}
+
+	public boolean checkOtpPage() {
+		boolean result = true;
+		try {
+
+			// wait for enter OTP box to be enable
+			if (loginPageObj.otpBoxes().size() == 0) {
+				loginMsgList.add("Enter otp text box not display after click on get otp button");
+				return false;
+			}
+		} catch (Exception e) {
+
+			result = false;
+
 		}
 		return result;
 	}
@@ -82,33 +126,10 @@ public class LoginUtil {
 		boolean result = true;
 		try {
 
-			cfObj.commonClick(loginPageObj.getTextOtp().get(0));
-
-			result = cfObj.commonSetTextTextBox(loginPageObj.getTextOtp().get(0), strOtp);
-
-			cfObj.hideKeyBoard(driver);
+			cfObj.commonSetTextTextBox(loginPageObj.otpBoxes().get(0), strOtp);
 
 		} catch (Exception e) {
 			result = false;
-		}
-		return result;
-	}
-
-	public boolean clickOnGetOtp() {
-		boolean result = true;
-		try {
-			cfObj.commonClick(loginPageObj.getBtnGetOtp());
-
-			// wait for enter OTP box to be enable
-			if (loginPageObj.getTextOtp().size() == 0) {
-				loginMsgList.add("Enter otp text box not display after click on get otp button");
-				return false;
-			}
-
-		} catch (Exception e) {
-
-			result = false;
-
 		}
 		return result;
 	}
@@ -117,16 +138,14 @@ public class LoginUtil {
 		boolean result = true;
 		try {
 
-			cfObj.commonClick(loginPageObj.getBtnLogin());
-
 			// check if permission is display then allow permission
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.PERMISSION_ALLOW, "id", 10);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.PERMISSION_ALLOW, "id", 5);
 			if (result) {
 				cfObj.commonClick(loginPageObj.getBtnPermissionAllowed());
 			}
 
 			// close pop up on home page
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 10);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 5);
 			if (result) {
 
 				cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
@@ -174,10 +193,17 @@ public class LoginUtil {
 		boolean result = true;
 		try {
 
-			cfObj.commonClick(loginPageObj.getTextUserName());
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.nameTxtHeading(), 5);
+			if (!result) {
+				loginMsgList.add("This is not name and email page");
+				return result;
+			}
 
-			result = cfObj.commonSetTextTextBox(loginPageObj.getTextUserName(), strName);
+			cfObj.commonClick(loginPageObj.nameInputBox());
+
+			cfObj.commonSetTextTextBox(loginPageObj.nameInputBox(), strName);
 			cfObj.hideKeyBoard(driver);
+
 		} catch (Exception e) {
 			result = false;
 			loginMsgList.add("enterUserName_Exception: " + e.getMessage());
@@ -190,51 +216,24 @@ public class LoginUtil {
 		boolean result = true;
 		try {
 
-			cfObj.commonClick(loginPageObj.getTextUserEmail());
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.emailTxtHeading(), 5);
+			if (!result) {
+				loginMsgList.add("This is not name and email page");
+				return result;
+			}
 
-			result = cfObj.commonSetTextTextBox(loginPageObj.getTextUserEmail(), strEmail);
+			cfObj.commonClick(loginPageObj.emailInputBox());
+
+			result = cfObj.commonSetTextTextBox(loginPageObj.emailInputBox(), strEmail);
 			cfObj.hideKeyBoard(driver);
+
+			cfObj.commonClick(loginPageObj.continueBtn());
 
 		} catch (Exception e) {
 			result = false;
 			loginMsgList.add("enterUerEmail_Exception: " + e.getMessage());
 		}
 
-		return result;
-	}
-
-	public boolean clickOnSkipLogin(AppiumDriver<MobileElement> driver) {
-		boolean result = true;
-		try {
-
-			cfObj.commonClick(loginPageObj.getBtnSkipLogin());
-			// check if permission is display then allow permission
-
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.PERMISSION_ALLOW, "id", 30);
-			if (result) {
-				cfObj.commonClick(loginPageObj.getBtnPermissionAllowed());
-			}
-
-			// close pop up on home page
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 30);
-			if (result) {
-
-				cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
-
-			}
-			// wait for home page to be opened
-
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
-
-			if (!result) {
-				loginMsgList.add("Home page not opened after login");
-				return result;
-			}
-
-		} catch (Exception e) {
-			result = false;
-			loginMsgList.add("clickOnSkipLogin_Exception: " + e.getMessage());
-		}
 		return result;
 	}
 
@@ -246,11 +245,12 @@ public class LoginUtil {
 		try {
 			strMobileNo = Common_Function.randomPhoneNumber(10, "3");
 			System.out.println("strMobileNo: " + strMobileNo);
-			result = enterMobileNumber(strMobileNo);
+
+			result = enterMobileNumber(strMobileNo, driver);
 			if (!result) {
 				return result;
 			}
-			result = clickOnGetOtp();
+			result = checkOtpPage();
 			if (!result) {
 				return result;
 			}
@@ -266,11 +266,17 @@ public class LoginUtil {
 			if (!result) {
 				return result;
 			}
+
 			result = enterUserName(driver, "TestUser" + strMobileNo);
 			if (!result) {
 				return result;
 			}
 			result = enterUerEmail(driver, "TestUser" + strMobileNo + "@gmail.com");
+			if (!result) {
+				return result;
+			}
+
+			result = chooseExamPreference(driver);
 			if (!result) {
 				return result;
 			}
@@ -287,13 +293,31 @@ public class LoginUtil {
 		return result;
 	}
 
-	public boolean checkSignUpLoginPage(AppiumDriver<MobileElement> driver) {
+	public boolean chooseExamPreference(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.getBtnGetOtp(), 5);
+
+			// close pop up on home page
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 5);
+			if (result) {
+
+				cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
+
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.searchGoalInputBox(), 5);
+			if (!result) {
+				System.out.println("The exam preference page is not displayed or search box is not visible");
+				return true;
+			}
+
+			cfObj.commonSetTextTextBox(loginPageObj.searchGoalInputBox(), "s");
+
+			cfObj.commonClick(loginPageObj.listOfGoals().get(0));
 
 		} catch (Exception e) {
-			System.out.println("checkSignUpLoginPageException " + e.getMessage());
+			result = false;
+			loginMsgList.add("chooseExamPreference_Exception: " + e.getMessage());
 		}
 		return result;
 	}

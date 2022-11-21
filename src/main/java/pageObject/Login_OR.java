@@ -7,69 +7,95 @@ import io.appium.java_client.pagefactory.AndroidFindBy;
 
 public class Login_OR {
 
-	@AndroidFindBy(id = "et_mobile")
-	private MobileElement textMobileNo;
+	@AndroidFindBy(id = "teMobile")
+	private MobileElement numberInputBoxElement;
+
+	public MobileElement numberInputBox() {
+		return numberInputBoxElement;
+	}
+
+	@AndroidFindBy(id = "com.truecaller:id/continueWithDifferentNumber")
+	private MobileElement manualDetailBtnElement;
+
+	public MobileElement manualDetailBtn() {
+		return manualDetailBtnElement;
+	}
+
+	@AndroidFindBy(id = "com.google.android.gms:id/button_area")
+	private MobileElement noneOfTheAboveElement;
+
+	public MobileElement noneOfTheAboveBtn() {
+		return noneOfTheAboveElement;
+	}
+	
+	@AndroidFindBy(id = "com.google.android.gms:id/credential_picker_options")
+	private MobileElement mobilePresentElement;
+
+	public MobileElement mobilePresentOnPopuP() {
+		return mobilePresentElement;
+	}
 
 	@AndroidFindBy(id = "btn_getOtp")
-	private MobileElement btnGetOtp;
+	private MobileElement continueBtnElement;
 
-	@AndroidFindBy(id = "et_otp")
-	private List<MobileElement> textOtp;
+	public MobileElement continueBtn() {
+		return continueBtnElement;
+	}
 
-	@AndroidFindBy(id = "btn_login_reg")
-	private MobileElement btnLogin;
+	@AndroidFindBy(xpath = "//android.widget.FrameLayout/android.widget.EditText")
+	private List<MobileElement> otpBoxElements;
+
+	public List<MobileElement> otpBoxes() {
+		return otpBoxElements;
+	}
 
 	@AndroidFindBy(id = "com.android.permissioncontroller:id/permission_allow_button")
 	private MobileElement btnPermissionAllowed;
 
-	public MobileElement getTextMobileNo() {
-		return textMobileNo;
-	}
-
-	public MobileElement getBtnGetOtp() {
-		return btnGetOtp;
-	}
-
-	public List<MobileElement> getTextOtp() {
-		return textOtp;
-	}
-
-	public MobileElement getBtnLogin() {
-		return btnLogin;
-	}
-
 	public MobileElement getBtnPermissionAllowed() {
 		return btnPermissionAllowed;
 	}
-	
-	@AndroidFindBy(id = "et_name")
-	private MobileElement textUserName;
-	
-	
-	public MobileElement getTextUserName() {
-		return textUserName;
+
+	@AndroidFindBy(id = "tvYourName")
+	private MobileElement nameTxtHeadingElement;
+
+	public MobileElement nameTxtHeading() {
+		return nameTxtHeadingElement;
 	}
 
-	public MobileElement getTextUserEmail() {
-		return textUserEmail;
+	@AndroidFindBy(id = "teName")
+	private MobileElement nameInputElement;
+
+	public MobileElement nameInputBox() {
+		return nameInputElement;
 	}
 
-	@AndroidFindBy(id = "et_email")
-	private MobileElement textUserEmail;
-	
-	
-	@AndroidFindBy(id = "tv_login_skip")
-	private MobileElement btnSkipLogin;
+	@AndroidFindBy(id = "teEmail")
+	private MobileElement emailInputElement;
 
-	public MobileElement getBtnSkipLogin() {
-		return btnSkipLogin;
+	public MobileElement emailInputBox() {
+		return emailInputElement;
 	}
-	
-	@AndroidFindBy(id = "com.android.permissioncontroller:id/permission_allow_button")
-	private List<MobileElement> permissionBtnElement;
-	
-	public List<MobileElement> permissionBtnAppear(){
-		return permissionBtnElement;
+
+	@AndroidFindBy(id = "tvYourEmail")
+	private MobileElement emailTxtHeadingElement;
+
+	public MobileElement emailTxtHeading() {
+		return emailTxtHeadingElement;
 	}
-	
+
+	@AndroidFindBy(id = "search_src_text")
+	private MobileElement searchGoalInputElement;
+
+	public MobileElement searchGoalInputBox() {
+		return searchGoalInputElement;
+	}
+
+	@AndroidFindBy(id = "ll_select_exam")
+	private List<MobileElement> goals;
+
+	public List<MobileElement> listOfGoals() {
+		return goals;
+	}
+
 }

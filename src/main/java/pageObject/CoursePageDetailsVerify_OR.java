@@ -8,16 +8,16 @@ import io.appium.java_client.pagefactory.AndroidFindBy;
 public class CoursePageDetailsVerify_OR {
 
 	@AndroidFindBy(id = "txt_course_title")
-	private MobileElement titleOfPageElement;
+	private List<MobileElement> titleOfPageElement;
 
-	public MobileElement titleOfPage() {
+	public List<MobileElement> titleOfPage() {
 		return titleOfPageElement;
 	}
 
 	@AndroidFindBy(id = "btn_buy_one")
-	private MobileElement buyNowBtnElementAbove;
+	private List<MobileElement> buyNowBtnElementAbove;
 
-	public MobileElement buyNowBtnAbove() {
+	public List<MobileElement> buyNowBtnAbove() {
 		return buyNowBtnElementAbove;
 	}
 	
@@ -162,9 +162,9 @@ public class CoursePageDetailsVerify_OR {
 	}
 	
 	@AndroidFindBy(id = "txt_discount_price_2")
-	private MobileElement coursePriceAtAboveElement;
+	private List<MobileElement> coursePriceAtAboveElement;
 	
-	public MobileElement coursePriceAtAbove() {
+	public List<MobileElement> coursePriceAtAbove() {
 		return coursePriceAtAboveElement;
 	}
 	
@@ -236,5 +236,61 @@ public class CoursePageDetailsVerify_OR {
 	
 	public List<MobileElement> viewAllCourses(){
 		return viewAllCoursesElements;
+	}
+	
+	@AndroidFindBy(xpath = "//android.widget.TextView[contains(@resource-id,'txt_total_')]")
+	private List<MobileElement> courseInfo;
+	
+	public List<MobileElement> listOfCourseInfo(){
+		return courseInfo;
+	}
+	
+	@AndroidFindBy(id = "ll_demo_container")
+	private MobileElement containerOfDemo;
+	
+	public MobileElement containerOfDemoVideos() {
+		return containerOfDemo;
+	}
+	
+	@AndroidFindBy(id = "exo_content_frame")
+	private MobileElement frameOfDemoVideo;
+	
+	public MobileElement frameDemoVideo() {
+		return frameOfDemoVideo;
+	}
+	
+	@AndroidFindBy(id = "tv_similar_courses")
+	private MobileElement similarCoursesText;
+	
+	public MobileElement similarCoursesText() {
+		return similarCoursesText;
+	}
+	
+	@AndroidFindBy(id = "course_image_card")
+	private List<MobileElement> crossSellImageList;
+	
+	public List<MobileElement> listOfCrossSellImage(){
+		return crossSellImageList;
+	}
+	
+	@AndroidFindBy(id = "txt_course_title")
+	private List<MobileElement> crossSellTitleList;
+	
+	public List<MobileElement> listOfCrossSellTitle(){
+		return crossSellTitleList;
+	}
+	
+	@AndroidFindBy(id = "price")
+	private List<MobileElement> crossSellPriceList;
+	
+	public List<MobileElement> listOfCrossSellPrice(){
+		return crossSellPriceList;
+	}
+	
+	@AndroidFindBy(id = "tv_view_all")
+	private MobileElement crossViewAllBtn;
+	
+	public MobileElement crossViewAllBtn() {
+		return crossViewAllBtn;
 	}
 }

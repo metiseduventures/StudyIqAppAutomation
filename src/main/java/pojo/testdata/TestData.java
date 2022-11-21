@@ -4,6 +4,7 @@ public class TestData {
 
 	private String courseName;
 	private String courseId;
+	private String courseType;
 	private String paymentMethod;
 	private String couponCode;
 	private String paymentType;
@@ -15,6 +16,24 @@ public class TestData {
 	private String state;
 	private String choosePack;
 	private String isKey;
+	private boolean isExpire;
+	private boolean isFree;
+
+	public boolean getIsFree() {
+		return isFree;
+	}
+
+	public void setFree(boolean isFree) {
+		this.isFree = isFree;
+	}
+
+	public boolean getIsExpire() {
+		return isExpire;
+	}
+
+	public void setIsExpire(Boolean isExpire) {
+		this.isExpire = isExpire;
+	}
 
 	public String getIsKey() {
 		return isKey;
@@ -118,6 +137,14 @@ public class TestData {
 
 	public void setChoosePack(String choosePack) {
 		this.choosePack = choosePack;
+	}
+
+	public String getCourseType() {
+		return courseType;
+	}
+
+	public void setCourseType(String courseType) {
+		this.courseType = courseType;
 	}
 
 }

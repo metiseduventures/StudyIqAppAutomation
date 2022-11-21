@@ -26,7 +26,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "bundlecourses",
     "course_faqs",
     "order_history",
-    "price_info"
+    "price_info",
+    "cross_sell_details"
 })
 @Generated("jsonschema2pojo")
 public class Data {
@@ -57,6 +58,8 @@ public class Data {
     private List<Object> orderHistory = null;
     @JsonProperty("price_info")
     private String priceInfo;
+    @JsonProperty("cross_sell_details")
+    private List<Object> crossSellDetails = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -189,6 +192,17 @@ public class Data {
     public void setPriceInfo(String priceInfo) {
         this.priceInfo = priceInfo;
     }
+    
+    @JsonProperty("cross_sell_details")
+    public List<Object> getCrossSellDetails() {
+        return crossSellDetails;
+    }
+
+    @JsonProperty("cross_sell_details")
+    public void setCrossSellDetails(List<Object> crossSellDetails) {
+        this.crossSellDetails = crossSellDetails;
+    }
+
 
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
