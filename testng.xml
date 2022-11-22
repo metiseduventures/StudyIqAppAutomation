@@ -2,7 +2,6 @@
 <suite name="StudyIq APP Automation Test Suite">
 	<listeners>
 		<listener class-name="com.listener.TestListener" />
-		<listener class-name="com.listener.AnnotationTransformer" />
 	</listeners>
 
 	<test name="LOGIN_SIGNUP_TEST">

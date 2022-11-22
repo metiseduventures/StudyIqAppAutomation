@@ -11,6 +11,7 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.Login_OR;
 import util.Common_Function;
+import util.ConfigFileReader;
 
 public class LoginUtil {
 
@@ -82,17 +83,20 @@ public class LoginUtil {
 
 			cfObj.commonClick(loginPageObj.numberInputBox());
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.manualDetailBtn(), 10);
-			if (!result) {
-				loginMsgList.add("The truecaller feature has not opened");
-				return result;
-			}
+			if (ConfigFileReader.isTrueCallerFeature) {
 
-			cfObj.commonClick(loginPageObj.manualDetailBtn());
+				result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.manualDetailBtn(), 10);
+				if (!result) {
+					loginMsgList.add("The truecaller feature has not opened");
+					return result;
+				}
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.noneOfTheAboveBtn(), 5);
-			if (result) {
-				cfObj.commonClick(loginPageObj.noneOfTheAboveBtn());
+				cfObj.commonClick(loginPageObj.manualDetailBtn());
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.noneOfTheAboveBtn(), 5);
+				if (result) {
+					cfObj.commonClick(loginPageObj.noneOfTheAboveBtn());
+				}
 			}
 
 			loginPageObj.numberInputBox().sendKeys(strMobileNo);
@@ -137,7 +141,6 @@ public class LoginUtil {
 	public boolean clickOnLoginButton(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-
 			// check if permission is display then allow permission
 			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.PERMISSION_ALLOW, "id", 5);
 			if (result) {
@@ -226,7 +229,6 @@ public class LoginUtil {
 
 			result = cfObj.commonSetTextTextBox(loginPageObj.emailInputBox(), strEmail);
 			cfObj.hideKeyBoard(driver);
-
 			cfObj.commonClick(loginPageObj.continueBtn());
 
 		} catch (Exception e) {

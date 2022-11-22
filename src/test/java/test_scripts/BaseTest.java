@@ -1,9 +1,5 @@
 package test_scripts;
-
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 
@@ -14,7 +10,11 @@ import util.Common_Function;
 public class BaseTest {
 
 	Common_Function cfObj = new Common_Function();
-	public static AppiumDriver<MobileElement> driver;
+	public AppiumDriver<MobileElement> driver;
+	
+	public AppiumDriver<MobileElement> getDriver() {
+        return driver;
+    }
 
 	@BeforeMethod
 	public void setUp() {
