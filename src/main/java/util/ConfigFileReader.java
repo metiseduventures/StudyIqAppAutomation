@@ -24,16 +24,16 @@ public class ConfigFileReader {
 		System.out.println("strDeviceName " + strDeviceName);
 		strDeviceVersion = System.getProperty("version");
 		strRunMode = System.getProperty("runMode");
-		//strRunMode = "cloud";
-		//strDeviceName = "Pixel 6";
+		//strRunMode = "local";
+		//strDeviceName = "RZ8T11F8CYW";
 		//strDeviceVersion = "12.0";
 		strDeviceIndex = System.getProperty("deviceIndex");
 		//strDeviceIndex = "0";
 		strFilePath = System.getProperty("apkId");
 		//strFilePath = "lt://APP10160571881669016963353488";
 		strUserMobileNumber = System.getProperty("mobileNumber");
-		//strUserMobileNumber = "3188517131";
-
+		//strUserMobileNumber = "9958544199";
+		isTrueCallerFeature = false;
 	}
 
 	private Properties properties;
