@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="StudyIq APP Automation Test Suite">
+	<listeners>
+		<listener class-name="com.listener.TestListener" />
+	</listeners>
+
+	<test name="FEED_TEST">
+		<classes>
+			<class name="test_scripts.FeedTest" />
+		</classes>
+	</test>
+</suite>
