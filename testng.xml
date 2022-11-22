@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="StudyIq APP Automation Test Suite">
-	<listeners>
+	<!--<listeners>
 		<listener class-name="com.listener.TestListener" />
-	</listeners>
+	</listeners>-->
 
 	<test name="LOGIN_SIGNUP_TEST">
 		<classes>
