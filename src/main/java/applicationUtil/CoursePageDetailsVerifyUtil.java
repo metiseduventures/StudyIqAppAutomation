@@ -105,7 +105,7 @@ public class CoursePageDetailsVerifyUtil {
 			courseViewObj = courseApiUtilObj.getCourseViewData(strCourseSlug);
 			System.out.println(courseViewObj.getData().getPriceInfo());
 
-			result = courseInfo(driver, courseViewObj);
+			result = courseInfo(driver, courseViewObj, testData);
 			if (!result) {
 				return result;
 			}
@@ -115,9 +115,12 @@ public class CoursePageDetailsVerifyUtil {
 				return result;
 			}
 
-			result = verifyExamsCovered(driver, courseViewObj);
-			if (!result) {
-				return result;
+			if (!testData.getCourseType().equalsIgnoreCase("live")) {
+
+				result = verifyExamsCovered(driver, courseViewObj);
+				if (!result) {
+					return result;
+				}
 			}
 
 			result = verifyAboutAuthor(driver, courseViewObj);
@@ -130,18 +133,15 @@ public class CoursePageDetailsVerifyUtil {
 //				return result;
 //			}
 
-			if (!configFileReader.getEnv().equalsIgnoreCase("prod")) {
+//			result = verifyCrossSell(driver, courseViewObj, testData);
+//			if (!result) {
+//				return result;
+//			}
 
-				result = verifyCrossSell(driver, courseViewObj, testData);
-				if (!result) {
-					return result;
-				}
-			}
-
-			result = verifyCourseContent(driver);
-			if (!result) {
-				return result;
-			}
+//			result = verifyCourseContent(driver);
+//			if (!result) {
+//				return result;
+//			}
 
 			result = verifyFreeCourses(driver, courseViewObj);
 			if (!result) {
@@ -166,7 +166,7 @@ public class CoursePageDetailsVerifyUtil {
 		return result;
 	}
 
-	public boolean courseInfo(AppiumDriver<MobileElement> driver, CourseView courseViewObj) {
+	public boolean courseInfo(AppiumDriver<MobileElement> driver, CourseView courseViewObj, TestData testData) {
 		boolean result = true;
 		String strOriginalPrice;
 		try {
@@ -208,8 +208,12 @@ public class CoursePageDetailsVerifyUtil {
 			}
 			cfObj.commonClick(cdpVerify_OR.shareCourse());
 
-			// add a wait to check if it is a share pop up
-
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "oplus:id/oplus_chooser_action_nearby_tx", "id", 10);
+			if (!result) {
+				cdpVerifyMsgList.add("The share pop is not visible");
+				return result;
+			}
+			
 			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 
 			// emi
@@ -231,9 +235,13 @@ public class CoursePageDetailsVerifyUtil {
 				((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 			}
 
-			if (cdpVerify_OR.listOfCourseInfo().size() == 0) {
-				cdpVerifyMsgList.add("Course info is not display in course detail page");
-				result = false;
+			if (!testData.getCourseType().equalsIgnoreCase("books")) {
+				if (!testData.getCourseType().equalsIgnoreCase("live")) {
+
+					if (cdpVerify_OR.listOfCourseInfo().size() == 0) {
+						System.out.println("Course info is not display in course detail page");
+					}
+				}
 			}
 
 		} catch (Exception e) {
@@ -308,6 +316,7 @@ public class CoursePageDetailsVerifyUtil {
 			String coursePriceBelow = cdpVerify_OR.mainPriceAtBottom().getText();
 
 			if (coursePriceAbove.equalsIgnoreCase(coursePriceBelow)) {
+				cfObj.scrollIntoText(driver, "Product Description");
 				result = true;
 			} else {
 				cdpVerifyMsgList.add("The price at bottom and above are not same");
@@ -432,7 +441,7 @@ public class CoursePageDetailsVerifyUtil {
 
 			if (courseViewObj.getData().getDemoUrls().size() > 0) {
 
-				//scroll method
+				// scroll method
 
 				List<MobileElement> langs = cdpVerify_OR.demoVideoLang();
 				List<MobileElement> videos = cdpVerify_OR.demoVideos();
