@@ -554,7 +554,7 @@ public class HomePageUtil {
 		try {
 
 			if (ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
-				strCourse = "live";
+				strCourse = "complete ncert";
 
 				// Click on search icon
 				clickOnSearchIcon();

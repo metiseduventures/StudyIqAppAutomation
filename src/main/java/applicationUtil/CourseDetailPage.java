@@ -987,12 +987,22 @@ public class CourseDetailPage {
 				coursePageMsgList.add("Phone field is empty");
 				return result;
 			}
+			
+			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListBookingFormName().get(0),
+					"userName");
+			if (!result) {
+				coursePageMsgList.add("not able to add name");
+				return result;
+			}
+			
 			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListBookingFormAddress().get(0),
 					"Unitech Cyber park");
 			if (!result) {
 				coursePageMsgList.add("not able to add address");
 				return result;
 			}
+			
+			driver.hideKeyboard();
 
 			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListBookingFormPinCode().get(0), "122003");
 			if (!result) {
