@@ -198,7 +198,7 @@ public class LoginUtil {
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.nameTxtHeading(), 5);
 			if (!result) {
-				loginMsgList.add("This is not name and email page");
+				loginMsgList.add("The number is already used and not for sign up");
 				return result;
 			}
 

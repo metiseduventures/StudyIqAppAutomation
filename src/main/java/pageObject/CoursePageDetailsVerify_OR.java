@@ -293,4 +293,11 @@ public class CoursePageDetailsVerify_OR {
 	public MobileElement crossViewAllBtn() {
 		return crossViewAllBtn;
 	}
+	
+	@AndroidFindBy(id = "tv_nav_home")
+	private List<MobileElement> listBottomMenuMyHome;
+
+	public List<MobileElement> getListBottomMenuMyHome() {
+		return listBottomMenuMyHome;
+	}
 }

@@ -14,7 +14,6 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.HomePage_OR;
 import pageObject.Login_OR;
 import pageObject.ProfilePage_OR;
-import pojo.testdata.TestData;
 import util.Common_Function;
 
 public class ProfilePageUtil {
@@ -33,7 +32,7 @@ public class ProfilePageUtil {
 		PageFactory.initElements(new AppiumFieldDecorator(driver), profilePage_OR);
 	}
 
-	public boolean verifyProfilePage(AppiumDriver<MobileElement> driver, TestData testData) {
+	public boolean verifyProfilePage(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		loginUtillObj = new LoginUtil(driver);
 		try {
@@ -54,7 +53,7 @@ public class ProfilePageUtil {
 				return result;
 			}
 
-			result = inputDataIntoBoxes(driver, testData);
+			result = inputDataIntoBoxes(driver);
 			if (!result) {
 				return result;
 			}
@@ -69,27 +68,17 @@ public class ProfilePageUtil {
 				return result;
 			}
 
-			result = checkUpdationDoneOrNot(testData);
+			result = checkUpdationDoneOrNot();
 			if (!result) {
 				return result;
 			}
 
-			result = changeNumberInProfile();
+			result = changeNumberInProfile(driver);
 			if (!result) {
 				return result;
 			}
-
-			result = openNavigationAndClickProfile(driver);
-			if (!result) {
-				return result;
-			}
-
-			result = changeEmailInProfile();
-			if (!result) {
-				return result;
-			}
-
-			result = returnToHomePage(driver);
+			
+			result = changeEmailInProfile(driver);
 			if (!result) {
 				return result;
 			}
@@ -168,67 +157,28 @@ public class ProfilePageUtil {
 		return result;
 	}
 
-	public boolean inputDataIntoBoxes(AppiumDriver<MobileElement> driver, TestData testData) {
+	public boolean inputDataIntoBoxes(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-			result = cfObj.commonSetTextTextBox(profilePage_OR.inputName(), testData.getName());
+			result = cfObj.commonSetTextTextBox(profilePage_OR.inputName(), "shubh");
 			if (!result) {
 				ProfilePageMsglist.add("input_name not working");
 				return result;
 			}
 
-			result = cfObj.commonSetTextTextBox(profilePage_OR.inputAddress(), testData.getAddress());
+			result = cfObj.commonSetTextTextBox(profilePage_OR.inputAddress(), "nanital");
 			if (!result) {
 				ProfilePageMsglist.add("input_address not working");
 				return result;
 			}
 
-			result = cfObj.commonSetTextTextBox(profilePage_OR.inputPincode(), testData.getPincode());
+			result = cfObj.commonSetTextTextBox(profilePage_OR.inputPincode(), "122003");
 			if (!result) {
 				ProfilePageMsglist.add("input_pincode not working");
 				return result;
 			}
 
-			cfObj.commonClick(profilePage_OR.inputCity());
-
-			String cityString = testData.getCity();
-			cfObj.scrollIntoText(driver, cityString);
-
-			List<MobileElement> optionsCity = profilePage_OR.cityOptions();
-			for (int i = 0; i < optionsCity.size(); i++) {
-				String cityOptionString = optionsCity.get(i).getText();
-				if (cityOptionString.equalsIgnoreCase(cityString)) {
-					cfObj.commonClick(optionsCity.get(i));
-					result = true;
-					break;
-				}
-				result = false;
-			}
-			if (!result) {
-				ProfilePageMsglist.add("input_city not working");
-				return result;
-			}
-
-			cfObj.commonClick(profilePage_OR.inputState());
-
-			String stateString = testData.getState();
-			cfObj.scrollIntoText(driver, stateString);
-
-			List<MobileElement> optionsState = profilePage_OR.stateOptions();
-			for (int i = 0; i < optionsState.size(); i++) {
-				String stateOptionString = optionsState.get(i).getText();
-				if (stateOptionString.equalsIgnoreCase(stateString)) {
-					cfObj.commonClick(optionsState.get(i));
-					result = true;
-					break;
-				}
-				result = false;
-			}
-
-			if (!result) {
-				ProfilePageMsglist.add("input_state not working");
-				return result;
-			}
+			driver.hideKeyboard();
 
 		} catch (Exception e) {
 			ProfilePageMsglist.add("inputDataInBoxesException" + e.getMessage());
@@ -250,12 +200,12 @@ public class ProfilePageUtil {
 		return result;
 	}
 
-	public boolean checkUpdationDoneOrNot(TestData testData) {
+	public boolean checkUpdationDoneOrNot() {
 		boolean result = true;
 		try {
 
 			String UpdatedName = profilePage_OR.inputName().getText();
-			if (UpdatedName.equalsIgnoreCase(testData.getName())) {
+			if (UpdatedName.equalsIgnoreCase("shubh")) {
 				result = true;
 			} else {
 				ProfilePageMsglist.add("The updated name is different");
@@ -263,7 +213,7 @@ public class ProfilePageUtil {
 			}
 
 			String UpdatedAddress = profilePage_OR.inputAddress().getText();
-			if (UpdatedAddress.equalsIgnoreCase(testData.getAddress())) {
+			if (UpdatedAddress.equalsIgnoreCase("nanital")) {
 				result = true;
 			} else {
 				ProfilePageMsglist.add("The updated address is different");
@@ -271,7 +221,7 @@ public class ProfilePageUtil {
 			}
 
 			String UpdatedPincode = profilePage_OR.inputPincode().getText();
-			if (UpdatedPincode.equalsIgnoreCase(testData.getPincode())) {
+			if (UpdatedPincode.equalsIgnoreCase("122003")) {
 				result = true;
 			} else {
 				ProfilePageMsglist.add("The updated pincode is different");
@@ -279,7 +229,7 @@ public class ProfilePageUtil {
 			}
 
 			String UpdatedCity = profilePage_OR.inputCity().getText();
-			if (UpdatedCity.equalsIgnoreCase(testData.getCity())) {
+			if (UpdatedCity.equalsIgnoreCase("GURUGRAM")) {
 				result = true;
 			} else {
 				ProfilePageMsglist.add("The updated city is different");
@@ -287,7 +237,7 @@ public class ProfilePageUtil {
 			}
 
 			String UpdatedState = profilePage_OR.inputState().getText();
-			if (UpdatedState.equalsIgnoreCase(testData.getState())) {
+			if (UpdatedState.equalsIgnoreCase("HARYANA")) {
 				result = true;
 			} else {
 				ProfilePageMsglist.add("The updated state is different");
@@ -301,40 +251,53 @@ public class ProfilePageUtil {
 		return result;
 	}
 
-	public boolean changeNumberInProfile() {
+	public boolean changeNumberInProfile(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
-		String strOtp = null;
-		otpUtilObj = new OtpUtil();
-
 		try {
-			String strMobileNumberString = Common_Function.randomPhoneNumber(10, "9");
+			String strMobileNumberString = Common_Function.randomPhoneNumber(10, "3");
 			System.out.println("strMobileNo: " + strMobileNumberString);
 
-			cfObj.commonClick(profilePage_OR.updatedNoBtn());
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.editNumberBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("The edit number icon not visible");
+				return result;
+			}
 
-			result = cfObj.commonSetTextTextBox(profilePage_OR.updatedNo(), strMobileNumberString);
+			cfObj.commonClick(profilePage_OR.editNumberBtn());
+
+			result = cfObj.commonSetTextTextBox(profilePage_OR.updatedNoInput(), strMobileNumberString);
 			if (!result) {
 				ProfilePageMsglist.add("Not able to enter mobile number");
 				return false;
 			}
 
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.clickOtpButton(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("The otp button not visible");
+				return result;
+			}
+
 			cfObj.commonClick(profilePage_OR.clickOtpButton());
 
-			strOtp = otpUtilObj.getOtp(strMobileNumberString, true);
-			if (strOtp == null) {
-				ProfilePageMsglist.add("Error in getting otp");
-				return false;
-			}
-
-			cfObj.commonClick(profilePage_OR.inputOtp());
-
-			result = cfObj.commonSetTextTextBox(profilePage_OR.inputOtp(), strOtp);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.inputOtp(), 5);
 			if (!result) {
-				ProfilePageMsglist.add("Not able to enter otp");
-				return false;
+				ProfilePageMsglist.add("The input otp box is not visible");
+				return result;
 			}
 
-			cfObj.commonClick(profilePage_OR.submitOtpBtn());
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.submitOtpBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("The submit button is not visible");
+				return result;
+			}
+
+			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.updateBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("After coming back from edit number, it is not profile page");
+				return result;
+			}
 
 		} catch (Exception e) {
 			ProfilePageMsglist.add("changeNumberInProfileException" + e.getMessage());
@@ -343,38 +306,34 @@ public class ProfilePageUtil {
 		return result;
 	}
 
-	public boolean changeEmailInProfile() {
+	public boolean changeEmailInProfile(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
+			
+			cfObj.scrollUtill(driver, 1);
+			
 			String randomNumber = Common_Function.randomPhoneNumber(10, "9");
 			String emailIdString = "TestUser" + randomNumber + "@gmail.com";
 			System.out.println("Email id: " + emailIdString);
 
-			cfObj.commonClick(profilePage_OR.updatedMailBtn());
-
-			cfObj.commonSetTextTextBox(profilePage_OR.updatedMail(), emailIdString);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.editMailBtn(), 5);
 			if (!result) {
-				ProfilePageMsglist.add("Not able to enter email id");
-				return false;
+				ProfilePageMsglist.add("The edit mail icon not visible");
+				return result;
 			}
-			System.out.println("The code is working fine of email change in profile but no OTP");
+			
+			cfObj.commonClick(profilePage_OR.editMailBtn());
+			
+			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 
-			cfObj.commonClick(profilePage_OR.closeButton());
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.updateBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("After coming back from edit mail, it is not profile page");
+				return result;
+			}
 
 		} catch (Exception e) {
 			ProfilePageMsglist.add("changeEmailInProfileException" + e.getMessage());
-			result = false;
-		}
-		return result;
-	}
-
-	public boolean returnToHomePage(AppiumDriver<MobileElement> driver) {
-		boolean result = true;
-		try {
-			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK)); // Go back to page
-
-		} catch (Exception e) {
-			ProfilePageMsglist.add("returnToHomePageException" + e.getMessage());
 			result = false;
 		}
 		return result;

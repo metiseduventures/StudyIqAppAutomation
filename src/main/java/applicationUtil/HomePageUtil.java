@@ -172,15 +172,15 @@ public class HomePageUtil {
 			cfObj.commonClick(navigationMenuElements.get(0));
 
 			openNaviagationMenu();
-			
+
 			cfObj.scrollIntoText(driver, "Log out");
 
 			int n = navigationMenuElements.size();
 			for (int i = 1; i < n; i++) {
 				bool = true;
-				
+
 				cfObj.scrollIntoText(driver, "Log out");
-				
+
 				result = cfObj.commonWaitForElementToBeVisible(driver, navigationMenuElements.get(i), 10);
 				if (!result) {
 					homePageMsglist.add("The menu element is not visible");
@@ -224,6 +224,14 @@ public class HomePageUtil {
 		boolean cond = true;
 
 		try {
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.getListBottomMenuMyHome().get(0), 10);
+			if (!result) {
+				homePageMsglist.add("The button of my home on bottom is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(homePageORObj.getListBottomMenuMyHome().get(0));
 
 			List<MobileElement> textOfTabElements = homePageORObj.listOfHomeTabText();
 			List<MobileElement> imgOfTabElements = homePageORObj.listOfHomeTabImgs();
@@ -361,6 +369,13 @@ public class HomePageUtil {
 			}
 
 			cfObj.commonClick(imgOfCoursesInViewAll.get(0));
+			
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id", 30);
+			if (!result) {
+				System.out.println("Course detail page not opened when click on course from view all");
+				return result;
+			}
+
 
 			driver.navigate().back();
 
@@ -554,7 +569,7 @@ public class HomePageUtil {
 		try {
 
 			if (ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
-				strCourse = "live";
+				strCourse = "complete ncert";
 
 				// Click on search icon
 				clickOnSearchIcon();
@@ -729,6 +744,14 @@ public class HomePageUtil {
 				return result;
 			}
 
+			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.getListBottomMenuMyHome().get(0), 10);
+			if (!result) {
+				homePageMsglist.add("The button of my home on bottom is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(homePageORObj.getListBottomMenuMyHome().get(0));
+
 			result = clickOnCourseOnHomePage(driver);
 
 		} catch (Exception e) {
@@ -748,6 +771,14 @@ public class HomePageUtil {
 				homePageMsglist.addAll(loginutillObj.loginMsgList);
 				return result;
 			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, homePageORObj.getListBottomMenuMyHome().get(0), 10);
+			if (!result) {
+				homePageMsglist.add("The button of my home on bottom is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(homePageORObj.getListBottomMenuMyHome().get(0));
 
 			result = searchCourse(driver);
 

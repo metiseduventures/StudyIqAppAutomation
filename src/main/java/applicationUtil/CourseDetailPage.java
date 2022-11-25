@@ -61,18 +61,27 @@ public class CourseDetailPage {
 					coursePageMsgList.addAll(loginutillObj.loginMsgList);
 					return result;
 				}
-				
+
+				result = cfObj.commonWaitForElementToBeVisible(driver,
+						courseDetailPageObj.getListBottomMenuMyHome().get(0), 10);
+				if (!result) {
+					coursePageMsgList.add("The button of my home on bottom is not visible");
+					return result;
+				}
+
+				cfObj.commonClick(courseDetailPageObj.getListBottomMenuMyHome().get(0));
+
 				if (testData.getCourseType().contains("video")) {
 
 					strCourseSlug = configFileReader.getVideoSlug();
-					
+
 					result = homePageUtilObj.clickOnCourseOnHomePage(driver);
 					if (!result) {
 						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
 						return result;
 					}
 				} else if (testData.getCourseType().contains("books")) {
-					
+
 					strCourseSlug = configFileReader.getBooksSlug();
 
 					result = homePageUtilObj.clickOnBookOnHomePage(driver);
@@ -81,7 +90,7 @@ public class CourseDetailPage {
 						return result;
 					}
 				} else if (testData.getCourseType().contains("live")) {
-					
+
 					strCourseSlug = configFileReader.getLiveSlug();
 
 					result = homePageUtilObj.clickOnLiveCourseOnHomePage(driver);
@@ -90,7 +99,7 @@ public class CourseDetailPage {
 						return result;
 					}
 				} else if (testData.getCourseType().contains("test-series")) {
-					
+
 					strCourseSlug = configFileReader.getTestseriesSlug();
 
 					result = homePageUtilObj.clickOnTestSeriesOnHomePage(driver);
@@ -214,18 +223,27 @@ public class CourseDetailPage {
 					coursePageMsgList.addAll(loginutillObj.loginMsgList);
 					return result;
 				}
-				
+
+				result = cfObj.commonWaitForElementToBeVisible(driver,
+						courseDetailPageObj.getListBottomMenuMyHome().get(0), 10);
+				if (!result) {
+					coursePageMsgList.add("The button of my home on bottom is not visible");
+					return result;
+				}
+
+				cfObj.commonClick(courseDetailPageObj.getListBottomMenuMyHome().get(0));
+
 				if (testData.getCourseType().contains("video")) {
 
 					strCourseSlug = configFileReader.getVideoSlug();
-					
+
 					result = homePageUtilObj.clickOnCourseOnHomePage(driver);
 					if (!result) {
 						coursePageMsgList.addAll(homePageUtilObj.homePageMsglist);
 						return result;
 					}
 				} else if (testData.getCourseType().contains("books")) {
-					
+
 					strCourseSlug = configFileReader.getBooksSlug();
 
 					result = homePageUtilObj.clickOnBookOnHomePage(driver);
@@ -234,7 +252,7 @@ public class CourseDetailPage {
 						return result;
 					}
 				} else if (testData.getCourseType().contains("live")) {
-					
+
 					strCourseSlug = configFileReader.getLiveSlug();
 
 					result = homePageUtilObj.clickOnLiveCourseOnHomePage(driver);
@@ -243,7 +261,7 @@ public class CourseDetailPage {
 						return result;
 					}
 				} else if (testData.getCourseType().contains("test-series")) {
-					
+
 					strCourseSlug = configFileReader.getTestseriesSlug();
 
 					result = homePageUtilObj.clickOnTestSeriesOnHomePage(driver);
@@ -445,6 +463,13 @@ public class CourseDetailPage {
 			// apply first coupon
 			cfObj.commonClick(courseDetailPageObj.getListBtnBuyApplyOffer().get(0));
 			// wait for coupon to be applied
+
+			String toastMsgLangChange = courseDetailPageObj.toastInvalidCoupon().getAttribute("name");
+
+			if (toastMsgLangChange.equalsIgnoreCase("Order Total can't be less or equal to discounted price")) {
+				coursePageMsgList.add("The coupon is wrong as Order Total can't be less or equal to discounted price");
+				return false;
+			}
 
 			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.OFFER_CHANGE_PACK, "id", 30);
 			if (!result) {
@@ -987,12 +1012,21 @@ public class CourseDetailPage {
 				coursePageMsgList.add("Phone field is empty");
 				return result;
 			}
+
+			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListBookingFormName().get(0), "userName");
+			if (!result) {
+				coursePageMsgList.add("not able to add name");
+				return result;
+			}
+
 			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListBookingFormAddress().get(0),
 					"Unitech Cyber park");
 			if (!result) {
 				coursePageMsgList.add("not able to add address");
 				return result;
 			}
+
+			driver.hideKeyboard();
 
 			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListBookingFormPinCode().get(0), "122003");
 			if (!result) {

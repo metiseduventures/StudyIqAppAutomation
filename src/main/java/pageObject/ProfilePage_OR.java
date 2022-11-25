@@ -69,10 +69,10 @@ public class ProfilePage_OR {
 		return updatedNumberBtn;
 	}
 	
-	@AndroidFindBy(id = "et_profile_update_mobile")
+	@AndroidFindBy(id = "et_mobile")
 	private MobileElement updatedNumberInput;
 	
-	public MobileElement updatedNo() {
+	public MobileElement updatedNoInput() {
 		return updatedNumberInput;
 	}
 	
@@ -83,7 +83,7 @@ public class ProfilePage_OR {
 		return getOtpBtn;
 	}
 	
-	@AndroidFindBy(id = "til_profile_update_otp")
+	@AndroidFindBy(id = "et_profile_update_otp")
 	private MobileElement inputOTP;
 	
 	public MobileElement inputOtp() {
@@ -98,13 +98,20 @@ public class ProfilePage_OR {
 	}
 	
 	@AndroidFindBy(id = "iv_profile_email_edit")
-	private MobileElement updatedEmailBtn;
+	private MobileElement editEmailBtn;
 	
-	public MobileElement updatedMailBtn() {
-		return updatedEmailBtn;
+	public MobileElement editMailBtn() {
+		return editEmailBtn;
 	}
 	
-	@AndroidFindBy(id = "et_profile_update_email")
+	@AndroidFindBy(id = "iv_profile_mobile_edit")
+	private MobileElement editNumberBtn;
+	
+	public MobileElement editNumberBtn() {
+		return updatedNumberBtn;
+	}
+	
+	@AndroidFindBy(id = "et_email")
 	private MobileElement updatedEmail;
 	
 	public MobileElement updatedMail() {
