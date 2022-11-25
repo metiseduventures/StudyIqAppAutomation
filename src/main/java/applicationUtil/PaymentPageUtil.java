@@ -3,6 +3,7 @@ package applicationUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.PageFactory;
 
 import io.appium.java_client.AppiumDriver;
@@ -65,15 +66,12 @@ public class PaymentPageUtil {
 						}
 						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
 						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
+						
+						//need to change pay btn (not working)
 
-						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.payBtn(), 5);
-						if (!result) {
-							paymentPageMsgList.add("The payBtn is not visible");
-							return result;
-						}
-
-						cfObj.commonClick(paymentPageObj.payBtn());
-
+						By by=By.xpath("//android.view.View[3]/android.view.View[3]/android.view.View/android.view.View");
+						driver.findElement(by).click();
+						
 						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.successfulPayBtn(), 5);
 						if (!result) {
 							paymentPageMsgList.add("The successful Paytm payment btn is not visible");
