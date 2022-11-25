@@ -56,7 +56,7 @@ public class CoursePageDetailsVerify_OR {
 		return continueBtnLangElement;
 	}
 
-	@AndroidFindBy(id = "share_course")
+	@AndroidFindBy(xpath = "//android.widget.TextView[@content-desc=\"Share\"]")
 	private MobileElement shareCourseElement;
 
 	public MobileElement shareCourse() {

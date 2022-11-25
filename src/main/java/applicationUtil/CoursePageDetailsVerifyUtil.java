@@ -209,7 +209,7 @@ public class CoursePageDetailsVerifyUtil {
 			}
 
 			// share
-			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.shareCourse(), 5);
+			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.shareCourse(), 10);
 			if (!result) {
 				cdpVerifyMsgList.add("The share btn is not visible");
 				return result;

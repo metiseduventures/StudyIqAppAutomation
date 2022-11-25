@@ -93,7 +93,7 @@ public class LoginUtil {
 
 				cfObj.commonClick(loginPageObj.manualDetailBtn());
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.noneOfTheAboveBtn(), 5);
+				result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.noneOfTheAboveBtn(), 10);
 				if (result) {
 					cfObj.commonClick(loginPageObj.noneOfTheAboveBtn());
 				}
@@ -142,13 +142,13 @@ public class LoginUtil {
 		boolean result = true;
 		try {
 			// check if permission is display then allow permission
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.PERMISSION_ALLOW, "id", 5);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.PERMISSION_ALLOW, "id", 10);
 			if (result) {
 				cfObj.commonClick(loginPageObj.getBtnPermissionAllowed());
 			}
 
 			// close pop up on home page
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 5);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 10);
 			if (result) {
 
 				cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
@@ -300,14 +300,14 @@ public class LoginUtil {
 		try {
 
 			// close pop up on home page
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 5);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.IMG_CLOSE, "id", 10);
 			if (result) {
 
 				cfObj.commonClick(cfObj.commonGetElement(driver, ConstantUtil.IMG_CLOSE, "id"));
 
 			}
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.searchGoalInputBox(), 5);
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.searchGoalInputBox(), 10);
 			if (!result) {
 				System.out.println("The exam preference page is not displayed or search box is not visible");
 				return true;
