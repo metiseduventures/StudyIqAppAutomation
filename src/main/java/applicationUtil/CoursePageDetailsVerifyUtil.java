@@ -60,6 +60,14 @@ public class CoursePageDetailsVerifyUtil {
 				cdpVerifyMsgList.addAll(loginutillObj.loginMsgList);
 				return result;
 			}
+			
+			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.getListBottomMenuMyHome().get(0), 10);
+			if (!result) {
+				cdpVerifyMsgList.add("The button of my home on bottom is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(cdpVerify_OR.getListBottomMenuMyHome().get(0));
 
 			if (testData.getCourseType().contains("video")) {
 

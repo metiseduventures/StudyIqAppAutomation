@@ -299,5 +299,12 @@ public class CourseDetailPage_OR {
 	public MobileElement buyNowBtn() {
 		return buyNowElement;
 	}
+	
+	@AndroidFindBy(id = "tv_nav_home")
+	private List<MobileElement> listBottomMenuMyHome;
+
+	public List<MobileElement> getListBottomMenuMyHome() {
+		return listBottomMenuMyHome;
+	}
 
 }
