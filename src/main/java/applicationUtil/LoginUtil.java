@@ -245,7 +245,7 @@ public class LoginUtil {
 		OtpUtil otpUtilObj;
 		String strMobileNo = null;
 		try {
-			strMobileNo = Common_Function.randomPhoneNumber(10, "3");
+			strMobileNo = Common_Function.randomPhoneNumber(10, "4");
 			System.out.println("strMobileNo: " + strMobileNo);
 
 			result = enterMobileNumber(strMobileNo, driver);
