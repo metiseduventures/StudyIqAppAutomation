@@ -6,6 +6,13 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 
 public class LibraryPage_OR {
+	
+	@AndroidFindBy(xpath = "//android.widget.TextView")
+	private List<MobileElement> headingListElement;
+	
+	public List<MobileElement> headingList(){
+		return headingListElement;
+	}
 
 	@AndroidFindBy(id = "bt_action_pc")
 	private MobileElement goToLibraryBtnElement;
@@ -552,4 +559,5 @@ public class LibraryPage_OR {
 	public List<MobileElement> listOfCourseValidOrRenewText(){
 		return courseValidOrRenewText;
 	}
+	
 }

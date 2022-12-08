@@ -9,15 +9,19 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.LibraryPage_OR;
+import pojo.myLibrary.MyLibrary;
 import pojo.testdata.TestData;
 import util.Common_Function;
 import util.ConfigFileReader;
+import apiUtil.LibraryApiUtil;
+import apiUtil.LoginApiUtil;
+import pojo.login.Login;
 
 public class LibraryPageUtil {
 
 	LibraryPage_OR libraryPage_OR;
 	LoginUtil loginUtillObj;
-	LoginUtil loginUtilObj;
+	LoginApiUtil loginApiUtilObj;
 	HomePageUtil homePageUtilObj;
 	PaymentPageUtil paymentPageUtilObj;
 	CourseDetailPage courseDetailPage;
@@ -31,14 +35,35 @@ public class LibraryPageUtil {
 		PageFactory.initElements(new AppiumFieldDecorator(driver), libraryPage_OR);
 	}
 
-	public boolean verifyLibraryPage(AppiumDriver<MobileElement> driver, TestData testData) {
+	public boolean verifyLibraryContent(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
+		homePageUtilObj = new HomePageUtil(driver);
+		LoginApiUtil loginApiUtilObj;
+		Login loginObj;
+		LibraryApiUtil libraryApiObj;
+		MyLibrary myLibrayApiObj;
 		try {
-
 			loginUtillObj = new LoginUtil(driver);
-			result = loginUtillObj.verifyLogin(driver, "9878252339");
+			result = loginUtillObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
 			if (!result) {
 				libraryPageMsgList.addAll(loginUtillObj.loginMsgList);
+				return result;
+			}
+
+			loginApiUtilObj = new LoginApiUtil();
+
+			loginObj = loginApiUtilObj.doLoginWeb(ConfigFileReader.strUserMobileNumber);
+			if (loginObj == null) {
+				libraryPageMsgList.add("Fail to Login via api");
+				return result;
+			}
+
+			libraryApiObj = new LibraryApiUtil();
+
+			myLibrayApiObj = libraryApiObj.getLibraryData(loginObj.getData().getApiToken(),
+					loginObj.getData().getUserId());
+			if (myLibrayApiObj == null) {
+				libraryPageMsgList.add("Error in my library api");
 				return result;
 			}
 
@@ -46,30 +71,16 @@ public class LibraryPageUtil {
 			if (!result) {
 				return result;
 			}
-			result = verifyExpireOrNot(driver, testData);
+
+			result = verifyCourseContent(driver, myLibrayApiObj);
 			if (!result) {
 				return result;
 			}
 
-			if (testData.getIsExpire() == false && testData.getIsFree() == false) {
-
-				result = openCoursesInLibrary(driver, testData);
-				if (!result) {
-					return result;
-				}
-			} else if (testData.getIsFree() == true) {
-				System.out.println("The course was free and has been removed successfully");
-			} else if (testData.getIsExpire() == true && testData.getIsKey() == "fail") {
-				System.out.println("The course was expired but the payment has been aborted");
-			} else {
-				System.out.println("The course was expired and now renewed");
-			}
-
 		} catch (Exception e) {
 			result = false;
-			libraryPageMsgList.add("Exception in verifyLibraryPage " + e.getMessage());
+			libraryPageMsgList.add("Exception in verifyLibraryContent " + e.getMessage());
 		}
-
 		return result;
 	}
 
@@ -97,6 +108,739 @@ public class LibraryPageUtil {
 			result = false;
 			libraryPageMsgList.add("verifyMyLibraryTitleException " + e.getMessage());
 		}
+		return result;
+	}
+
+	public boolean verifyCourseContent(AppiumDriver<MobileElement> driver, MyLibrary mylibraryObj) {
+		boolean result = true;
+		int size;
+		try {
+			size = mylibraryObj.getData().size();
+
+			for (int i = 0; i < size; i++) {
+				if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Video")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.videoCoursesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The video courses menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.videoCoursesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+						if (statusText.equalsIgnoreCase("RENEW NOW")) {
+
+							cfObj.commonClick(libraryPage_OR.listOfRenewNowBtn().get(0));
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.noOfOffersAvail(),
+									10);
+							if (!result) {
+								libraryPageMsgList.add("It is not package and offer page");
+								return result;
+							}
+
+							driver.navigate().back();
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.videoCoursesBtn(), 5);
+							if (!result) {
+								libraryPageMsgList.add(
+										"The video courses menu button not visible after course is opened and came back");
+								return result;
+							}
+
+						} else {
+							cfObj.commonClick(libraryPage_OR.listOfCourseTitlesInLib().get(j));
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myCourseBtn(), 5);
+							if (!result) {
+								libraryPageMsgList.add("Not inside the course clicked in library");
+								return result;
+							}
+
+							if (!courseNameFromApi.equalsIgnoreCase(libraryPage_OR.headingList().get(0).getText())) {
+								libraryPageMsgList.add("The course name in library is not same as in api");
+								result = false;
+							}
+
+							driver.navigate().back();
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.videoCoursesBtn(), 5);
+							if (!result) {
+								libraryPageMsgList.add(
+										"The video courses menu button not visible after course is opened and came back");
+								return result;
+							}
+						}
+					}
+
+				} else if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Live Classes")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.liveClassesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The live classes menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.liveClassesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+						if (statusText.equalsIgnoreCase("RENEW NOW")) {
+
+							cfObj.commonClick(libraryPage_OR.listOfRenewNowBtn().get(0));
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.noOfOffersAvail(),
+									10);
+							if (!result) {
+								libraryPageMsgList.add("It is not package and offer page");
+								return result;
+							}
+
+							driver.navigate().back();
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.liveClassesBtn(), 5);
+							if (!result) {
+								libraryPageMsgList.add(
+										"The video courses menu button not visible after course is opened and came back");
+								return result;
+							}
+
+						} else {
+							cfObj.commonClick(libraryPage_OR.listOfCourseTitlesInLib().get(j));
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myCourseBtn(), 5);
+							if (!result) {
+								libraryPageMsgList.add("Not inside the course clicked in library");
+								return result;
+							}
+
+							if (!courseNameFromApi.equalsIgnoreCase(libraryPage_OR.headingList().get(0).getText())) {
+								libraryPageMsgList.add("The course name in library is not same as in api");
+								result = false;
+							}
+
+							driver.navigate().back();
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.liveClassesBtn(), 5);
+							if (!result) {
+								libraryPageMsgList.add(
+										"The video courses menu button not visible after course is opened and came back");
+								return result;
+							}
+						}
+					}
+				} else if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Testseries")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.testSeriesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The test series menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.testSeriesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+						if (statusText.equalsIgnoreCase("RENEW NOW")) {
+
+							cfObj.commonClick(libraryPage_OR.listOfRenewNowBtn().get(0));
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.noOfOffersAvail(),
+									10);
+							if (!result) {
+								libraryPageMsgList.add("It is not package and offer page");
+								return result;
+							}
+
+							driver.navigate().back();
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.testSeriesBtn(), 5);
+							if (!result) {
+								libraryPageMsgList.add(
+										"The video courses menu button not visible after course is opened and came back");
+								return result;
+							}
+
+						} else {
+							cfObj.commonClick(libraryPage_OR.listOfCourseTitlesInLib().get(j));
+
+							Thread.sleep(2000);
+
+							if (!courseNameFromApi.equalsIgnoreCase(libraryPage_OR.headingList().get(0).getText())) {
+								libraryPageMsgList.add("The course name in library is not same as in api");
+								result = false;
+							}
+
+							driver.navigate().back();
+
+							result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.testSeriesBtn(), 5);
+							if (!result) {
+								libraryPageMsgList.add(
+										"The video courses menu button not visible after course is opened and came back");
+								return result;
+							}
+						}
+					}
+
+				} else {
+					libraryPageMsgList.add("The course type is wrong");
+					return false;
+				}
+			}
+
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean verifyMyLibrary(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		homePageUtilObj = new HomePageUtil(driver);
+		LoginApiUtil loginApiUtilObj;
+		Login loginObj;
+		LibraryApiUtil libraryApiObj;
+		MyLibrary myLibrayApiObj;
+
+		try {
+			loginUtillObj = new LoginUtil(driver);
+			result = loginUtillObj.verifyLogin(driver, ConfigFileReader.strUserMobileNumber);
+			if (!result) {
+				libraryPageMsgList.addAll(loginUtillObj.loginMsgList);
+				return result;
+			}
+
+			loginApiUtilObj = new LoginApiUtil();
+
+			loginObj = loginApiUtilObj.doLoginWeb(ConfigFileReader.strUserMobileNumber);
+			if (loginObj == null) {
+				libraryPageMsgList.add("Fail to Login via api");
+				return result;
+			}
+
+			libraryApiObj = new LibraryApiUtil();
+
+			myLibrayApiObj = libraryApiObj.getLibraryData(loginObj.getData().getApiToken(),
+					loginObj.getData().getUserId());
+			if (myLibrayApiObj == null) {
+				libraryPageMsgList.add("Error in my library api");
+				return result;
+			}
+
+			result = verifyMyLibraryTitle(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyValidCourse(driver, myLibrayApiObj);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyExpiredCourse(driver, myLibrayApiObj);
+			if (!result) {
+				return result;
+			}
+
+//			result = verifyExpiringSoonCourse(driver, myLibrayApiObj);
+//			if (!result) {
+//				return result;
+//			}
+
+		} catch (Exception e) {
+			result = false;
+			libraryPageMsgList.add("Exception in verifyMyLibrary " + e.getMessage());
+		}
+		return result;
+	}
+
+	public boolean verifyValidCourse(AppiumDriver<MobileElement> driver, MyLibrary mylibraryObj) {
+		boolean result = true;
+		int size;
+		try {
+			size = mylibraryObj.getData().size();
+
+			for (int i = 0; i < size; i++) {
+
+				if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Video")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.videoCoursesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The video courses menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.videoCoursesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+
+						if (statusText.contains("Valid Upto")) {
+
+							if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() > 15)) {
+								libraryPageMsgList.add("The validity days from api is less than 15");
+								result = false;
+							}
+						}
+					}
+
+				} else if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Live Classes")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.liveClassesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The live classes menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.liveClassesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+						if (statusText.contains("Valid Upto")) {
+
+							if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() > 15)) {
+								libraryPageMsgList.add("The validity days from api is less than 15");
+								result = false;
+							}
+						}
+					}
+				} else if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Testseries")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.testSeriesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The test series menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.testSeriesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+						if (statusText.contains("Valid Upto")) {
+
+							if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() > 15)) {
+								libraryPageMsgList.add("The validity days from api is less than 15");
+								result = false;
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			result = false;
+			libraryPageMsgList.add("Exception in verifyValidCourse " + e.getMessage());
+		}
+		return result;
+	}
+
+	public boolean verifyExpiredCourse(AppiumDriver<MobileElement> driver, MyLibrary mylibraryObj) {
+		boolean result = true;
+		int size;
+		try {
+			size = mylibraryObj.getData().size();
+
+			for (int i = 0; i < size; i++) {
+
+				if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Video")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.videoCoursesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The video courses menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.videoCoursesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+
+						if (statusText.equalsIgnoreCase("RENEW NOW")) {
+
+							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+									"txt_course_validity_status", "id", 5);
+							if (!result) {
+
+								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 0)) {
+									libraryPageMsgList.add("The validity days from api is more than 0");
+									result = false;
+								}
+							}
+						}
+					}
+
+				} else if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Live Classes")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.liveClassesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The live classes menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.liveClassesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+						if (statusText.equalsIgnoreCase("RENEW NOW")) {
+
+							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+									"txt_course_validity_status", "id", 5);
+							if (!result) {
+
+								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 0)) {
+									libraryPageMsgList.add("The validity days from api is more than 0");
+									result = false;
+								}
+							}
+						}
+					}
+				} else if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Testseries")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.testSeriesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The test series menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.testSeriesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+						if (statusText.equalsIgnoreCase("RENEW NOW")) {
+
+							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+									"txt_course_validity_status", "id", 5);
+
+							if (!result) {
+
+								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 0)) {
+									libraryPageMsgList.add("The validity days from api is more than 0");
+									result = false;
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			result = false;
+			libraryPageMsgList.add("Exception in verifyValidCourse " + e.getMessage());
+		}
+		return result;
+	}
+
+	public boolean verifyExpiringSoonCourse(AppiumDriver<MobileElement> driver, MyLibrary mylibraryObj) {
+		boolean result = true;
+		int size;
+		try {
+			size = mylibraryObj.getData().size();
+
+			for (int i = 0; i < size; i++) {
+
+				if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Video")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.videoCoursesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The video courses menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.videoCoursesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+
+						if (statusText.equalsIgnoreCase("RENEW NOW")) {
+
+							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+									"txt_course_validity_status", "id", 5);
+							if (result) {
+								
+								//problem that if we have two renew button, how to distinguish
+								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 15)
+										|| !(mylibraryObj.getData().get(i).getCourseData().get(j)
+												.getValidityDaysLeft() > 0)) {
+									libraryPageMsgList.add("The validity days from api is more than 15 or less than 0");
+									result = false;
+								}
+							}
+						}
+					}
+
+				} else if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Live Classes")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.liveClassesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The live classes menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.liveClassesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+						if (statusText.equalsIgnoreCase("RENEW NOW")) {
+
+							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+									"txt_course_validity_status", "id", 5);
+							if (result) {
+
+								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 15)
+										|| !(mylibraryObj.getData().get(i).getCourseData().get(j)
+												.getValidityDaysLeft() > 0)) {
+									libraryPageMsgList.add("The validity days from api is more than 15 or less than 0");
+									result = false;
+								}
+							}
+						}
+					}
+				} else if (mylibraryObj.getData().get(i).getCourseTypeName().equals("Testseries")) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.testSeriesBtn(), 5);
+					if (!result) {
+						libraryPageMsgList.add("The test series menu button not visible");
+						return result;
+					}
+
+					cfObj.commonClick(libraryPage_OR.testSeriesBtn());
+
+					List<MobileElement> courseStatusList = libraryPage_OR.listOfCourseValidOrRenewText();
+
+					for (int j = 0; j < courseStatusList.size(); j++) {
+
+						String courseNameFromApi = mylibraryObj.getData().get(i).getCourseData().get(j)
+								.getCourseTitle();
+
+						if (!courseNameFromApi
+								.equalsIgnoreCase(libraryPage_OR.listOfCourseTitlesInLib().get(j).getText())) {
+							libraryPageMsgList.add("The course name in library is not same as in api");
+							result = false;
+						}
+
+						String statusText = courseStatusList.get(j).getText();
+						if (statusText.equalsIgnoreCase("RENEW NOW")) {
+
+							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
+									"txt_course_validity_status", "id", 5);
+							if (result) {
+
+								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 15)
+										|| !(mylibraryObj.getData().get(i).getCourseData().get(j)
+												.getValidityDaysLeft() > 0)) {
+									libraryPageMsgList.add("The validity days from api is more than 15 or less than 0");
+									result = false;
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			result = false;
+			libraryPageMsgList.add("Exception in verifyValidCourse " + e.getMessage());
+		}
+		return result;
+	}
+
+	/*
+	 * Above code is new Implementation
+	 */
+
+	public boolean verifyLibraryPage(AppiumDriver<MobileElement> driver, TestData testData) {
+		boolean result = true;
+		homePageUtilObj = new HomePageUtil(driver);
+		LoginApiUtil loginApiUtilObj;
+		Login loginObj;
+		LibraryApiUtil libraryApiObj;
+		MyLibrary myLibrayApiObj;
+		try {
+
+			loginUtillObj = new LoginUtil(driver);
+			result = loginUtillObj.verifyLogin(driver, "9878252339");
+			if (!result) {
+				libraryPageMsgList.addAll(loginUtillObj.loginMsgList);
+				return result;
+			}
+
+			loginApiUtilObj = new LoginApiUtil();
+
+			loginObj = loginApiUtilObj.doLoginWeb(ConfigFileReader.strUserMobileNumber);
+			if (loginObj == null) {
+				libraryPageMsgList.add("Fail to Login via api");
+				return result;
+			}
+
+			libraryApiObj = new LibraryApiUtil();
+
+			myLibrayApiObj = libraryApiObj.getLibraryData(loginObj.getData().getApiToken(),
+					loginObj.getData().getUserId());
+			if (myLibrayApiObj == null) {
+				libraryPageMsgList.add("Error in my library api");
+				return result;
+			}
+
+			result = verifyMyLibraryTitle(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyExpireOrNot(driver, testData);
+			if (!result) {
+				return result;
+			}
+
+			if (testData.getIsExpire() == false && testData.getIsFree() == false) {
+
+				result = openCoursesInLibrary(driver, testData);
+				if (!result) {
+					return result;
+				}
+			} else if (testData.getIsFree() == true) {
+				System.out.println("The course was free and has been removed successfully");
+			} else if (testData.getIsExpire() == true && testData.getIsKey() == "fail") {
+				System.out.println("The course was expired but the payment has been aborted");
+			} else {
+				System.out.println("The course was expired and now renewed");
+			}
+
+		} catch (Exception e) {
+			result = false;
+			libraryPageMsgList.add("Exception in verifyLibraryPage " + e.getMessage());
+		}
+
 		return result;
 	}
 
@@ -449,12 +1193,12 @@ public class LibraryPageUtil {
 				if (!result) {
 					return result;
 				}
-				
+
 				result = verifyExtendValidity(driver, testData);
 				if (!result) {
 					return result;
 				}
-				
+
 			} else {
 				System.out.println("The coursetype is " + testData.getCourseType() + ". No column for this in library");
 				return true;

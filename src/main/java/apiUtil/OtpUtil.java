@@ -37,5 +37,24 @@ public class OtpUtil {
 		}
 		return strOtp;
 	}
+	
+	public APIResponse sentOtpWeb(String strMobileNumber) {
+		APIResponse ap = null;
+		Map<String, String> formData;
+		try {
+			formData = new HashMap<String, String>();
+			formData.put("mobile", strMobileNumber);
+			apiUtilsObj = new APIUtils();
+
+			ap = apiUtilsObj.postCall(cfReaderObject.getBaseUrl(), Constant.WEB_LOGIN, formData,
+					Constant.CONTENT_TYPE);
+			System.out.println(ap.getmessageCode());
+
+		} catch (Exception e) {
+
+		}
+		return ap;
+
+	}
 
 }

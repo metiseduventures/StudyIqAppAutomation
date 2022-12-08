@@ -369,13 +369,12 @@ public class HomePageUtil {
 			}
 
 			cfObj.commonClick(imgOfCoursesInViewAll.get(0));
-			
+
 			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id", 30);
 			if (!result) {
 				System.out.println("Course detail page not opened when click on course from view all");
 				return result;
 			}
-
 
 			driver.navigate().back();
 
@@ -591,7 +590,25 @@ public class HomePageUtil {
 
 			} else {
 
-				cfObj.commonClick(homePageORObj.imgSlider());
+				strCourse = "UPSC/IAS";
+
+				// Click on search icon
+				clickOnSearchIcon();
+				// Click on search box
+				clickOnSearchInputBox();
+
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + strCourse);
+					return false;
+				}
+
+				cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
 
 			}
 
