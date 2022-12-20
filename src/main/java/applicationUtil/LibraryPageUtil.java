@@ -549,6 +549,8 @@ public class LibraryPageUtil {
 								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 0)) {
 									libraryPageMsgList.add("The validity days from api is more than 0");
 									result = false;
+								} else {
+									result = true;
 								}
 							}
 						}
@@ -587,6 +589,8 @@ public class LibraryPageUtil {
 								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 0)) {
 									libraryPageMsgList.add("The validity days from api is more than 0");
 									result = false;
+								} else {
+									result = true;
 								}
 							}
 						}
@@ -619,12 +623,13 @@ public class LibraryPageUtil {
 
 							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
 									"txt_course_validity_status", "id", 5);
-
 							if (!result) {
 
 								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 0)) {
 									libraryPageMsgList.add("The validity days from api is more than 0");
 									result = false;
+								} else {
+									result = true;
 								}
 							}
 						}
@@ -676,8 +681,8 @@ public class LibraryPageUtil {
 							result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver,
 									"txt_course_validity_status", "id", 5);
 							if (result) {
-								
-								//problem that if we have two renew button, how to distinguish
+
+								// problem that if we have two renew button, how to distinguish
 								if (!(mylibraryObj.getData().get(i).getCourseData().get(j).getValidityDaysLeft() < 15)
 										|| !(mylibraryObj.getData().get(i).getCourseData().get(j)
 												.getValidityDaysLeft() > 0)) {

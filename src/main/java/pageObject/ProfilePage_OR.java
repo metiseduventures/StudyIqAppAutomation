@@ -4,7 +4,7 @@ import java.util.List;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 
-public class ProfilePage_OR {	
+public class ProfilePage_OR {
 
 	@AndroidFindBy(id = "et_profile_name")
 	private MobileElement name;
@@ -64,65 +64,72 @@ public class ProfilePage_OR {
 
 	@AndroidFindBy(id = "iv_profile_mobile_edit")
 	private MobileElement updatedNumberBtn;
-	
+
 	public MobileElement updatedNoBtn() {
 		return updatedNumberBtn;
 	}
-	
+
 	@AndroidFindBy(id = "et_mobile")
 	private MobileElement updatedNumberInput;
-	
+
 	public MobileElement updatedNoInput() {
 		return updatedNumberInput;
 	}
-	
+
 	@AndroidFindBy(id = "bt_profile_update_get_otp")
 	private MobileElement getOtpBtn;
-	
+
 	public MobileElement clickOtpButton() {
 		return getOtpBtn;
 	}
-	
+
 	@AndroidFindBy(id = "et_profile_update_otp")
 	private MobileElement inputOTP;
-	
+
 	public MobileElement inputOtp() {
 		return inputOTP;
 	}
-	
+
 	@AndroidFindBy(id = "bt_profile_update_submit")
 	private MobileElement submitOtpElement;
-	
+
 	public MobileElement submitOtpBtn() {
 		return submitOtpElement;
 	}
-	
+
 	@AndroidFindBy(id = "iv_profile_email_edit")
 	private MobileElement editEmailBtn;
-	
+
 	public MobileElement editMailBtn() {
 		return editEmailBtn;
 	}
-	
+
 	@AndroidFindBy(id = "iv_profile_mobile_edit")
 	private MobileElement editNumberBtn;
-	
+
 	public MobileElement editNumberBtn() {
 		return updatedNumberBtn;
 	}
-	
+
 	@AndroidFindBy(id = "et_email")
 	private MobileElement updatedEmail;
-	
+
 	public MobileElement updatedMail() {
 		return updatedEmail;
 	}
-	
+
 	@AndroidFindBy(id = "iv_profile_update_close")
 	private MobileElement closeBtnElement;
-	
+
 	public MobileElement closeButton() {
 		return closeBtnElement;
+	}
+
+	@AndroidFindBy(xpath = "(//android.widget.Toast)[1]")
+	private MobileElement toastFeedLangElement;
+
+	public MobileElement toastFeedLang() {
+		return toastFeedLangElement;
 	}
 
 }
