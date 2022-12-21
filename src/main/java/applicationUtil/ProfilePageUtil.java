@@ -77,7 +77,7 @@ public class ProfilePageUtil {
 			if (!result) {
 				return result;
 			}
-			
+
 			result = changeEmailInProfile(driver);
 			if (!result) {
 				return result;
@@ -193,6 +193,21 @@ public class ProfilePageUtil {
 
 			cfObj.commonClick(profilePage_OR.updateBtn());
 
+			String toastMsgLangChange = profilePage_OR.toastFeedLang().getAttribute("name");
+
+			if (toastMsgLangChange.equalsIgnoreCase("Profile updated successfully")) {
+
+				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
+				if (!result) {
+					ProfilePageMsglist.add("Home page not opened after profile updated");
+					return result;
+				}
+
+			} else {
+				ProfilePageMsglist.add("The profile changed toast not visible");
+				return false;
+			}
+
 		} catch (Exception e) {
 			ProfilePageMsglist.add("clickUpdateBtnException" + e.getMessage());
 			result = false;
@@ -279,24 +294,32 @@ public class ProfilePageUtil {
 
 			cfObj.commonClick(profilePage_OR.clickOtpButton());
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.inputOtp(), 5);
-			if (!result) {
-				ProfilePageMsglist.add("The input otp box is not visible");
-				return result;
-			}
+			String toastMsgLangChange = profilePage_OR.toastFeedLang().getAttribute("name");
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.submitOtpBtn(), 5);
-			if (!result) {
-				ProfilePageMsglist.add("The submit button is not visible");
-				return result;
-			}
+			if (toastMsgLangChange.equalsIgnoreCase("Otp has been sent to verify Mobile number")) {
 
-			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
+				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.inputOtp(), 5);
+				if (!result) {
+					ProfilePageMsglist.add("The input otp box is not visible");
+					return result;
+				}
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.updateBtn(), 5);
-			if (!result) {
-				ProfilePageMsglist.add("After coming back from edit number, it is not profile page");
-				return result;
+				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.submitOtpBtn(), 5);
+				if (!result) {
+					ProfilePageMsglist.add("The submit button is not visible");
+					return result;
+				}
+
+				((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.updateBtn(), 5);
+				if (!result) {
+					ProfilePageMsglist.add("After coming back from edit number, it is not profile page");
+					return result;
+				}
+
+			} else {
+				return false;
 			}
 
 		} catch (Exception e) {
@@ -309,9 +332,9 @@ public class ProfilePageUtil {
 	public boolean changeEmailInProfile(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-			
+
 			cfObj.scrollUtill(driver, 1);
-			
+
 			String randomNumber = Common_Function.randomPhoneNumber(10, "9");
 			String emailIdString = "TestUser" + randomNumber + "@gmail.com";
 			System.out.println("Email id: " + emailIdString);
@@ -321,9 +344,9 @@ public class ProfilePageUtil {
 				ProfilePageMsglist.add("The edit mail icon not visible");
 				return result;
 			}
-			
+
 			cfObj.commonClick(profilePage_OR.editMailBtn());
-			
+
 			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.updateBtn(), 5);

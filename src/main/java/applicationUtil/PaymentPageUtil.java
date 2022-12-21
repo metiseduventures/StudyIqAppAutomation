@@ -68,9 +68,6 @@ public class PaymentPageUtil {
 						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
 						
 						//need to change pay btn (not working)
-
-						By by=By.xpath("//android.view.View[3]/android.view.View[3]/android.view.View/android.view.View");
-						driver.findElement(by).click();
 						
 						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.successfulPayBtn(), 5);
 						if (!result) {

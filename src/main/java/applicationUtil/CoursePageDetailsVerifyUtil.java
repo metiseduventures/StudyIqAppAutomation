@@ -209,20 +209,20 @@ public class CoursePageDetailsVerifyUtil {
 			}
 
 			// share
-			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.shareCourse(), 10);
-			if (!result) {
-				cdpVerifyMsgList.add("The share btn is not visible");
-				return result;
-			}
-			cfObj.commonClick(cdpVerify_OR.shareCourse());
-
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "oplus:id/oplus_chooser_action_nearby_tx", "id", 10);
-			if (!result) {
-				cdpVerifyMsgList.add("The share pop is not visible");
-				return result;
-			}
-			
-			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
+//			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.shareCourse(), 10);
+//			if (!result) {
+//				cdpVerifyMsgList.add("The share btn is not visible");
+//				return result;
+//			}
+//			cfObj.commonClick(cdpVerify_OR.shareCourse());
+//
+//			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "oplus:id/oplus_chooser_action_nearby_tx", "id", 10);
+//			if (!result) {
+//				cdpVerifyMsgList.add("The share pop is not visible");
+//				return result;
+//			}
+//			
+//			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 
 			// emi
 			if (courseViewObj.getData().getCourseDetail().getIsEmiAvailable() == 0) {

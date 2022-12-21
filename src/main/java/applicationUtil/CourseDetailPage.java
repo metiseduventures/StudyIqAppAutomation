@@ -150,7 +150,6 @@ public class CourseDetailPage {
 						if (!result) {
 							return result;
 						}
-
 						result = selectCoupon_verifyAmount(driver);
 						if (!result) {
 							return result;
@@ -165,8 +164,8 @@ public class CourseDetailPage {
 						if (!result) {
 							return result;
 						}
-
 					}
+
 				}
 
 				result = buyNowPack(driver);
@@ -435,6 +434,7 @@ public class CourseDetailPage {
 
 			if (toastMsgLangChange.equalsIgnoreCase("Entered coupon code is invalid. Please try another code.")
 					|| toastMsgLangChange.equalsIgnoreCase("Invalid Coupon Code")) {
+				Thread.sleep(3000);
 				return true;
 			} else {
 				coursePageMsgList.add("The coupon is invalid but the toast is not visible");
@@ -464,29 +464,30 @@ public class CourseDetailPage {
 			cfObj.commonClick(courseDetailPageObj.getListBtnBuyApplyOffer().get(0));
 			// wait for coupon to be applied
 
-			String toastMsgLangChange = courseDetailPageObj.toastInvalidCoupon().getAttribute("name");
-
-			if (toastMsgLangChange.equalsIgnoreCase("Order Total can't be less or equal to discounted price")) {
-				coursePageMsgList.add("The coupon is wrong as Order Total can't be less or equal to discounted price");
-				return false;
-			}
-
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.OFFER_CHANGE_PACK, "id", 30);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.OFFER_CHANGE_PACK, "id", 1);
 			if (!result) {
-				System.out.println("Coupon is not applied");
-			}
+				String toastMsgLangChange = courseDetailPageObj.toastInvalidCoupon().getAttribute("name");
 
-			String discountAmountString = courseDetailPageObj.packDiscountPrice().getText();
-			Double discountAmount = amountCorrectFormat(discountAmountString);
-
-			String afterCouponPackageAmountString = courseDetailPageObj.packSellingPrice().getText();
-			Double afterCouponPackageAmount = amountCorrectFormat(afterCouponPackageAmountString);
-
-			if (packageAmount == afterCouponPackageAmount + discountAmount) {
-				return true;
+				if (toastMsgLangChange.equalsIgnoreCase("Order Total can't be less or equal to discounted price")) {
+					coursePageMsgList
+							.add("The coupon code is wrong as Order Total can't be less or equal to discounted price");
+					result = true;
+				} else {
+					coursePageMsgList.add("The coupon not applied or problem in coupon area");
+				}
 			} else {
-				coursePageMsgList.add("The amount is not same of packages before and after");
-				return false;
+				String discountAmountString = courseDetailPageObj.packDiscountPrice().getText();
+				Double discountAmount = amountCorrectFormat(discountAmountString);
+
+				String afterCouponPackageAmountString = courseDetailPageObj.packSellingPrice().getText();
+				Double afterCouponPackageAmount = amountCorrectFormat(afterCouponPackageAmountString);
+
+				if (packageAmount == afterCouponPackageAmount + discountAmount) {
+					return true;
+				} else {
+					coursePageMsgList.add("The amount is not same of packages before and after");
+					return false;
+				}
 			}
 
 		} catch (Exception e) {
@@ -553,14 +554,20 @@ public class CourseDetailPage {
 		boolean result = true;
 		try {
 
-			// Click on change offer
-			cfObj.commonClick(courseDetailPageObj.getListLableChangePack().get(0));
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.OFFER_CHANGE_PACK, "id", 5);
+			if (result) {
+				// Click on change offer
+				cfObj.commonClick(courseDetailPageObj.getListLableChangePack().get(0));
 
-			// wait for available offer page to be opened
-			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.availOfferLabelBox(), 30);
+				// wait for available offer page to be opened
+				result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.availOfferLabelBox(), 30);
 
-			if (!result) {
-				System.out.println("Offer list pop up is not opened");
+				if (!result) {
+					System.out.println("Offer list pop up is not opened");
+				}
+			}
+			else {
+				result = true;
 			}
 
 		} catch (Exception e) {
@@ -574,23 +581,43 @@ public class CourseDetailPage {
 		boolean result = true;
 		String strCouponName;
 		try {
-			strCouponName = courseDetailPageObj.getListOfferName().get(0).getText().toString().trim();
-			System.out.println("strCouponName: " + strCouponName);
+			
+			result = cfObj.commonWaitForElementToBeVisible(driver, courseDetailPageObj.availOfferLabelBox(), 5);
+			if (result) {
+				strCouponName = courseDetailPageObj.getListOfferName().get(0).getText().toString().trim();
+				System.out.println("strCouponName: " + strCouponName);
 
-			// click on coupon text
-			cfObj.commonClick(courseDetailPageObj.getListTextCouponCode().get(0));
-			result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListTextCouponCode().get(0), strCouponName);
+				// click on coupon text
+				cfObj.commonClick(courseDetailPageObj.getListTextCouponCode().get(0));
+				result = cfObj.commonSetTextTextBox(courseDetailPageObj.getListTextCouponCode().get(0), strCouponName);
 
-			// click on apply button
+				// click on apply button
 
-			cfObj.commonClick(courseDetailPageObj.applyCodeAfterInputBtn());
-			// wait for coupon to be applied
+				cfObj.commonClick(courseDetailPageObj.applyCodeAfterInputBtn());
 
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.OFFER_CHANGE_PACK, "id", 30);
-
-			if (!result) {
-				System.out.println("manual Coupon is not applied: coupon code: " + strCouponName);
+				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.OFFER_CHANGE_PACK, "id", 5);
+				if (!result) {
+					coursePageMsgList.add("The manual correct coupon is not applied");
+					return result;
+				}
+			}else {
+				result=true;
 			}
+			
+//			// wait for coupon to be applied
+//
+//			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.OFFER_CHANGE_PACK, "id", 30);
+//			if (!result) {
+//				String toastMsgLangChange = courseDetailPageObj.toastInvalidCoupon().getAttribute("name");
+//
+//				if (toastMsgLangChange.equalsIgnoreCase("Order Total can't be less or equal to discounted price")) {
+//					coursePageMsgList
+//							.add("The coupon code is wrong as Order Total can't be less or equal to discounted price");
+//					result = true;
+//				} else {
+//					coursePageMsgList.add("The coupon not applied or problem in coupon area");
+//				}
+//			}
 
 		} catch (Exception e) {
 			result = false;

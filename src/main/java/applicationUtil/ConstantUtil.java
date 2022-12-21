@@ -13,6 +13,5 @@ public class ConstantUtil {
 	public static final String BUY_ONE= "btn_buy_one";
 	public static final String TEXT_SORRY= "txt_sorry";
 	public static final String TEXT_BOX_MOBILE= "et_mobile";
-	
 
 }
