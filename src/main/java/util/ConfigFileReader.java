@@ -33,7 +33,7 @@ public class ConfigFileReader {
 		strFilePath = "lt://APP10160571881669016963353488";
 		strUserMobileNumber = System.getProperty("mobileNumber");
 		strUserMobileNumber = "9878252339";
-		isTrueCallerFeature = true;
+		isTrueCallerFeature = false;
 	}
 
 	private Properties properties;

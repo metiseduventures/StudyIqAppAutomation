@@ -561,6 +561,47 @@ public class HomePageUtil {
 		}
 		return result;
 	}
+	
+	public boolean clickOnFreeTestseries(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		String strCourse = "aparna test series";
+		try {
+			int courseSize = homePageORObj.getListCourses().size();
+			System.out.println("courseSize: " + courseSize);
+			if (homePageORObj.getListCourses().size() == 0) {
+				return false;
+			}
+
+			// Click on search icon
+			clickOnSearchIcon();
+			// Click on search box
+			clickOnSearchInputBox();
+
+			// enter course name
+			result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+			if (!result) {
+				return result;
+			}
+
+			if (homePageORObj.getListSearchResult().size() == 0) {
+				homePageMsglist.add("No result found using search text: " + strCourse);
+				return false;
+			}
+
+			cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
+
+			// wait for course detail page to be opened
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "btn_check_free_course", "id", 30);
+			if (!result) {
+				System.out.println("It is a free course and the add to library button is not visible");
+				return result;
+			}
+
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
+	}
 
 	public boolean clickOnLiveCourseOnHomePage(AppiumDriver<MobileElement> driver) {
 		boolean result = true;

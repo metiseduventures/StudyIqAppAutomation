@@ -98,6 +98,13 @@ public class LoginUtil {
 					cfObj.commonClick(loginPageObj.noneOfTheAboveBtn());
 				}
 			}
+			
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageObj.noneOfTheAboveBtn(), 5);
+			if (result) {
+				cfObj.commonClick(loginPageObj.noneOfTheAboveBtn());
+			}else {
+				result = true;
+			}
 
 			loginPageObj.numberInputBox().sendKeys(strMobileNo);
 
