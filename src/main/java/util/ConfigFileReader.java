@@ -14,25 +14,25 @@ public class ConfigFileReader {
 	public static String strApplicationType;
 	static {
 		strEnv = System.getProperty("env");
-		strEnv = "stag";
+		//strEnv = "stag";
 		strDeviceName = System.getProperty("deviceId");
 		userName = System.getProperty("userName");
-		userName = "abhay.rai";
+		//userName = "abhay.rai";
 		accessKey = System.getProperty("accessKey");
-		accessKey = "f562ULSQYygxPzwtlVtAvfsna7mnAoWTlVlS4BIC3FYUs6Tf1W";
+		//accessKey = "f562ULSQYygxPzwtlVtAvfsna7mnAoWTlVlS4BIC3FYUs6Tf1W";
 		strDeviceName = System.getProperty("deviceId");
 		System.out.println("strDeviceName " + strDeviceName);
 		strDeviceVersion = System.getProperty("version");
 		strRunMode = System.getProperty("runMode");
-		strRunMode = "local";
-		strDeviceName = "RZ8T11F8CYW";
-		strDeviceVersion = "12.0";
+		//strRunMode = "local";
+		//strDeviceName = "RZ8T11F8CYW";
+		//strDeviceVersion = "12.0";
 		strDeviceIndex = System.getProperty("deviceIndex");
-		strDeviceIndex = "0";
+		//strDeviceIndex = "0";
 		strFilePath = System.getProperty("apkId");
-		strFilePath = "lt://APP10160571881669016963353488";
+		//strFilePath = "lt://APP10160571881669016963353488";
 		strUserMobileNumber = System.getProperty("mobileNumber");
-		strUserMobileNumber = "9878252339";
+		//strUserMobileNumber = "9958544199";
 		isTrueCallerFeature = false;
 	}
 
