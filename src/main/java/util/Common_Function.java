@@ -108,7 +108,7 @@ public class Common_Function {
 				// capability.setCapability("browserstack.debug", true);
 			}
 			System.out.println("capability " + capability);
-			System.out.println("hubUrl: "+getCapebility().get("remoteAddress"));
+			System.out.println("hubUrl: " + getCapebility().get("remoteAddress"));
 			driver = new AndroidDriver<MobileElement>(new URL(getCapebility().get("remoteAddress")), capability);
 
 			driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -987,6 +987,50 @@ public class Common_Function {
 		} catch (Exception e) {
 			System.err.println("Unable to scroll to MobileElement. MobileElement is not visible.");
 		}
+	}
+
+	public boolean pressAndroidKey(AppiumDriver<MobileElement> driver, key KEY, int noOfTimes) {
+		boolean result = true;
+		try {
+			for (int i = 0; i < noOfTimes; i++) {
+				if (KEY == key.BACK) {
+					// ((AndroidDriver) driver).pressKey(new KeyEvent(AndroidKey.BACK));
+					((AndroidDriver<MobileElement>) driver)
+							.pressKey(new io.appium.java_client.android.nativekey.KeyEvent(AndroidKey.BACK));
+				}
+				Thread.sleep(1000);
+			}
+		} catch (Exception e) {
+			result = false;
+			System.out.println(e.getMessage());
+		}
+		return result;
+	}
+
+	public enum key {
+		BACK, ENTER
+	}
+
+	public void tapOnCenter(AppiumDriver<MobileElement> driver) {
+		try {
+			new TouchAction(driver).tap(PointOption.point(377, 699)).perform();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public boolean handleHints(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		try {
+			Thread.sleep(1000);
+			tapOnCenter(driver);
+			tapOnCenter(driver);
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			System.out.println("handleHints_Exception: " + e.getMessage());
+			return result;
+		}
+		return result;
 	}
 
 }

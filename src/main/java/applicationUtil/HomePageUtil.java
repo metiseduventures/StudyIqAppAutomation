@@ -562,9 +562,9 @@ public class HomePageUtil {
 		return result;
 	}
 	
-	public boolean clickOnFreeTestseries(AppiumDriver<MobileElement> driver) {
+	public boolean clickOnTestseries(AppiumDriver<MobileElement> driver, String testName) {
 		boolean result = true;
-		String strCourse = "aparna test series";
+		String strCourse = testName;
 		try {
 			int courseSize = homePageORObj.getListCourses().size();
 			System.out.println("courseSize: " + courseSize);
@@ -591,9 +591,9 @@ public class HomePageUtil {
 			cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
 
 			// wait for course detail page to be opened
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "btn_check_free_course", "id", 30);
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id", 30);
 			if (!result) {
-				System.out.println("It is a free course and the add to library button is not visible");
+				System.out.println("Course detail page not opened when click on course from home page");
 				return result;
 			}
 

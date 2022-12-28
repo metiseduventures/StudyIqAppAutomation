@@ -21,17 +21,17 @@ public class TestSeries_OR {
 		return addtoLibElement;
 	}
 	
-	@AndroidFindBy(xpath = "//android.widget.TextView[contains(@text,'ENGLISH')]")
-	private MobileElement folder1Element;
+	@AndroidFindBy(id = "tvFolName")
+	private List<MobileElement> folder1Element;
 	
-	public MobileElement folder1() {
+	public List<MobileElement> folder1() {
 		return folder1Element;
 	}
 	
-	@AndroidFindBy(xpath = "//android.widget.TextView[contains(@text,'MOCK 1')]")
-	private MobileElement subfolder1Element;
+	@AndroidFindBy(id = "tvSubFolName")
+	private List<MobileElement> subfolder1Element;
 	
-	public MobileElement subfolder1() {
+	public List<MobileElement> subfolder1() {
 		return subfolder1Element;
 	}
 	
@@ -132,4 +132,89 @@ public class TestSeries_OR {
 	public MobileElement quizLang() {
 		return quizLangElement;
 	}
+	
+	@AndroidFindBy(id = "constFolder")
+	private List<MobileElement> openDrawerOfContentElements;
+
+	public List<MobileElement> openDrawerIcons() {
+		return openDrawerOfContentElements;
+	}
+	
+	@AndroidFindBy(id = "btn_show_content")
+	private MobileElement viewCourseContentElement;
+
+	public MobileElement viewCourseContent() {
+		return viewCourseContentElement;
+	}
+	
+	@AndroidFindBy(id = "tvFolName")
+	private List<MobileElement> namesOfCourseContentElements;
+
+	public List<MobileElement> namesOfCourseContentElements() {
+		return namesOfCourseContentElements;
+	}
+	
+	@AndroidFindBy(id = "tvSubFolName")
+	private List<MobileElement> namesOfsubCourseContentElements;
+
+	public List<MobileElement> namesOfsubCourseContentElements() {
+		return namesOfsubCourseContentElements;
+	}
+	
+	@AndroidFindBy(id = "btn_buy_two")
+	private MobileElement buyNowBtnElementBelow;
+
+	public MobileElement buyNowBtnBelow() {
+		return buyNowBtnElementBelow;
+	}
+	
+	@AndroidFindBy(id = "tv_offer_title_pack")
+	private MobileElement noOfOffersAvailElement;
+
+	public MobileElement noOfOffersAvail() {
+		return noOfOffersAvailElement;
+	}
+	
+	@AndroidFindBy(id = "fbMessage")
+	private MobileElement comingSoonPopUp;
+
+	public MobileElement comingSoonPopUp() {
+		return comingSoonPopUp;
+	}
+	
+	@AndroidFindBy(id = "view_solution_container")
+	private MobileElement SolutionBtn;
+	
+	public MobileElement solutionButton() {
+		return SolutionBtn;
+	}
+	
+	@AndroidFindBy(id = "btn_show_correct_ans")
+	private MobileElement showCorrectAnsElement;
+	
+	public MobileElement showCorrectAns() {
+		return showCorrectAnsElement;
+	}
+	
+	@AndroidFindBy(id = "toolbar_sub_text")
+	private MobileElement resultOverviewElement;
+	
+	public MobileElement resultOverviewButton() {
+		return resultOverviewElement;
+	}
+	
+	@AndroidFindBy(id = "title")
+	private List<MobileElement> titlesOfResultAnalysis;
+	
+	public List<MobileElement> titlesOfResultAnalysis(){
+		return titlesOfResultAnalysis;
+	}
+	
+	@AndroidFindBy(xpath = "//android.widget.ImageButton[@content-desc=\"Navigate up\"]")
+	private MobileElement backBtn;
+	
+	public MobileElement backButton() {
+		return backBtn;
+	}
+
 }

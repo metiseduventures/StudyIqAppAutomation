@@ -183,7 +183,7 @@ public class CourseDetailPage {
 
 					paymentPageUtilObj = new PaymentPageUtil(driver);
 
-					result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
+					result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData.getIsKey());
 					if (!result) {
 						coursePageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
 						return result;
@@ -345,7 +345,7 @@ public class CourseDetailPage {
 
 					paymentPageUtilObj = new PaymentPageUtil(driver);
 
-					result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
+					result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData.getIsKey());
 					if (!result) {
 						coursePageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
 						return result;
@@ -1086,7 +1086,7 @@ public class CourseDetailPage {
 		try {
 
 			if (!testData.getCourseType().equalsIgnoreCase("books")) {
-				result = libraryPageUtil.checkCourseInLibrary(driver, testData, courseName);
+				result = libraryPageUtil.checkCourseInLibrary(driver, courseName);
 				if (!result) {
 					coursePageMsgList.addAll(libraryPageUtil.libraryPageMsgList);
 					return result;

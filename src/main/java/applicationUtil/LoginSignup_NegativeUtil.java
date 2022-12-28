@@ -112,6 +112,11 @@ public class LoginSignup_NegativeUtil {
 					cfObj.commonClick(loginPageNegObj.noneOfTheAboveBtn());
 				}
 			}
+			
+			result = cfObj.commonWaitForElementToBeVisible(driver, loginPageNegObj.noneOfTheAboveBtn(), 10);
+			if (result) {
+				cfObj.commonClick(loginPageNegObj.noneOfTheAboveBtn());
+			}
 
 			cfObj.commonClick(loginPageNegObj.continueBtn());
 

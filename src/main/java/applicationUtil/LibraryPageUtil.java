@@ -958,7 +958,7 @@ public class LibraryPageUtil {
 							paymentPageUtilObj = new PaymentPageUtil(driver);
 
 							result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(),
-									testData);
+									testData.getIsKey());
 							if (!result) {
 								libraryPageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
 								return result;
@@ -1661,30 +1661,18 @@ public class LibraryPageUtil {
 		return result;
 	}
 
-	public boolean checkCourseInLibrary(AppiumDriver<MobileElement> driver, TestData testData,
-			String actualCourseName) {
+	public boolean checkCourseInLibrary(AppiumDriver<MobileElement> driver, String actualCourseName) {
 		boolean result = true;
 		try {
-			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.searchBoxLibrary(), 5);
+			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.myCourseBtn(), 10);
 			if (!result) {
-				libraryPageMsgList.add("It is not library page or purchase text is not visible");
+				libraryPageMsgList.add("The course is not opened or the my course button is not visible");
 				return result;
 			}
 
-			cfObj.commonSetTextTextBox(libraryPage_OR.searchBoxLibrary(), actualCourseName);
-
-			result = cfObj.commonWaitForElementToBeVisible(driver, libraryPage_OR.listOfCourseTitlesInLib().get(0), 5);
-			if (!result) {
-				libraryPageMsgList.add("The course title text is not visible");
-				return result;
-			}
-
-			String courseNameAfterSearch = libraryPage_OR.listOfCourseTitlesInLib().get(0).getText();
-
-			if (actualCourseName.equalsIgnoreCase(courseNameAfterSearch)) {
-				return true;
-			} else {
-				libraryPageMsgList.add("The course bought in lib is not present");
+			String headingOfCourse = libraryPage_OR.headingList().get(0).getText();
+			if (!actualCourseName.equalsIgnoreCase(headingOfCourse)) {
+				libraryPageMsgList.add("The course bought title is not same as the lib course opened heading");
 				return false;
 			}
 
@@ -1779,7 +1767,8 @@ public class LibraryPageUtil {
 
 				paymentPageUtilObj = new PaymentPageUtil(driver);
 
-				result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(), testData);
+				result = paymentPageUtilObj.selectPaymentOption(driver, testData.getPaymentMethod(),
+						testData.getIsKey());
 				if (!result) {
 					libraryPageMsgList.addAll(paymentPageUtilObj.paymentPageMsgList);
 					return result;

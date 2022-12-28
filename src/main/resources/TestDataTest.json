@@ -1,0 +1,22 @@
+{
+"dataSet1" : [
+{
+"courseName": "shubh automate test1",
+"courseType": "test-series",
+"paymentMethod" : "Paytm",
+"isKey" : "pass"
+},
+{
+"courseName": "shubh automate t2",
+"courseType": "test-series",
+"paymentMethod" : "Paytm",
+"isKey" : "pass"
+},
+{
+"courseName": "shubh automate t12",
+"courseType": "test-series",
+"paymentMethod" : "Paytm",
+"isKey" : "pass"
+} 
+]
+}

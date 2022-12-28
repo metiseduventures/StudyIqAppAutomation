@@ -155,5 +155,29 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException(strTestSeriesCSSlug + "not specified in the Configuration properties file.");
 	}
+	
+	public String getTestseriesType1() {
+		String strTestSeriesType1 = properties.getProperty("testseriesType1");
+		if (strTestSeriesType1 != null)
+			return strTestSeriesType1;
+		else
+			throw new RuntimeException(strTestSeriesType1 + "not specified in the Configuration properties file.");
+	}
+	
+	public String getTestseriesType2() {
+		String strTestSeriesType2 = properties.getProperty("testseriesType2");
+		if (strTestSeriesType2 != null)
+			return strTestSeriesType2;
+		else
+			throw new RuntimeException(strTestSeriesType2 + "not specified in the Configuration properties file.");
+	}
+	
+	public String getTestseriesType12() {
+		String strTestSeriesType12 = properties.getProperty("testseriesType12");
+		if (strTestSeriesType12 != null)
+			return strTestSeriesType12;
+		else
+			throw new RuntimeException(strTestSeriesType12 + "not specified in the Configuration properties file.");
+	}
 
 }
