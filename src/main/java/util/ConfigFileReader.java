@@ -8,8 +8,8 @@ import java.util.Properties;
 
 public class ConfigFileReader {
 	public static String strEnv;
-	public static String strDeviceName, userName, accessKey, strDeviceVersion, strRunMode,
-			strDeviceIndex, strFilePath,strUserMobileNumber;
+	public static String strDeviceName, userName, accessKey, strDeviceVersion, strRunMode, strDeviceIndex, strFilePath,
+			strUserMobileNumber;
 	public static boolean isTrueCallerFeature;
 	public static String strApplicationType;
 	static {
@@ -24,7 +24,7 @@ public class ConfigFileReader {
 		System.out.println("strDeviceName " + strDeviceName);
 		strDeviceVersion = System.getProperty("version");
 		strRunMode = System.getProperty("runMode");
-		//strRunMode = "local";
+        //strRunMode = "local";
 		//strDeviceName = "RZ8T11F8CYW";
 		//strDeviceVersion = "12.0";
 		strDeviceIndex = System.getProperty("deviceIndex");
@@ -91,7 +91,7 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException("Otp token is not defined.");
 	}
-	
+
 	public String getVideoSlug() {
 		String strVideoSlug = properties.getProperty("video");
 		if (strVideoSlug != null)
@@ -99,7 +99,7 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException(strVideoSlug + "not specified in the Configuration properties file.");
 	}
-	
+
 	public String getBooksSlug() {
 		String strBooksSlug = properties.getProperty("books");
 		if (strBooksSlug != null)
@@ -107,7 +107,7 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException(strBooksSlug + "not specified in the Configuration properties file.");
 	}
-	
+
 	public String getLiveSlug() {
 		String strLiveSlug = properties.getProperty("live");
 		if (strLiveSlug != null)
@@ -115,7 +115,7 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException(strLiveSlug + "not specified in the Configuration properties file.");
 	}
-	
+
 	public String getTestseriesSlug() {
 		String strTestseriesSlug = properties.getProperty("testseries");
 		if (strTestseriesSlug != null)
@@ -123,7 +123,7 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException(strTestseriesSlug + "not specified in the Configuration properties file.");
 	}
-	
+
 	public String getBooksCrossSellSlug() {
 		String strBooksCSSlug = properties.getProperty("booksCrossSell");
 		if (strBooksCSSlug != null)
@@ -131,7 +131,7 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException(strBooksCSSlug + "not specified in the Configuration properties file.");
 	}
-	
+
 	public String getVideoCrossSellSlug() {
 		String strVideoCSSlug = properties.getProperty("videoCrossSell");
 		if (strVideoCSSlug != null)
@@ -139,7 +139,7 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException(strVideoCSSlug + "not specified in the Configuration properties file.");
 	}
-	
+
 	public String getLiveCrossSellSlug() {
 		String strLiveCSSlug = properties.getProperty("liveCrossSell");
 		if (strLiveCSSlug != null)
@@ -147,37 +147,13 @@ public class ConfigFileReader {
 		else
 			throw new RuntimeException(strLiveCSSlug + "not specified in the Configuration properties file.");
 	}
-	
+
 	public String getTestseriesCrossSellSlug() {
 		String strTestSeriesCSSlug = properties.getProperty("testseriesCrossSell");
 		if (strTestSeriesCSSlug != null)
 			return strTestSeriesCSSlug;
 		else
 			throw new RuntimeException(strTestSeriesCSSlug + "not specified in the Configuration properties file.");
-	}
-	
-	public String getTestseriesType1() {
-		String strTestSeriesType1 = properties.getProperty("testseriesType1");
-		if (strTestSeriesType1 != null)
-			return strTestSeriesType1;
-		else
-			throw new RuntimeException(strTestSeriesType1 + "not specified in the Configuration properties file.");
-	}
-	
-	public String getTestseriesType2() {
-		String strTestSeriesType2 = properties.getProperty("testseriesType2");
-		if (strTestSeriesType2 != null)
-			return strTestSeriesType2;
-		else
-			throw new RuntimeException(strTestSeriesType2 + "not specified in the Configuration properties file.");
-	}
-	
-	public String getTestseriesType12() {
-		String strTestSeriesType12 = properties.getProperty("testseriesType12");
-		if (strTestSeriesType12 != null)
-			return strTestSeriesType12;
-		else
-			throw new RuntimeException(strTestSeriesType12 + "not specified in the Configuration properties file.");
 	}
 
 }

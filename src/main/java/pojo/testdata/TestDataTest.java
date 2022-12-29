@@ -2,17 +2,26 @@ package pojo.testdata;
 
 public class TestDataTest {
 
-	private String courseName;
+	private String courseNamePrimary;
+	private String courseVideoNamePrimary;
 	private String courseType;
 	private String paymentMethod;
 	private String isKey;
 	
-	public String getCourseName() {
-		return courseName;
+	public String getCourseNamePrimary() {
+		return courseNamePrimary;
 	}
 
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
+	public void setCourseNamePrimary(String courseNamePrimary) {
+		this.courseNamePrimary = courseNamePrimary;
+	}
+	
+	public String getCourseVideoNamePrimary() {
+		return courseVideoNamePrimary;
+	}
+
+	public void setCourseVideoNamePrimary(String courseVideoNamePrimary) {
+		this.courseVideoNamePrimary = courseVideoNamePrimary;
 	}
 
 	public String getIsKey() {

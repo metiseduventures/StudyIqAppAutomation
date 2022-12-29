@@ -21,13 +21,22 @@ public class TestSeries_Test extends BaseTest {
 	TestSeriesUtil testSeriesUtil;
 
 	@Test(dataProvider = "getData", enabled = true)
-	public void verifyAllTypesNormalTest(TestDataTest testDataTest) {
+	public void verifyPrimaryNormalTest(TestDataTest testDataTest) {
 		boolean result = true;
 		testSeriesUtil = new TestSeriesUtil(driver);
-		result = testSeriesUtil.verifyAllNormalTest(driver, testDataTest);
+		result = testSeriesUtil.verifyPrimaryNormalTest(driver, testDataTest);
+		Assert.assertEquals(result, true, testSeriesUtil.testseriesMsgList.toString());
+	}
+	
+	@Test(dataProvider = "getData", enabled = true)
+	public void verifySecondaryNormalTest(TestDataTest testDataTest) {
+		boolean result = true;
+		testSeriesUtil = new TestSeriesUtil(driver);
+		result = testSeriesUtil.verifySecondaryNormalTest(driver, testDataTest);
 		Assert.assertEquals(result, true, testSeriesUtil.testseriesMsgList.toString());
 	}
 
+	@SuppressWarnings("deprecation")
 	@DataProvider
 	public Object[][] getData() throws FileNotFoundException {
 		JsonElement jsonData = new JsonParser().parse(new FileReader("src/main/resources/TestDataTest.json"));

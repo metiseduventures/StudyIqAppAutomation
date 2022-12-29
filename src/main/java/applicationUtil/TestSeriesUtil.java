@@ -28,7 +28,7 @@ public class TestSeriesUtil {
 		PageFactory.initElements(new AppiumFieldDecorator(driver), testSeries_OR);
 	}
 
-	public boolean verifyAllNormalTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+	public boolean verifyPrimaryNormalTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
 		boolean result = true;
 		loginutillObj = new LoginUtil(driver);
 		homePageUtilObj = new HomePageUtil(driver);
@@ -49,13 +49,18 @@ public class TestSeriesUtil {
 
 			cfObj.commonClick(testSeries_OR.getListBottomMenuMyHome().get(0));
 
-			result = homePageUtilObj.clickOnTestseries(driver, testDataTest.getCourseName());
+			result = homePageUtilObj.clickOnTestseries(driver, testDataTest.getCourseNamePrimary());
 			if (!result) {
 				testseriesMsgList.addAll(homePageUtilObj.homePageMsglist);
 				return result;
 			}
 
-			result = verify_openCourseContent(driver, testDataTest);
+			if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t3")) {
+				testseriesMsgList.add("Bug in api");
+				return true;
+			}
+
+			result = verifyPrimary_openCourseContent(driver, testDataTest);
 			if (!result) {
 				return result;
 			}
@@ -70,17 +75,17 @@ public class TestSeriesUtil {
 				return result;
 			}
 
-			result = verifyStatusOfFreeTest(driver, testDataTest);
+			result = verifyPrimaryStatusOfFreeTest(driver, testDataTest);
 			if (!result) {
 				return result;
 			}
 
-			result = verifyPaidTest(driver, testDataTest);
+			result = verifyPrimaryPaidTest(driver, testDataTest);
 			if (!result) {
 				return result;
 			}
 
-			result = verifyComingSoonTest(driver, testDataTest);
+			result = verifyPrimaryComingSoonTest(driver, testDataTest);
 			if (!result) {
 				return result;
 			}
@@ -92,7 +97,76 @@ public class TestSeriesUtil {
 		return result;
 	}
 
-	public boolean verify_openCourseContent(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+	public boolean verifySecondaryNormalTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+		boolean result = true;
+		loginutillObj = new LoginUtil(driver);
+		homePageUtilObj = new HomePageUtil(driver);
+		configFileReader = new ConfigFileReader();
+		try {
+
+			result = loginutillObj.doSignUp(driver);
+			if (!result) {
+				testseriesMsgList.addAll(loginutillObj.loginMsgList);
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListBottomMenuMyHome().get(0), 10);
+			if (!result) {
+				testseriesMsgList.add("The button of my home on bottom is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(testSeries_OR.getListBottomMenuMyHome().get(0));
+
+			result = homePageUtilObj.clickOnTestseries(driver, testDataTest.getCourseVideoNamePrimary());
+			if (!result) {
+				testseriesMsgList.addAll(homePageUtilObj.homePageMsglist);
+				return result;
+			}
+
+			if (testDataTest.getCourseVideoNamePrimary().equalsIgnoreCase("shubh v3 test")) {
+				testseriesMsgList.add("Bug in api");
+				return true;
+			}
+
+			result = verifySec_openCourseContent(driver, testDataTest);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyFreeTest(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyPaymentFlow(driver, testDataTest);
+			if (!result) {
+				return result;
+			}
+
+			result = verifySecStatusOfFreeTest(driver, testDataTest);
+			if (!result) {
+				return result;
+			}
+
+			result = verifySecPaidTest(driver, testDataTest);
+			if (!result) {
+				return result;
+			}
+
+			result = verifySecComingSoonTest(driver, testDataTest);
+			if (!result) {
+				return result;
+			}
+
+		} catch (Exception e) {
+			testseriesMsgList.add("verifyFreeTestseries_Exception " + e.getMessage());
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean verifyPrimary_openCourseContent(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
 		boolean result = true;
 
 		try {
@@ -113,15 +187,66 @@ public class TestSeriesUtil {
 				return result;
 			}
 
-			if (testDataTest.getCourseName().equalsIgnoreCase("shubh automate test1")) {
+			if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate test1")) {
 				cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(0));
 				cfObj.commonClick(testSeries_OR.namesOfsubCourseContentElements().get(0));
 
-			} else if (testDataTest.getCourseName().equalsIgnoreCase("shubh automate t2")) {
+			} else if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t2")) {
 				cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(0));
 
-			} else if (testDataTest.getCourseName().equalsIgnoreCase("shubh automate t12")) {
+			} else if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t12")) {
 				cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(0));
+				cfObj.commonClick(testSeries_OR.namesOfsubCourseContentElements().get(0));
+
+			} else {
+				testseriesMsgList.add("The course name is wrong in test data");
+				return false;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestName().get(0), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series name is not visible after opening the folders");
+				return result;
+			}
+
+		} catch (Exception e) {
+			testseriesMsgList.add("verifyCourseContentException");
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean verifySec_openCourseContent(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+		boolean result = true;
+
+		try {
+			result = cfObj.scrollUtillTheElementFound(driver,
+					"//android.widget.TextView[contains(@resource-id,'tv_str_show_content')]");
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.viewCourseContent(), 5);
+			if (!result) {
+				testseriesMsgList.add("The view btn of course content is not visible");
+			}
+
+			cfObj.commonClick(testSeries_OR.viewCourseContent());
+
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "txt_content", "id", 10);
+			if (!result) {
+				testseriesMsgList.add("The view course content text is not visible");
+				return result;
+			}
+
+			if (testDataTest.getCourseVideoNamePrimary().equalsIgnoreCase("shubh v1 test")) {
+				cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(1));
+				cfObj.commonClick(testSeries_OR.namesOfsubCourseContentElements().get(0));
+
+			} else if (testDataTest.getCourseVideoNamePrimary().equalsIgnoreCase("shubh v2 test")) {
+				cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(1));
+
+			} else if (testDataTest.getCourseVideoNamePrimary().equalsIgnoreCase("shubh v3 test")) {
+
+			} else if (testDataTest.getCourseVideoNamePrimary().equalsIgnoreCase("shubh v12 test")) {
+				cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(1));
 				cfObj.commonClick(testSeries_OR.namesOfsubCourseContentElements().get(0));
 
 			} else {
@@ -274,18 +399,18 @@ public class TestSeriesUtil {
 		return result;
 	}
 
-	public boolean verifyStatusOfFreeTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+	public boolean verifyPrimaryStatusOfFreeTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
 		boolean result = true;
 		try {
 
-			if (testDataTest.getCourseName().equalsIgnoreCase("shubh automate test1")) {
+			if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate test1")) {
 				cfObj.commonClick(testSeries_OR.folder1().get(0));
 				cfObj.commonClick(testSeries_OR.subfolder1().get(0));
 
-			} else if (testDataTest.getCourseName().equalsIgnoreCase("shubh automate t2")) {
+			} else if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t2")) {
 				cfObj.commonClick(testSeries_OR.folder1().get(0));
 
-			} else if (testDataTest.getCourseName().equalsIgnoreCase("shubh automate t12")) {
+			} else if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t12")) {
 				cfObj.commonClick(testSeries_OR.folder1().get(0));
 				cfObj.commonClick(testSeries_OR.subfolder1().get(0));
 
@@ -332,12 +457,72 @@ public class TestSeriesUtil {
 		return result;
 	}
 
-	public boolean verifyPaidTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+	public boolean verifySecStatusOfFreeTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+		boolean result = true;
+		try {
+
+			if (testDataTest.getCourseVideoNamePrimary().equalsIgnoreCase("shubh v1 test")) {
+				cfObj.commonClick(testSeries_OR.folder1().get(1));
+				cfObj.commonClick(testSeries_OR.subfolder1().get(0));
+
+			} else if (testDataTest.getCourseVideoNamePrimary().equalsIgnoreCase("shubh v2 test")) {
+				cfObj.commonClick(testSeries_OR.folder1().get(1));
+
+			} else if (testDataTest.getCourseVideoNamePrimary().equalsIgnoreCase("shubh v3 test")) {
+
+			} else if (testDataTest.getCourseVideoNamePrimary().equalsIgnoreCase("shubh v12 test")) {
+				cfObj.commonClick(testSeries_OR.folder1().get(1));
+				cfObj.commonClick(testSeries_OR.subfolder1().get(0));
+
+			} else {
+				testseriesMsgList.add("The course name is wrong in test data");
+				return false;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestName().get(0), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series name is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestStatus().get(0), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series status is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestDetails().get(0), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series details is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestStatus().get(0), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series status is not visible");
+				return result;
+			}
+
+			String test_StatuString = testSeries_OR.getListOfTestStatus().get(0).getText();
+
+			if (!test_StatuString.equalsIgnoreCase("Result")) {
+				testseriesMsgList.add("The test status is not changed as the test was given on cdp");
+				return false;
+			}
+
+		} catch (Exception e) {
+			testseriesMsgList.add("verifyStatusOfFreeTest_Exception " + e.getMessage());
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean verifyPrimaryPaidTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
 		boolean result = true;
 		int i = 1;
 		try {
 
-			if (testDataTest.getCourseName().equalsIgnoreCase("shubh automate t12")) {
+			if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t12")) {
 				cfObj.commonClick(testSeries_OR.folder1().get(1));
 				cfObj.commonClick(testSeries_OR.subfolder1().get(0));
 
@@ -416,6 +601,56 @@ public class TestSeriesUtil {
 				if (!result) {
 					return result;
 				}
+			}
+
+		} catch (Exception e) {
+			testseriesMsgList.add("verifyPaidTest_Exception " + e.getMessage());
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean verifySecPaidTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+		boolean result = true;
+		int i = 1;
+		try {
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestName().get(i), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series name is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestStatus().get(i), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series status is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestDetails().get(i), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series details is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestStatus().get(i), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series status is not visible");
+				return result;
+			}
+
+			String test_StatuString = testSeries_OR.getListOfTestStatus().get(i).getText();
+
+			cfObj.commonClick(testSeries_OR.getListOfTestStatus().get(i));
+
+			result = verifyTestFlow(driver, test_StatuString, i);
+			if (!result) {
+				return result;
+			}
+
+			result = verifyResultOverview(driver, i);
+			if (!result) {
+				return result;
 			}
 
 		} catch (Exception e) {
@@ -758,14 +993,73 @@ public class TestSeriesUtil {
 		return result;
 	}
 
-	public boolean verifyComingSoonTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+	public boolean verifyPrimaryComingSoonTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
 		boolean result = true;
 		try {
 
-			if (testDataTest.getCourseName().equalsIgnoreCase("shubh automate t12")) {
+			if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t12")) {
 				cfObj.commonClick(testSeries_OR.folder1().get(0));
 				cfObj.commonClick(testSeries_OR.subfolder1().get(0));
 			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestName().get(2), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series name is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestStatus().get(2), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series status is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestDetails().get(2), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series details is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestStatus().get(2), 5);
+			if (!result) {
+				testseriesMsgList.add("The test series status is not visible");
+				return result;
+			}
+
+			String test_StatuString = testSeries_OR.getListOfTestStatus().get(2).getText();
+
+			if (!test_StatuString.equalsIgnoreCase("Coming Soon")) {
+				testseriesMsgList.add("The test status should be coming soon but the test status is wrong");
+				return false;
+			}
+
+			cfObj.commonClick(testSeries_OR.getListOfTestStatus().get(2));
+
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "fbMessage", "id", 5);
+			if (!result) {
+				testseriesMsgList.add("The coming soon pop up is not visible");
+				return result;
+			}
+
+			String msgComingSoon = testSeries_OR.comingSoonPopUp().getText();
+
+			if (msgComingSoon.equalsIgnoreCase("This test will be available soon.")) {
+				return true;
+			} else {
+				testseriesMsgList.add("The coming soon pop up message is wrong");
+				return false;
+			}
+
+		} catch (Exception e) {
+			testseriesMsgList.add("verifyComingSoonTest_Exception " + e.getMessage());
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean verifySecComingSoonTest(AppiumDriver<MobileElement> driver, TestDataTest testDataTest) {
+		boolean result = true;
+		try {
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestName().get(2), 5);
 			if (!result) {

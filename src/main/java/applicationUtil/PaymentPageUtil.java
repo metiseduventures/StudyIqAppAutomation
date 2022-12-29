@@ -58,15 +58,16 @@ public class PaymentPageUtil {
 					if (isKey.equalsIgnoreCase("pass")) {
 
 						cfObj.scrollIntoText(driver, "Net Banking");
+						
+						driver.hideKeyboard();
 
-						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.netBankPaymentOption(),
-								5);
-						if (!result) {
-							paymentPageMsgList.add("The netbanking option in paytm is not visible");
-							return result;
-						}
-						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
-						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
+//						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.netBankPaymentOption(),
+//								5);
+//						if (!result) {
+//							paymentPageMsgList.add("The netbanking option in paytm is not visible");
+//							return result;
+//						}
+//						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
 						
 						//need to change pay btn (not working)
 						
