@@ -21,7 +21,7 @@ public class ConfigFileReader {
 		accessKey = System.getProperty("accessKey");
 		//accessKey = "f562ULSQYygxPzwtlVtAvfsna7mnAoWTlVlS4BIC3FYUs6Tf1W";
 		strDeviceName = System.getProperty("deviceId");
-		System.out.println("strDeviceName " + strDeviceName);
+		//System.out.println("strDeviceName " + strDeviceName);
 		strDeviceVersion = System.getProperty("version");
 		strRunMode = System.getProperty("runMode");
         //strRunMode = "local";
