@@ -28,6 +28,15 @@ public class CourseDetailPageVerifyTest extends BaseTest {
 		Assert.assertEquals(result, true, coursePageDetailUtil.cdpVerifyMsgList.toString());
 	}
 
+	@Test
+	public void verifyCrossSell() throws Exception {
+		boolean result = true;
+		coursePageDetailUtil = new CoursePageDetailsVerifyUtil(driver);
+		result = coursePageDetailUtil.crossSellVerify(driver);
+		Assert.assertEquals(result, true, coursePageDetailUtil.cdpVerifyMsgList.toString());
+	}
+
+	@SuppressWarnings("deprecation")
 	@DataProvider
 	public Object[][] getData() throws FileNotFoundException {
 		JsonElement jsonData = new JsonParser().parse(new FileReader("src/main/resources/TestData.json"));

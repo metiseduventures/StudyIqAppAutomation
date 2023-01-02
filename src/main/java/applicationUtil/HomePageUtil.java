@@ -521,6 +521,66 @@ public class HomePageUtil {
 		return result;
 	}
 
+	public boolean clickOnCrossSellCourseOnHomePage(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		String strCourse;
+		ConfigFileReader configFileReader = new ConfigFileReader();
+		try {
+			int courseSize = homePageORObj.getListCourses().size();
+			System.out.println("courseSize: " + courseSize);
+			if (homePageORObj.getListCourses().size() == 0) {
+				return false;
+			}
+
+			// Click on search icon
+			clickOnSearchIcon();
+			// Click on search box
+			clickOnSearchInputBox();
+
+			if (configFileReader.getEnv().equals("prod")) {
+				strCourse = "LIVE PSIR Optional Batch 2";
+
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + strCourse);
+					return false;
+				}
+
+			} else {
+				strCourse = "GS - Dr";
+
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + strCourse);
+					return false;
+				}
+			}
+
+			cfObj.commonClick(homePageORObj.getListSearchResult().get(0));
+
+			// wait for course detail page to be opened
+			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id", 30);
+			if (!result) {
+				System.out.println("Course detail page not opened when click on course from home page");
+				return result;
+			}
+
+		} catch (Exception e) {
+			result = false;
+		}
+		return result;
+	}
+
 	public boolean clickOnCourseOnHomePage(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		String strCourse = "GS - Dr";
@@ -561,7 +621,7 @@ public class HomePageUtil {
 		}
 		return result;
 	}
-	
+
 	public boolean clickOnTestseries(AppiumDriver<MobileElement> driver, String testName) {
 		boolean result = true;
 		String strCourse = testName;
@@ -577,15 +637,30 @@ public class HomePageUtil {
 			// Click on search box
 			clickOnSearchInputBox();
 
-			// enter course name
-			result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
-			if (!result) {
-				return result;
-			}
+			if (ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
+				String prodCourse = "UPSC Prelims Test Series 2023";
 
-			if (homePageORObj.getListSearchResult().size() == 0) {
-				homePageMsglist.add("No result found using search text: " + strCourse);
-				return false;
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), prodCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + prodCourse);
+					return false;
+				}
+			} else {
+				// enter course name
+				result = cfObj.commonSetTextTextBox(homePageORObj.getListSearchTextBox().get(0), strCourse);
+				if (!result) {
+					return result;
+				}
+
+				if (homePageORObj.getListSearchResult().size() == 0) {
+					homePageMsglist.add("No result found using search text: " + strCourse);
+					return false;
+				}
 			}
 
 			cfObj.commonClick(homePageORObj.getListSearchResult().get(0));

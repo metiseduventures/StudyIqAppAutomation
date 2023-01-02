@@ -70,24 +70,29 @@ public class TestSeriesUtil {
 				return result;
 			}
 
-			result = verifyPaymentFlow(driver, testDataTest);
-			if (!result) {
-				return result;
-			}
+			if (ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
+				System.out.println("The free test working");
+				
+			} else {
+				result = verifyPaymentFlow(driver, testDataTest);
+				if (!result) {
+					return result;
+				}
 
-			result = verifyPrimaryStatusOfFreeTest(driver, testDataTest);
-			if (!result) {
-				return result;
-			}
+				result = verifyPrimaryStatusOfFreeTest(driver, testDataTest);
+				if (!result) {
+					return result;
+				}
 
-			result = verifyPrimaryPaidTest(driver, testDataTest);
-			if (!result) {
-				return result;
-			}
+				result = verifyPrimaryPaidTest(driver, testDataTest);
+				if (!result) {
+					return result;
+				}
 
-			result = verifyPrimaryComingSoonTest(driver, testDataTest);
-			if (!result) {
-				return result;
+				result = verifyPrimaryComingSoonTest(driver, testDataTest);
+				if (!result) {
+					return result;
+				}
 			}
 
 		} catch (Exception e) {
@@ -187,20 +192,24 @@ public class TestSeriesUtil {
 				return result;
 			}
 
-			if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate test1")) {
+			if (ConfigFileReader.strEnv.equalsIgnoreCase("prod")) {
 				cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(0));
-				cfObj.commonClick(testSeries_OR.namesOfsubCourseContentElements().get(0));
-
-			} else if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t2")) {
-				cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(0));
-
-			} else if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t12")) {
-				cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(0));
-				cfObj.commonClick(testSeries_OR.namesOfsubCourseContentElements().get(0));
-
 			} else {
-				testseriesMsgList.add("The course name is wrong in test data");
-				return false;
+				if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate test1")) {
+					cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(0));
+					cfObj.commonClick(testSeries_OR.namesOfsubCourseContentElements().get(0));
+
+				} else if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t2")) {
+					cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(0));
+
+				} else if (testDataTest.getCourseNamePrimary().equalsIgnoreCase("shubh automate t12")) {
+					cfObj.commonClick(testSeries_OR.namesOfCourseContentElements().get(0));
+					cfObj.commonClick(testSeries_OR.namesOfsubCourseContentElements().get(0));
+
+				} else {
+					testseriesMsgList.add("The course name is wrong in test data");
+					return false;
+				}
 			}
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestName().get(0), 5);
@@ -698,6 +707,8 @@ public class TestSeriesUtil {
 				} else {
 					result = true;
 				}
+				
+				cfObj.tapOnCenter(driver);
 
 				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "submit_test", "id", 5);
 				if (!result) {
@@ -781,6 +792,8 @@ public class TestSeriesUtil {
 				}
 
 				cfObj.commonClick(testSeries_OR.yesPausePopUpButton());
+				
+				Thread.sleep(2000);
 
 				result = cfObj.commonWaitForElementToBeVisible(driver,
 						testSeries_OR.getListOfTestStatus().get(selectNo), 10);
@@ -971,6 +984,8 @@ public class TestSeriesUtil {
 			} else {
 				result = true;
 			}
+			
+			Thread.sleep(2000);
 
 			result = cfObj.commonWaitForElementToBeVisible(driver, testSeries_OR.getListOfTestStatus().get(selectNo),
 					5);

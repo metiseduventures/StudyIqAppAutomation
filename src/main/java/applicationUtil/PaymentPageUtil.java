@@ -58,7 +58,7 @@ public class PaymentPageUtil {
 					if (isKey.equalsIgnoreCase("pass")) {
 
 						cfObj.scrollIntoText(driver, "Net Banking");
-						
+
 						driver.hideKeyboard();
 
 //						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.netBankPaymentOption(),
@@ -68,9 +68,9 @@ public class PaymentPageUtil {
 //							return result;
 //						}
 //						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
-						
-						//need to change pay btn (not working)
-						
+
+						// need to change pay btn (not working)
+
 						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.successfulPayBtn(), 5);
 						if (!result) {
 							paymentPageMsgList.add("The successful Paytm payment btn is not visible");

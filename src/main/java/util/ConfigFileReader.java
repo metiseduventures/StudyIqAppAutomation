@@ -21,10 +21,10 @@ public class ConfigFileReader {
 		accessKey = System.getProperty("accessKey");
 		//accessKey = "f562ULSQYygxPzwtlVtAvfsna7mnAoWTlVlS4BIC3FYUs6Tf1W";
 		strDeviceName = System.getProperty("deviceId");
-		//System.out.println("strDeviceName " + strDeviceName);
+		System.out.println("strDeviceName " + strDeviceName);
 		strDeviceVersion = System.getProperty("version");
 		strRunMode = System.getProperty("runMode");
-        //strRunMode = "local";
+		//strRunMode = "local";
 		//strDeviceName = "RZ8T11F8CYW";
 		//strDeviceVersion = "12.0";
 		strDeviceIndex = System.getProperty("deviceIndex");
@@ -122,38 +122,6 @@ public class ConfigFileReader {
 			return strTestseriesSlug;
 		else
 			throw new RuntimeException(strTestseriesSlug + "not specified in the Configuration properties file.");
-	}
-
-	public String getBooksCrossSellSlug() {
-		String strBooksCSSlug = properties.getProperty("booksCrossSell");
-		if (strBooksCSSlug != null)
-			return strBooksCSSlug;
-		else
-			throw new RuntimeException(strBooksCSSlug + "not specified in the Configuration properties file.");
-	}
-
-	public String getVideoCrossSellSlug() {
-		String strVideoCSSlug = properties.getProperty("videoCrossSell");
-		if (strVideoCSSlug != null)
-			return strVideoCSSlug;
-		else
-			throw new RuntimeException(strVideoCSSlug + "not specified in the Configuration properties file.");
-	}
-
-	public String getLiveCrossSellSlug() {
-		String strLiveCSSlug = properties.getProperty("liveCrossSell");
-		if (strLiveCSSlug != null)
-			return strLiveCSSlug;
-		else
-			throw new RuntimeException(strLiveCSSlug + "not specified in the Configuration properties file.");
-	}
-
-	public String getTestseriesCrossSellSlug() {
-		String strTestSeriesCSSlug = properties.getProperty("testseriesCrossSell");
-		if (strTestSeriesCSSlug != null)
-			return strTestSeriesCSSlug;
-		else
-			throw new RuntimeException(strTestSeriesCSSlug + "not specified in the Configuration properties file.");
 	}
 
 }

@@ -804,7 +804,7 @@ public class Common_Function {
 			int height = size.height;
 			int middleOfX = width / 2;
 			int startYCoordinate = (int) (height * .7);
-			int endYCoordinate = (int) (height * .6);
+			int endYCoordinate = (int) (height * .5);
 			while (count < noOfTime) {
 				count = count + 1;
 				action.press(PointOption.point(middleOfX, startYCoordinate))
