@@ -5,47 +5,19 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 
 public class ProfilePage_OR {
+	
+	@AndroidFindBy(xpath = "//android.widget.EditText")
+	private List<MobileElement> listOfInputElements;
 
-	@AndroidFindBy(id = "et_profile_name")
-	private MobileElement name;
-
-	public MobileElement inputName() {
-		return name;
+	public List<MobileElement> listOfInputBoxes() {
+		return listOfInputElements;
 	}
 
-	@AndroidFindBy(id = "et_profile_address")
-	private MobileElement address;
+	@AndroidFindBy(xpath = "//android.widget.Button")
+	private List<MobileElement> listOfButtons;
 
-	public MobileElement inputAddress() {
-		return address;
-	}
-
-	@AndroidFindBy(id = "et_profile_pincode")
-	private MobileElement pincode;
-
-	public MobileElement inputPincode() {
-		return pincode;
-	}
-
-	@AndroidFindBy(id = "et_profile_city")
-	private MobileElement city;
-
-	public MobileElement inputCity() {
-		return city;
-	}
-
-	@AndroidFindBy(id = "et_profile_state")
-	private MobileElement state;
-
-	public MobileElement inputState() {
-		return state;
-	}
-
-	@AndroidFindBy(id = "btn_update")
-	private MobileElement updateBtnElement;
-
-	public MobileElement updateBtn() {
-		return updateBtnElement;
+	public List<MobileElement> listOfButtons() {
+		return listOfButtons;
 	}
 
 	@AndroidFindBy(className = "android.widget.CheckedTextView")
@@ -69,18 +41,39 @@ public class ProfilePage_OR {
 		return updatedNumberBtn;
 	}
 
-	@AndroidFindBy(id = "et_mobile")
+	@AndroidFindBy(id = "teMobile")
 	private MobileElement updatedNumberInput;
 
 	public MobileElement updatedNoInput() {
 		return updatedNumberInput;
 	}
+	
+	@AndroidFindBy(id = "teEmail")
+	private MobileElement updatedEmailInput;
 
-	@AndroidFindBy(id = "bt_profile_update_get_otp")
+	public MobileElement updatedEmailInput() {
+		return updatedEmailInput;
+	}
+	
+	@AndroidFindBy(id = "snackbar_text")
+	private MobileElement otpSentMsgElement;
+	
+	public MobileElement otpSentMsg() {
+		return otpSentMsgElement;
+	}
+
+	@AndroidFindBy(id = "btn_getOtp")
 	private MobileElement getOtpBtn;
 
-	public MobileElement clickOtpButton() {
+	public MobileElement clickUpdateContinueBtn() {
 		return getOtpBtn;
+	}
+	
+	@AndroidFindBy(id = "btn_getOtp")
+	private MobileElement getOtpBtn1;
+
+	public MobileElement verifyOtpButton() {
+		return getOtpBtn1;
 	}
 
 	@AndroidFindBy(id = "et_profile_update_otp")
@@ -132,4 +125,24 @@ public class ProfilePage_OR {
 		return toastFeedLangElement;
 	}
 
+	@AndroidFindBy(xpath = "//android.widget.TextView[contains(@text,'Sign Out')]")
+	private MobileElement signOutButtonElement;
+	
+	public MobileElement signOutBtn() {
+		return signOutButtonElement;
+	}
+	
+	@AndroidFindBy(xpath = "//android.widget.TextView[contains(@text,'Logout')]")
+	private MobileElement logOutButtonElement;
+	
+	public MobileElement logOutBtn() {
+		return logOutButtonElement;
+	}
+	
+	@AndroidFindBy(xpath = "//android.widget.TextView[contains(@text,'Cancel')]")
+	private MobileElement cancelButtonElement;
+	
+	public MobileElement cancelBtn() {
+		return cancelButtonElement;
+	}
 }

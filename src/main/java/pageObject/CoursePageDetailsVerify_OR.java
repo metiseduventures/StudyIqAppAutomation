@@ -300,4 +300,18 @@ public class CoursePageDetailsVerify_OR {
 	public List<MobileElement> getListBottomMenuMyHome() {
 		return listBottomMenuMyHome;
 	}
+	
+	@AndroidFindBy(id = "tv_offer_title_pack")
+	private MobileElement noOfOffersAvailElement;
+
+	public MobileElement noOfOffersAvail() {
+		return noOfOffersAvailElement;
+	}
+	
+	@AndroidFindBy(id = "btn_buy_one")
+	private MobileElement buyNowBtn;
+	
+	public MobileElement buyNowButton() {
+		return buyNowBtn;
+	}
 }

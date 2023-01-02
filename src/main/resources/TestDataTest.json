@@ -1,0 +1,32 @@
+{
+"dataSet1" : [
+{
+"courseNamePrimary": "shubh automate test1",
+"courseVideoNamePrimary": "shubh v1 test",
+"courseType": "test-series",
+"paymentMethod" : "Paytm",
+"isKey" : "pass"
+},
+{
+"courseNamePrimary": "shubh automate t2",
+"courseVideoNamePrimary": "shubh v2 test",
+"courseType": "test-series",
+"paymentMethod" : "Paytm",
+"isKey" : "pass"
+},
+{
+"courseNamePrimary": "shubh automate t12",
+"courseVideoNamePrimary": "shubh v12 test",
+"courseType": "test-series",
+"paymentMethod" : "Paytm",
+"isKey" : "pass"
+},
+{
+"courseNamePrimary": "shubh automate t3",
+"courseVideoNamePrimary": "shubh v3 test",
+"courseType": "test-series",
+"paymentMethod" : "Paytm",
+"isKey" : "pass"
+}
+]
+}

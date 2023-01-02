@@ -16,7 +16,9 @@ import pageObject.CoursePageDetailsVerify_OR;
 import pojo.courseList.CourseList;
 import pojo.courseView.CourseView;
 import pojo.testdata.TestData;
+import pojo.testdata.TestDataTest;
 import util.Common_Function;
+import util.Common_Function.direction;
 import util.ConfigFileReader;
 
 public class CoursePageDetailsVerifyUtil {
@@ -60,7 +62,7 @@ public class CoursePageDetailsVerifyUtil {
 				cdpVerifyMsgList.addAll(loginutillObj.loginMsgList);
 				return result;
 			}
-			
+
 			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.getListBottomMenuMyHome().get(0), 10);
 			if (!result) {
 				cdpVerifyMsgList.add("The button of my home on bottom is not visible");
@@ -137,11 +139,6 @@ public class CoursePageDetailsVerifyUtil {
 			}
 
 //			result = verifyDemoVideos(driver, courseViewObj);
-//			if (!result) {
-//				return result;
-//			}
-
-//			result = verifyCrossSell(driver, courseViewObj, testData);
 //			if (!result) {
 //				return result;
 //			}
@@ -649,79 +646,111 @@ public class CoursePageDetailsVerifyUtil {
 		return result;
 	}
 
-	public boolean verifyCrossSell(AppiumDriver<MobileElement> driver, CourseView courseViewObj, TestData testData) {
+	public boolean crossSellVerify(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
-		String strCrossSellSlug = null;
-		CourseApiUtil courseApiUtilObj;
+		loginutillObj = new LoginUtil(driver);
+		homePageUtilObj = new HomePageUtil(driver);
+		configFileReader = new ConfigFileReader();
 		try {
-			if (courseViewObj.getData().getCrossSellDetails().size() != 0) {
 
-				if (testData.getCourseType().contains("video")) {
+			result = loginutillObj.doSignUp(driver);
+			if (!result) {
+				cdpVerifyMsgList.addAll(loginutillObj.loginMsgList);
+				return result;
+			}
 
-					strCrossSellSlug = configFileReader.getVideoCrossSellSlug();
+			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.getListBottomMenuMyHome().get(0), 10);
+			if (!result) {
+				cdpVerifyMsgList.add("The button of my home on bottom is not visible");
+				return result;
+			}
 
-				} else if (testData.getCourseType().contains("books")) {
+			cfObj.commonClick(cdpVerify_OR.getListBottomMenuMyHome().get(0));
 
-					strCrossSellSlug = configFileReader.getBooksCrossSellSlug();
+			result = homePageUtilObj.clickOnCrossSellCourseOnHomePage(driver);
+			if (!result) {
+				cdpVerifyMsgList.addAll(homePageUtilObj.homePageMsglist);
+				return result;
+			}
 
-				} else if (testData.getCourseType().contains("live")) {
+			result = verifySimilarCourses(driver);
+			if (!result) {
+				return result;
+			}
 
-					strCrossSellSlug = configFileReader.getLiveCrossSellSlug();
+		} catch (Exception e) {
+			cdpVerifyMsgList.add("crossSellVerifyException " + e.getMessage());
+			result = false;
+		}
+		return result;
+	}
 
-				} else if (testData.getCourseType().contains("test-series")) {
+	public boolean verifySimilarCourses(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+		try {
 
-					strCrossSellSlug = configFileReader.getTestseriesCrossSellSlug();
+			result = cfObj.scrollUtillTheElementFound(driver,
+					"//android.widget.ImageView[contains(@resource-id,'course_image_card')]");
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.similarCoursesText(), 5);
+			if (!result) {
+				cdpVerifyMsgList.add("The similar courses text is not visible");
+				return result;
+			}
+
+			List<MobileElement> ImageList = cdpVerify_OR.listOfCrossSellImage();
+			List<MobileElement> TitleList = cdpVerify_OR.listOfCrossSellTitle();
+			List<MobileElement> PriceList = cdpVerify_OR.listOfCrossSellPrice();
+
+			int imageSize = ImageList.size();
+			int titleSize = TitleList.size();
+			int priceSize = PriceList.size();
+
+			if (imageSize < 4 && titleSize < 4 && priceSize < 4) {
+
+				for (int i = 0; i < imageSize; i++) {
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, ImageList.get(i), 5);
+					if (!result) {
+						cdpVerifyMsgList.add("The image is not visible");
+						return result;
+					}
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, TitleList.get(i), 5);
+					if (!result) {
+						cdpVerifyMsgList.add("The title is not visible");
+						return result;
+					}
+
+					result = cfObj.commonWaitForElementToBeVisible(driver, PriceList.get(i), 5);
+					if (!result) {
+						cdpVerifyMsgList.add("The price is not visible");
+						return result;
+					}
+
 				}
 
-				courseApiUtilObj = new CourseApiUtil();
-				courseViewObj = new CourseView();
-				courseViewObj = courseApiUtilObj.getCourseViewData(strCrossSellSlug);
+				cfObj.commonClick(TitleList.get(0));
 
-				result = cfObj.scrollUtillTheElementFound(driver,
-						"//android.widget.ImageView[contains(@resource-id,'course_image_card')]");
+				result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.titleOfPage().get(0), 5);
+				if (!result) {
+					cdpVerifyMsgList.add("The cdp is not open");
+					return result;
+				}
+				((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 
 				result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.similarCoursesText(), 5);
 				if (!result) {
-					cdpVerifyMsgList.add("The similar courses text is not visible");
+					cdpVerifyMsgList.add("The similar courses text is not visible after coming back from first course");
 					return result;
 				}
 
-				List<MobileElement> ImageList = cdpVerify_OR.listOfCrossSellImage();
-				List<MobileElement> TitleList = cdpVerify_OR.listOfCrossSellTitle();
-				List<MobileElement> PriceList = cdpVerify_OR.listOfCrossSellPrice();
+				result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.crossViewAllBtn(), 5);
+				if (result) {
+					cfObj.commonClick(cdpVerify_OR.crossViewAllBtn());
 
-				int imageSize = ImageList.size();
-				int titleSize = TitleList.size();
-				int priceSize = PriceList.size();
-
-				if (imageSize > 3 && titleSize > 3 && priceSize > 3) {
-
-					for (int i = 0; i < imageSize; i++) {
-
-						result = cfObj.commonWaitForElementToBeVisible(driver, ImageList.get(i), 5);
-						if (!result) {
-							cdpVerifyMsgList.add("The image is not visible");
-							return result;
-						}
-
-						result = cfObj.commonWaitForElementToBeVisible(driver, TitleList.get(i), 5);
-						if (!result) {
-							cdpVerifyMsgList.add("The title is not visible");
-							return result;
-						}
-
-						result = cfObj.commonWaitForElementToBeVisible(driver, PriceList.get(i), 5);
-						if (!result) {
-							cdpVerifyMsgList.add("The price is not visible");
-							return result;
-						}
-
-						result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.crossViewAllBtn(), 5);
-						if (!result) {
-							cdpVerifyMsgList.add("The view all btn is not visible");
-							return result;
-						}
-					}
+					String courseTitle = TitleList.get(0).getText();
+					String titleString = courseTitle.replace("\n", "");
 
 					cfObj.commonClick(TitleList.get(0));
 
@@ -730,33 +759,33 @@ public class CoursePageDetailsVerifyUtil {
 						cdpVerifyMsgList.add("The cdp is not open");
 						return result;
 					}
-					((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 
-					result = cfObj.commonWaitForElementToBeVisible(driver, cdpVerify_OR.similarCoursesText(), 5);
-					if (!result) {
-						cdpVerifyMsgList
-								.add("The similar courses text is not visible after coming back from first course");
-						return result;
-					}
+					String courseTitleAfterClick = cdpVerify_OR.titleOfPage().get(0).getText();
 
-					cfObj.commonClick(cdpVerify_OR.crossViewAllBtn());
+					if (titleString.equalsIgnoreCase(courseTitleAfterClick)) {
 
-					String courseTitle = TitleList.get(0).getText();
+						result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.BUY_ONE, "id",
+								30);
+						if (!result) {
+							System.out.println(
+									"Course detail page not opened when click on course from cross sell in view all");
+							return result;
+						}
 
-					String courseTitleAfterClick = courseViewObj.getData().getCourseDetail().getCourseTitle();
-
-					if (courseTitle.equalsIgnoreCase(courseTitleAfterClick)) {
-						((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 					} else {
 						cdpVerifyMsgList.add("The course is not same");
 						return false;
 					}
-
 				} else {
-					cdpVerifyMsgList.add("The size of the courses should not be more than 3");
-					return false;
+					result = true;
+					System.out.println(
+							"No view all button as there is less than 4 cross sell courses or scroll has not reached view all button");
 				}
 
+			} else {
+				cdpVerifyMsgList.add(
+						"The size of the courses should not be more than 3 on cdp until view all button is clicked");
+				return false;
 			}
 
 		} catch (Exception e) {

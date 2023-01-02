@@ -15,6 +15,7 @@ import pageObject.HomePage_OR;
 import pageObject.Login_OR;
 import pageObject.ProfilePage_OR;
 import util.Common_Function;
+import util.Common_Function.direction;
 
 public class ProfilePageUtil {
 
@@ -63,12 +64,7 @@ public class ProfilePageUtil {
 				return result;
 			}
 
-			result = openNavigationAndClickProfile(driver);
-			if (!result) {
-				return result;
-			}
-
-			result = checkUpdationDoneOrNot();
+			result = checkUpdationDoneOrNot(driver);
 			if (!result) {
 				return result;
 			}
@@ -79,6 +75,11 @@ public class ProfilePageUtil {
 			}
 
 			result = changeEmailInProfile(driver);
+			if (!result) {
+				return result;
+			}
+
+			result = verifySignOut(driver);
 			if (!result) {
 				return result;
 			}
@@ -120,33 +121,33 @@ public class ProfilePageUtil {
 		boolean result = true;
 		try {
 
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "et_profile_name", "id", 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.listOfInputBoxes().get(0), 10);
 			if (!result) {
 				ProfilePageMsglist.add("input name box not present");
 				return result;
 			}
 
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "et_profile_address", "id", 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.listOfInputBoxes().get(3), 10);
 			if (!result) {
 				ProfilePageMsglist.add("input address box not present");
 				return result;
 			}
 
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "et_profile_pincode", "id", 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.listOfInputBoxes().get(4), 10);
 			if (!result) {
 				ProfilePageMsglist.add("input pincode box not present");
 				return result;
 			}
 
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "et_profile_city", "id", 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.listOfInputBoxes().get(1), 10);
 			if (!result) {
-				ProfilePageMsglist.add("input city box not present");
+				ProfilePageMsglist.add("email box box not present");
 				return result;
 			}
 
-			result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, "et_profile_state", "id", 10);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.listOfInputBoxes().get(2), 10);
 			if (!result) {
-				ProfilePageMsglist.add("input state box not present");
+				ProfilePageMsglist.add("phone box not present");
 				return result;
 			}
 
@@ -160,19 +161,23 @@ public class ProfilePageUtil {
 	public boolean inputDataIntoBoxes(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
-			result = cfObj.commonSetTextTextBox(profilePage_OR.inputName(), "shubh");
+			result = cfObj.commonSetTextTextBox(profilePage_OR.listOfInputBoxes().get(0), "shubh");
 			if (!result) {
 				ProfilePageMsglist.add("input_name not working");
 				return result;
 			}
 
-			result = cfObj.commonSetTextTextBox(profilePage_OR.inputAddress(), "nanital");
+			driver.hideKeyboard();
+
+			result = cfObj.commonSetTextTextBox(profilePage_OR.listOfInputBoxes().get(3), "#1776, nanital");
 			if (!result) {
 				ProfilePageMsglist.add("input_address not working");
 				return result;
 			}
 
-			result = cfObj.commonSetTextTextBox(profilePage_OR.inputPincode(), "122003");
+			driver.hideKeyboard();
+
+			result = cfObj.commonSetTextTextBox(profilePage_OR.listOfInputBoxes().get(4), "122003");
 			if (!result) {
 				ProfilePageMsglist.add("input_pincode not working");
 				return result;
@@ -191,18 +196,14 @@ public class ProfilePageUtil {
 		boolean result = true;
 		try {
 
-			cfObj.commonClick(profilePage_OR.updateBtn());
+			cfObj.scrollUtillNtimes(driver, 1, direction.DOWN);
+
+			cfObj.commonClick(profilePage_OR.listOfButtons().get(2));
 
 			String toastMsgLangChange = profilePage_OR.toastFeedLang().getAttribute("name");
 
 			if (toastMsgLangChange.equalsIgnoreCase("Profile updated successfully")) {
-
-				result = cfObj.commonWaitForElementToBeLocatedAndVisible(driver, ConstantUtil.NAV_LIB, "id", 30);
-				if (!result) {
-					ProfilePageMsglist.add("Home page not opened after profile updated");
-					return result;
-				}
-
+				return true;
 			} else {
 				ProfilePageMsglist.add("The profile changed toast not visible");
 				return false;
@@ -215,27 +216,19 @@ public class ProfilePageUtil {
 		return result;
 	}
 
-	public boolean checkUpdationDoneOrNot() {
+	public boolean checkUpdationDoneOrNot(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
 
-			String UpdatedName = profilePage_OR.inputName().getText();
-			if (UpdatedName.equalsIgnoreCase("shubh")) {
-				result = true;
-			} else {
-				ProfilePageMsglist.add("The updated name is different");
-				return false;
-			}
-
-			String UpdatedAddress = profilePage_OR.inputAddress().getText();
-			if (UpdatedAddress.equalsIgnoreCase("nanital")) {
+			String UpdatedAddress = profilePage_OR.listOfInputBoxes().get(3).getText();
+			if (UpdatedAddress.equalsIgnoreCase("#1776, nanital")) {
 				result = true;
 			} else {
 				ProfilePageMsglist.add("The updated address is different");
 				return false;
 			}
 
-			String UpdatedPincode = profilePage_OR.inputPincode().getText();
+			String UpdatedPincode = profilePage_OR.listOfInputBoxes().get(4).getText();
 			if (UpdatedPincode.equalsIgnoreCase("122003")) {
 				result = true;
 			} else {
@@ -243,7 +236,7 @@ public class ProfilePageUtil {
 				return false;
 			}
 
-			String UpdatedCity = profilePage_OR.inputCity().getText();
+			String UpdatedCity = profilePage_OR.listOfInputBoxes().get(5).getText();
 			if (UpdatedCity.equalsIgnoreCase("GURUGRAM")) {
 				result = true;
 			} else {
@@ -251,11 +244,22 @@ public class ProfilePageUtil {
 				return false;
 			}
 
-			String UpdatedState = profilePage_OR.inputState().getText();
+			String UpdatedState = profilePage_OR.listOfInputBoxes().get(6).getText();
 			if (UpdatedState.equalsIgnoreCase("HARYANA")) {
 				result = true;
 			} else {
 				ProfilePageMsglist.add("The updated state is different");
+				return false;
+			}
+
+			// scroll method to top
+			cfObj.scrollUtillNtimes(driver, 1, direction.UP);
+
+			String UpdatedName = profilePage_OR.listOfInputBoxes().get(0).getText();
+			if (UpdatedName.equalsIgnoreCase("shubh")) {
+				result = true;
+			} else {
+				ProfilePageMsglist.add("The updated name is different");
 				return false;
 			}
 
@@ -269,16 +273,20 @@ public class ProfilePageUtil {
 	public boolean changeNumberInProfile(AppiumDriver<MobileElement> driver) {
 		boolean result = true;
 		try {
+
+			// scroll method to bottom
+			cfObj.scrollUtillNtimes(driver, 1, direction.DOWN);
+
 			String strMobileNumberString = Common_Function.randomPhoneNumber(10, "3");
 			System.out.println("strMobileNo: " + strMobileNumberString);
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.editNumberBtn(), 5);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.listOfButtons().get(1), 5);
 			if (!result) {
 				ProfilePageMsglist.add("The edit number icon not visible");
 				return result;
 			}
 
-			cfObj.commonClick(profilePage_OR.editNumberBtn());
+			cfObj.commonClick(profilePage_OR.listOfButtons().get(1));
 
 			result = cfObj.commonSetTextTextBox(profilePage_OR.updatedNoInput(), strMobileNumberString);
 			if (!result) {
@@ -286,25 +294,19 @@ public class ProfilePageUtil {
 				return false;
 			}
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.clickOtpButton(), 5);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.clickUpdateContinueBtn(), 5);
 			if (!result) {
-				ProfilePageMsglist.add("The otp button not visible");
+				ProfilePageMsglist.add("The continue button not visible");
 				return result;
 			}
 
-			cfObj.commonClick(profilePage_OR.clickOtpButton());
+			cfObj.commonClick(profilePage_OR.clickUpdateContinueBtn());
 
-			String toastMsgLangChange = profilePage_OR.toastFeedLang().getAttribute("name");
+			String msgOtpSent = profilePage_OR.otpSentMsg().getText();
 
-			if (toastMsgLangChange.equalsIgnoreCase("Otp has been sent to verify Mobile number")) {
+			if (msgOtpSent.equalsIgnoreCase("OTP has been sent to verify Mobile number")) {
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.inputOtp(), 5);
-				if (!result) {
-					ProfilePageMsglist.add("The input otp box is not visible");
-					return result;
-				}
-
-				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.submitOtpBtn(), 5);
+				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.verifyOtpButton(), 5);
 				if (!result) {
 					ProfilePageMsglist.add("The submit button is not visible");
 					return result;
@@ -312,13 +314,16 @@ public class ProfilePageUtil {
 
 				((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
 
-				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.updateBtn(), 5);
+				((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.listOfButtons().get(1), 5);
 				if (!result) {
 					ProfilePageMsglist.add("After coming back from edit number, it is not profile page");
 					return result;
 				}
 
 			} else {
+				ProfilePageMsglist.add("The otp sent message is wrong for number");
 				return false;
 			}
 
@@ -333,30 +338,108 @@ public class ProfilePageUtil {
 		boolean result = true;
 		try {
 
-			cfObj.scrollUtill(driver, 1);
-
 			String randomNumber = Common_Function.randomPhoneNumber(10, "9");
 			String emailIdString = "TestUser" + randomNumber + "@gmail.com";
 			System.out.println("Email id: " + emailIdString);
 
-			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.editMailBtn(), 5);
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.listOfButtons().get(0), 5);
 			if (!result) {
 				ProfilePageMsglist.add("The edit mail icon not visible");
 				return result;
 			}
 
-			cfObj.commonClick(profilePage_OR.editMailBtn());
+			cfObj.commonClick(profilePage_OR.listOfButtons().get(0));
 
-			((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
-
-			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.updateBtn(), 5);
+			result = cfObj.commonSetTextTextBox(profilePage_OR.updatedEmailInput(), emailIdString);
 			if (!result) {
-				ProfilePageMsglist.add("After coming back from edit mail, it is not profile page");
+				ProfilePageMsglist.add("Not able to enter email");
+				return false;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.clickUpdateContinueBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("The continue button not visible");
 				return result;
+			}
+
+			cfObj.commonClick(profilePage_OR.clickUpdateContinueBtn());
+
+			String msgOtpSent = profilePage_OR.otpSentMsg().getText();
+
+			if (msgOtpSent.equalsIgnoreCase("OTP has been sent to your email address")) {
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.verifyOtpButton(), 5);
+				if (!result) {
+					ProfilePageMsglist.add("The submit button is not visible");
+					return result;
+				}
+
+				((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
+
+				((AndroidDriver<MobileElement>) driver).pressKey(new KeyEvent(AndroidKey.BACK));
+
+				result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.listOfButtons().get(0), 5);
+				if (!result) {
+					ProfilePageMsglist.add("After coming back from edit email, it is not profile page");
+					return result;
+				}
+
+			} else {
+				ProfilePageMsglist.add("The otp sent msg is wrong for email");
+				return false;
 			}
 
 		} catch (Exception e) {
 			ProfilePageMsglist.add("changeEmailInProfileException" + e.getMessage());
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean verifySignOut(AppiumDriver<MobileElement> driver) {
+		boolean result = true;
+
+		try {
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.signOutBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("The sign out is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(profilePage_OR.signOutBtn());
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.logOutBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("The sign out is not visible");
+				return result;
+			}
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.cancelBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("The sign out is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(profilePage_OR.cancelBtn());
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.signOutBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("The sign out is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(profilePage_OR.signOutBtn());
+
+			result = cfObj.commonWaitForElementToBeVisible(driver, profilePage_OR.logOutBtn(), 5);
+			if (!result) {
+				ProfilePageMsglist.add("The sign out is not visible");
+				return result;
+			}
+
+			cfObj.commonClick(profilePage_OR.logOutBtn());
+
+		} catch (Exception e) {
+			ProfilePageMsglist.add("verifySignOutException" + e.getMessage());
 			result = false;
 		}
 		return result;

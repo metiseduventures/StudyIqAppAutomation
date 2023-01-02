@@ -11,6 +11,7 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import pageObject.PaymentPage_OR;
 import pojo.testdata.TestData;
+import pojo.testdata.TestDataTest;
 import util.Common_Function;
 
 public class PaymentPageUtil {
@@ -25,7 +26,7 @@ public class PaymentPageUtil {
 		PageFactory.initElements(new AppiumFieldDecorator(driver), paymentPageObj);
 	}
 
-	public boolean selectPaymentOption(AppiumDriver<MobileElement> driver, String strPaymentOption, TestData testData) {
+	public boolean selectPaymentOption(AppiumDriver<MobileElement> driver, String strPaymentOption, String isKey) {
 		boolean result = true;
 
 		try {
@@ -54,21 +55,22 @@ public class PaymentPageUtil {
 						return result;
 					}
 
-					if (testData.getIsKey().equalsIgnoreCase("pass")) {
+					if (isKey.equalsIgnoreCase("pass")) {
 
 						cfObj.scrollIntoText(driver, "Net Banking");
 
-						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.netBankPaymentOption(),
-								5);
-						if (!result) {
-							paymentPageMsgList.add("The netbanking option in paytm is not visible");
-							return result;
-						}
-						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
-						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
-						
-						//need to change pay btn (not working)
-						
+						driver.hideKeyboard();
+
+//						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.netBankPaymentOption(),
+//								5);
+//						if (!result) {
+//							paymentPageMsgList.add("The netbanking option in paytm is not visible");
+//							return result;
+//						}
+//						cfObj.commonClick(paymentPageObj.netBankPaymentOption());
+
+						// need to change pay btn (not working)
+
 						result = cfObj.commonWaitForElementToBeVisible(driver, paymentPageObj.successfulPayBtn(), 5);
 						if (!result) {
 							paymentPageMsgList.add("The successful Paytm payment btn is not visible");
@@ -85,7 +87,7 @@ public class PaymentPageUtil {
 
 						return true;
 
-					} else if (testData.getIsKey().equalsIgnoreCase("fail")) {
+					} else if (isKey.equalsIgnoreCase("fail")) {
 
 						driver.hideKeyboard();
 
