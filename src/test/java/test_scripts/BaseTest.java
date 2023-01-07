@@ -10,7 +10,7 @@ import util.Common_Function;
 public class BaseTest {
 
 	Common_Function cfObj = new Common_Function();
-	public AppiumDriver<MobileElement> driver;
+	public static AppiumDriver<MobileElement> driver;
 	
 	public AppiumDriver<MobileElement> getDriver() {
         return driver;
